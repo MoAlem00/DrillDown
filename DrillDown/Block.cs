@@ -7,8 +7,6 @@ public class Block
 {
     private BlockType type;
     private float drillProgress;
-    public Collider collider;
-    public Rectangle bounds;
     
     public Texture2D Texture => type.texture;
     public Material Material => type.material;
@@ -18,6 +16,12 @@ public class Block
     public Block(BlockType type)
     {
         this.type = type;
+    }
+    
+    public bool isDrilled(float amount)
+    {
+        drillProgress += amount;
+        return drillProgress >= type.timeToDrill;
     }
     
 }

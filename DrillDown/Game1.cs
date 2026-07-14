@@ -47,7 +47,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
 
-        _graphics.IsFullScreen = true;
+        _graphics.IsFullScreen = false;
         
         _screenCenter =  new Vector2(
             _graphics.PreferredBackBufferWidth * 0.5f,
@@ -72,7 +72,7 @@ public class Game1 : Game
         Texture2D buttonTexture =  Content.Load<Texture2D>("Images/CrackedButton");
         
         Button.Pixel = new Texture2D(GraphicsDevice, 1, 1);
-        Button.Pixel.SetData(new Color[] { Color.DarkGreen });
+        Button.Pixel.SetData(new Color[] { Color.White });
         
         SpriteManager.AddSprite("BackGround","Images/BG");
         SpriteManager.AddSprite("DirtBlock","Images/Dirt");
@@ -184,6 +184,10 @@ public class Game1 : Game
                 break;
             case GameManager.GameState.Playing:
                 player.Draw(_spriteBatch);
+                _spriteBatch.Draw(Button.Pixel, player.destRect, Color.White * 0.9f);
+                int col = (int)((player.tm.position.X - groundLevel.X) / blockSize);
+                int row = (int)((player.tm.position.Y - groundLevel.Y) / blockSize);
+                _spriteBatch.Draw(Button.Pixel, world.CellRect(row, col), Color.Red * 0.9f);
                 break;
         }
         SceneManager.Instance.Draw(_spriteBatch);

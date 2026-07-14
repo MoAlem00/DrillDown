@@ -6,10 +6,11 @@ namespace DrillDown;
 
 public class Player : Animation
 {
-    bool IsRKeyPressed = false;
-    float speedRotation = 0;
+    private const float gravity = 150f;
+    private Vector2 velocity;
     float speedMovement = 100;
     bool isColliding = false;
+    private float fuel {get; set;}
     public World world { get; set; }
     public Collider collider { get; }
     Vector2 prevPosition = Vector2.Zero;
@@ -24,55 +25,51 @@ public class Player : Animation
         base.Start();
 
         tm.position = Game1._screenCenter;
-        tm.scale = new Vector2(1f, 1f);
+        tm.scale = new Vector2(0.8f, 0.8f);
         prevPosition =  tm.position;
     }
 
     public override void Update(GameTime gameTime)
     {
+        int row = world.WorldToRow(tm.position);
+        int col = world.WorldToCol(tm.position);
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        if (Keyboard.GetState().IsKeyDown(Keys.R) && !IsRKeyPressed)
-        {
-            // R was pressed in this frame
-            speedRotation = 500;
-        }
-        
+        velocity.X = 0;
         if (Keyboard.GetState().IsKeyDown(Keys.D))
         {
             effects = SpriteEffects.FlipHorizontally;
-            tm.position += new Vector2(speedMovement * deltaTime, 0);
+            velocity.X = speedMovement;
+            world.Drill(row, col + 1, deltaTime);
         }
         
         if (Keyboard.GetState().IsKeyDown(Keys.A))
         {
+            world.Drill(row, col - 1, deltaTime);
             effects = SpriteEffects.None;
-            tm.position += new Vector2(-speedMovement * deltaTime, 0);
+            velocity.X = -speedMovement;
         }
         
         if (Keyboard.GetState().IsKeyDown(Keys.S))
         {
-            tm.position += new Vector2(0, speedMovement * deltaTime);
+            world.Drill(row + 1, col, deltaTime);
+            velocity.Y = speedMovement;
         }
         
         if (Keyboard.GetState().IsKeyDown(Keys.W))
         {
-            tm.position += new Vector2(0, -speedMovement * deltaTime);
+            velocity.Y = -speedMovement;
         }
-
-        IsRKeyPressed =  Keyboard.GetState().IsKeyDown(Keys.R);
-        
-        tm.rotation = (float)gameTime.TotalGameTime.TotalSeconds * speedRotation;
+        velocity.Y += gravity * deltaTime;
+        tm.position += velocity * deltaTime;
 
         base.Update(gameTime);
         
-        /*if (isColliding)
-        {
-            tm.position =  prevPosition;
-            isColliding = false;
-        }*/
         destRect = GetDestRect(sourceRect);
         if (world.IsSolid(destRect))
+        {
             tm.position = prevPosition;
+            velocity.Y = 0f;
+        }
         prevPosition =  tm.position;
     }
     public void OnCollision(Collider selfCollider, Collider otherCollider)
