@@ -47,7 +47,7 @@ public class Sprite : IDrawable, IUpdatable
     
     public virtual void Draw(SpriteBatch spriteBatch)
     {
-        //destRect = GetDestRect(sourceRect);
+        destRect = GetDestRect(sourceRect);
         
         spriteBatch.Draw(
             texture, 

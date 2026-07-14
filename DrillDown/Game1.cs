@@ -26,7 +26,7 @@ public class Game1 : Game
     private Vector2 buttonsOffset = new Vector2(0,100);
     private Vector2 buttonsCentered;
     //private List<Sprite> blocks = new();
-    private Vector2 groundLevel;
+    public static Vector2 groundLevel;
     private Vector2 yLevelOffset = new Vector2(0, 200f);
     private SpriteManager spriteManager;
     private WorldGenerator worldGenerator;
@@ -132,6 +132,7 @@ public class Game1 : Game
     private void Start()
     {
         player = SceneManager.Create<Player>();
+        player.world = world;
         player.PlayAnimation();
         player.sortingOrder = 4f / totalLayers;
         
@@ -141,10 +142,7 @@ public class Game1 : Game
         startButton.Start();
         settingsButton.Start();
         quitButton.Start();
-        /*foreach (var block in blocks)
-        {
-            block.Start();
-        }*/
+
         SceneManager.Instance.Start();
     }
 

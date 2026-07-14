@@ -10,6 +10,7 @@ public class Player : Animation
     float speedRotation = 0;
     float speedMovement = 100;
     bool isColliding = false;
+    public World world { get; set; }
     public Collider collider { get; }
     Vector2 prevPosition = Vector2.Zero;
     public Player() : base("DrillPod")
@@ -21,9 +22,9 @@ public class Player : Animation
     public override void Start()
     {
         base.Start();
-        
+
         tm.position = Game1._screenCenter;
-        tm.scale = new Vector2(1.2f, 1.2f);
+        tm.scale = new Vector2(1f, 1f);
         prevPosition =  tm.position;
     }
 
@@ -64,11 +65,14 @@ public class Player : Animation
 
         base.Update(gameTime);
         
-        if (isColliding)
+        /*if (isColliding)
         {
             tm.position =  prevPosition;
             isColliding = false;
-        }
+        }*/
+        destRect = GetDestRect(sourceRect);
+        if (world.IsSolid(destRect))
+            tm.position = prevPosition;
         prevPosition =  tm.position;
     }
     public void OnCollision(Collider selfCollider, Collider otherCollider)

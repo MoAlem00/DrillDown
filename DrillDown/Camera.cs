@@ -11,11 +11,11 @@ public class Camera
         this.position = position;
     }
 
-    public void Follow(Rectangle target, Vector2 screenSize)
+    public void Follow(Player target, Vector2 screenSize)
     {
         position = new Vector2(
-            -target.X + (screenSize.X / 2 - target.Width / 2f), 
-            -target.Y + (screenSize.Y / 2 - target.Height / 2f));
+            -target.tm.position.X + (screenSize.X / 2 - target.texture.Width / 2f), 
+            -target.tm.position.Y + (screenSize.Y / 2 - target.texture.Height / 2f));
     }
     
 }

@@ -36,4 +36,22 @@ public class World : IDrawable
             }
         }
     }
+    
+    public bool IsSolid(Rectangle podRect)
+    {
+        int leftCol   = (int)((podRect.Left   - groundLevel.X) / blockSize);
+        int rightCol  = (int)((podRect.Right - 1  - groundLevel.X) / blockSize);
+        int topRow    = (int)((podRect.Top    - groundLevel.Y) / blockSize);
+        int bottomRow = (int)((podRect.Bottom - 1 - groundLevel.Y) / blockSize);
+
+        for (int r = topRow; r <= bottomRow; r++)
+        {
+            for (int c = leftCol; c <= rightCol; c++)
+            {
+                if (r < 0 || r >= rows || c < 0 || c >= columns) continue;
+                if (world[r, c] != null) return true;
+            }
+        }
+        return false;
+    }
 }
