@@ -173,27 +173,30 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.Brown);
 
-        _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp, transformMatrix: camera.position);
+        _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp,
+            transformMatrix: camera.position);
         backGround.Draw(_spriteBatch);
         world.Draw(_spriteBatch);
-        switch (gameManager.gameState)
+        if (gameManager.gameState == GameManager.GameState.Playing)
         {
-            case GameManager.GameState.MainMenu:
-                startButton.Draw(_spriteBatch);
-                settingsButton.Draw(_spriteBatch);
-                quitButton.Draw(_spriteBatch);
-                break;
-            case GameManager.GameState.Playing:
-                player.Draw(_spriteBatch);
-                _spriteBatch.Draw(Button.Pixel, player.destRect, Color.White * 0.9f);
-                int col = (int)((player.tm.position.X - groundLevel.X) / blockSize);
-                int row = (int)((player.tm.position.Y - groundLevel.Y) / blockSize);
-                _spriteBatch.Draw(Button.Pixel, world.CellRect(row, col), Color.Red * 0.9f);
-                break;
+            player.Draw(_spriteBatch);
+            _spriteBatch.Draw(Button.Pixel, player.destRect, Color.White * 0.9f);
+            int col = (int)((player.tm.position.X - groundLevel.X) / blockSize);
+            int row = (int)((player.tm.position.Y - groundLevel.Y) / blockSize);
+            _spriteBatch.Draw(Button.Pixel, world.CellRect(row, col), Color.Red * 0.9f);
+            SceneManager.Instance.Draw(_spriteBatch);
         }
-        SceneManager.Instance.Draw(_spriteBatch);
         _spriteBatch.End();
+        
+        _spriteBatch.Begin();
+        if (gameManager.gameState == GameManager.GameState.MainMenu)
+        {
 
+            startButton.Draw(_spriteBatch);
+            settingsButton.Draw(_spriteBatch);
+            quitButton.Draw(_spriteBatch);
+        }
+        _spriteBatch.End();
         base.Draw(gameTime);
     }
 }
