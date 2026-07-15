@@ -33,6 +33,7 @@ public class Game1 : Game
     private Block[,] grid;
     private World world;
     private Camera camera;
+    //Matrix transform;
 
     
     public Game1()
@@ -40,7 +41,8 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         spriteManager = new SpriteManager(Content);
         gameManager = new GameManager();
-        //camera = new Camera(Vector2.Zero);
+        camera = new Camera();
+        
         
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -151,7 +153,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-
+        camera.Follow(player);
         switch (gameManager.gameState)
         {
             case GameManager.GameState.MainMenu:
@@ -164,15 +166,14 @@ public class Game1 : Game
                 break;
         }
         SceneManager.Instance.Update(gameTime);
-        //camera.Follow(player.destRect,new Vector2(_graphics.PreferredBackBufferWidth,_graphics.PreferredBackBufferHeight));
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Gray);
+        GraphicsDevice.Clear(Color.Brown);
 
-        _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp);
+        _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp, transformMatrix: camera.position);
         backGround.Draw(_spriteBatch);
         world.Draw(_spriteBatch);
         switch (gameManager.gameState)

@@ -4,18 +4,18 @@ namespace DrillDown;
 
 public class Camera
 {
-    public Vector2 position;
+    public Matrix position;
 
-    public Camera(Vector2 position)
+    public Camera()
     {
-        this.position = position;
     }
 
-    public void Follow(Player target, Vector2 screenSize)
+    public void Follow(Player target)
     {
-        position = new Vector2(
-            -target.tm.position.X + (screenSize.X / 2 - target.texture.Width / 2f), 
-            -target.tm.position.Y + (screenSize.Y / 2 - target.texture.Height / 2f));
+        position = Matrix.CreateTranslation(
+            -target.tm.position.X + Game1._screenCenter.X,
+            -target.tm.position.Y + Game1._screenCenter.Y,
+            0);
     }
     
 }
