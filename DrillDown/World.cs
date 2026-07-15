@@ -10,13 +10,15 @@ public class World : IDrawable
     private int blockSize;
     private Vector2 groundLevel;
     private int rows, columns;
+    private float layer;
     
     
-    public World(Block[,] world, int blockSize, Vector2 groundLevel)
+    public World(Block[,] world, int blockSize, Vector2 groundLevel,float layer)
     {
         this.world = world;
         this.blockSize = blockSize;
         this.groundLevel = groundLevel;
+        this.layer = layer;
         rows = world.GetLength(0);
         columns = world.GetLength(1);
     }

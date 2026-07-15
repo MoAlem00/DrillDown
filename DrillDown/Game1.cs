@@ -91,12 +91,12 @@ public class Game1 : Game
         
         Material ironOre = new Material("Iron Ore",Content.Load<Texture2D>("Images/IronOre"),5f,50);
         
-        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,1f);
-        BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,2f);
-        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,1f);
-        BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,5f,ironOre);
-        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,1f);
-        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,1f);
+        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.2f);
+        BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.2f);
+        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.2f);
+        BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.2f,ironOre);
+        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.2f);
+        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,0.2f);
         List<BlockType> blockTypes = new List<BlockType>();
         blockTypes.Add(grassType);
         blockTypes.Add(dirtType);
@@ -108,7 +108,7 @@ public class Game1 : Game
         worldGenerator = new WorldGenerator(rows, columns, blockTypes);
         grid = worldGenerator.GenerateWorld();
 
-        world = new World(grid, blockSize, groundLevel);
+        world = new World(grid, blockSize, groundLevel, 4f/totalLayers);
         
         
         backGround = new Sprite("BackGround");
@@ -139,7 +139,7 @@ public class Game1 : Game
         player = SceneManager.Create<Player>();
         player.world = world;
         player.PlayAnimation();
-        player.sortingOrder = 4f / totalLayers;
+        player.sortingOrder = 3f / totalLayers;
         
         player.collider.RegisterOnCollision(player.OnCollision);
         player.collider.RegisterOnTrigger(player.OnTrigger);
