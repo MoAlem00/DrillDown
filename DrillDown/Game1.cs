@@ -85,6 +85,9 @@ public class Game1 : Game
         SpriteManager.AddSprite("IronBlock","Images/IronBlock");
         SpriteManager.AddSprite("DiamondBlock","Images/DiamondBlock");
         SpriteManager.AddSprite("GoldBlock","Images/GoldBlock");
+        SpriteManager.AddSprite("DownDrill","Images/DrillDownSpriteSheet",5,1);
+        SpriteManager.AddSprite("RightDrill","Images/DrillRightSpriteSheet",5,1);
+        SpriteManager.AddSprite("LeftDrill","Images/DrillLeftSpriteSheet",5,1);
         
         Material ironOre = new Material("Iron Ore",Content.Load<Texture2D>("Images/IronOre"),5f,50);
         
@@ -191,7 +194,6 @@ public class Game1 : Game
         _spriteBatch.Begin();
         if (gameManager.gameState == GameManager.GameState.MainMenu)
         {
-
             startButton.Draw(_spriteBatch);
             settingsButton.Draw(_spriteBatch);
             quitButton.Draw(_spriteBatch);

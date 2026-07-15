@@ -80,7 +80,7 @@ public class World : IDrawable
 
         Block block = world[row, col];
         if (block == null) return;
-
+        
         bool broken = block.isDrilled(deltaTime);
         if (broken)
             world[row, col] = null;
