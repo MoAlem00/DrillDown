@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace DrillDown;
 
-public class Inventory
+public class Inventory : IEnumerable<Material>
 {
     private List<Material> materials;
     private float currentWeight;
@@ -31,4 +32,13 @@ public class Inventory
         capacity = Math.Clamp(capacity + amount, minCapacity, maxCapacity);
     }
 
+    public IEnumerator<Material> GetEnumerator()
+    {
+        return new List<Material>(materials).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }

@@ -76,15 +76,21 @@ public class World : IDrawable
         return col;
     }
 
-    public void Drill(int row, int col, float deltaTime)
+    public Material Drill(int row, int col, float deltaTime)
     {
-        if (row < 0 || row >= rows || col < 0 || col >= columns) return;
+        if (row < 0 || row >= rows || col < 0 || col >= columns) return null;
 
         Block block = world[row, col];
-        if (block == null) return;
+        if (block == null) return null;
         
         bool broken = block.isDrilled(deltaTime);
         if (broken)
+        {
+            Material dropped = block.Material;
             world[row, col] = null;
+            return dropped;
+        }
+
+        return null;
     }
 }

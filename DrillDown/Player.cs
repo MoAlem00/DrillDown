@@ -14,9 +14,13 @@ public class Player : Animation
     bool isColliding = false;
     private bool isGrounded;
     private float deltaTime;
+    private bool showInv;
+    private float startingCapacity = 100f;
     private float fuel {get; set;}
+    private Material ore;
     public World world { get; set; }
     public Collider collider { get; }
+    private Inventory inventory;
     Vector2 prevPosition;
     private DrillDirection drillDirection = DrillDirection.None;
     private DrillDirection movingDirection = DrillDirection.None;
@@ -32,6 +36,7 @@ public class Player : Animation
     {
         collider = SceneManager.Create<Collider>();
         collider.Parent = this;
+        inventory = new Inventory(startingCapacity);
         animations.Add(DrillDirection.Down, new Animation("DownDrill"));
         animations.Add(DrillDirection.Right, new Animation("RightDrill"));
         animations.Add(DrillDirection.Left, new Animation("LeftDrill"));
@@ -67,9 +72,18 @@ public class Player : Animation
         
         switch (drillDirection)
         {
-            case DrillDirection.Down: world.Drill(row + 1, col, deltaTime); break;
-            case DrillDirection.Left: world.Drill(row, col - 1, deltaTime); break;
-            case DrillDirection.Right: world.Drill(row, col + 1, deltaTime); break;
+            case DrillDirection.Down: 
+                ore = world.Drill(row + 1, col, deltaTime);
+                AddOreToInventory(ore);
+                break;
+            case DrillDirection.Left: 
+                ore = world.Drill(row, col - 1, deltaTime); 
+                AddOreToInventory(ore);
+                break;
+            case DrillDirection.Right: 
+                ore = world.Drill(row, col + 1, deltaTime);
+                AddOreToInventory(ore);
+                break;
         }
 
         if (drillDirection != DrillDirection.None)
@@ -131,7 +145,24 @@ public class Player : Animation
         SceneManager.Remove(otherCollider);
         SceneManager.Remove(otherCollider.Parent);
     }
-    
+
+    private void AddOreToInventory(Material material)
+    {
+        if (material != null)
+        {
+            inventory.TryAddMaterial(material);
+            Console.WriteLine($"Collected {material.Name}");
+        }
+    }
+
+    private void ShowInventory()
+    {
+        foreach (var item in inventory)
+        {
+            Console.WriteLine($"{item.Name}");
+        }
+        showInv = false;
+    }
     private void ReadInput()
     {
         velocity.X = 0;
@@ -157,6 +188,11 @@ public class Player : Animation
         if (Keyboard.GetState().IsKeyDown(Keys.W))
         {
             velocity.Y = -speedMovement;
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.I) && !showInv )
+        {
+            ShowInventory();
+            showInv = true;
         }
     }
 }

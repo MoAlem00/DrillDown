@@ -25,7 +25,6 @@ public class Game1 : Game
     private int buttonHeight = 80;
     private Vector2 buttonsOffset = new Vector2(0,100);
     private Vector2 buttonsCentered;
-    //private List<Sprite> blocks = new();
     public static Vector2 groundLevel;
     private Vector2 yLevelOffset = new Vector2(0, 200f);
     private SpriteManager spriteManager;
@@ -33,7 +32,6 @@ public class Game1 : Game
     private Block[,] grid;
     private World world;
     private Camera camera;
-    //Matrix transform;
 
     
     public Game1()
@@ -76,27 +74,39 @@ public class Game1 : Game
         Button.Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Button.Pixel.SetData(new Color[] { Color.White });
         
+        
         SpriteManager.AddSprite("BackGround","Images/BG");
-        SpriteManager.AddSprite("DirtBlock","Images/Dirt");
-        SpriteManager.AddSprite("GrassBlock","Images/Grass");
-        SpriteManager.AddSprite("StoneBlock","Images/Stone");
         SpriteManager.AddSprite("DrillPod","Images/DrillPod");
         SpriteManager.AddSprite("Pixel","Images/Pixel");
-        SpriteManager.AddSprite("IronBlock","Images/IronBlock");
-        SpriteManager.AddSprite("DiamondBlock","Images/DiamondBlock");
-        SpriteManager.AddSprite("GoldBlock","Images/GoldBlock");
         SpriteManager.AddSprite("DownDrill","Images/DrillDownSpriteSheet",5,1);
         SpriteManager.AddSprite("RightDrill","Images/DrillRightSpriteSheet",5,1);
         SpriteManager.AddSprite("LeftDrill","Images/DrillLeftSpriteSheet",5,1);
+
         
-        Material ironOre = new Material("Iron Ore",Content.Load<Texture2D>("Images/IronOre"),5f,50);
+        SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
+        SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
+        SpriteManager.AddSprite("StoneBlock","Blocks/StoneBlock");
+        SpriteManager.AddSprite("IronBlock","Blocks/IronBlock");
+        SpriteManager.AddSprite("DiamondBlock","Blocks/DiamondBlock");
+        SpriteManager.AddSprite("GoldBlock","Blocks/GoldBlock");
+        
+        SpriteManager.AddSprite("IronOre","Ores/IronOre");
+        SpriteManager.AddSprite("DiamondOre","Ores/DiamondOre");
+        SpriteManager.AddSprite("GoldOre","Ores/GoldOre");
+        
+        
+        Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,5f,50);
+        Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,5f,500);
+        Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,5f,1000);
+        
+        
         
         BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.2f);
         BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.2f);
         BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.2f);
         BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.2f,ironOre);
-        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.2f);
-        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,0.2f);
+        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.2f,goldOre);
+        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,0.2f,diamondOre);
         List<BlockType> blockTypes = new List<BlockType>();
         blockTypes.Add(grassType);
         blockTypes.Add(dirtType);
