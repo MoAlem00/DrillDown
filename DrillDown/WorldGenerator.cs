@@ -28,7 +28,12 @@ public class WorldGenerator
                     r < 4 ? blockTypes[2] :
                     r < 5 ? blockTypes[3] :
                     r < 6 ? blockTypes[4] :
-                    blockTypes[5];
+                    r < 7 ? blockTypes[5] :
+                    r < 8 ? blockTypes[6] :
+                    r < 9 ? blockTypes[7] :
+                    r < 10 ? blockTypes[8] :
+                    r < 11 ? blockTypes[9] :
+                    blockTypes[10];
                 grid[r, c] = new Block(type);
             }
         }

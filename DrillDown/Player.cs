@@ -5,23 +5,45 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 namespace DrillDown;
 
-public enum DrillDirection { None, Down, Left, Right }
+public enum DrillDirection { None, Down, Left, Right}
 public class Player : Animation
 {
     private const float gravity = 150f;
     private Vector2 velocity;
     float speedMovement = 100;
+    private float minFallSpeed = 300f;
+    private float fallDamageMultiplier = 0.2f;
     bool isColliding = false;
+    private bool isFlying = false;
+    private bool isDead;
     private bool isGrounded;
     private float deltaTime;
     private bool showInv;
     private float startingCapacity = 100f;
-    private float fuel {get; set;}
+    private float fuel;
+    public float Fuel => fuel;
+    private float maxFuel = 100f;
+    public float MaxFuel => maxFuel;
+    private float health;
+    public float Health => health;
+    private float maxHealth { get; set; } = 100f;
+    private float burnRate = 1f;
+    private int money;
+    public int Money => money;
     private Material ore;
+    private Animation flame;
+    private Animation explode;
     public World world { get; set; }
     public Collider collider { get; }
     private Inventory inventory;
+    public Inventory Inventory => inventory;
+    public event Action<float> OnFuelChange;
+    public event Action<float> OnHealthChange;
+    public event Action<int> OnMoneyChange;
+    public event Action OnPlayerDeath;
+    
     Vector2 prevPosition;
+    
     private DrillDirection drillDirection = DrillDirection.None;
     private DrillDirection movingDirection = DrillDirection.None;
     private Dictionary<DrillDirection, Animation> animations = new Dictionary<DrillDirection, Animation>();
@@ -37,6 +59,8 @@ public class Player : Animation
         collider = SceneManager.Create<Collider>();
         collider.Parent = this;
         inventory = new Inventory(startingCapacity);
+        flame = new Animation("Flame");
+        explode = new Animation("Explosion");
         animations.Add(DrillDirection.Down, new Animation("DownDrill"));
         animations.Add(DrillDirection.Right, new Animation("RightDrill"));
         animations.Add(DrillDirection.Left, new Animation("LeftDrill"));
@@ -45,13 +69,20 @@ public class Player : Animation
     public override void Start()
     {
         base.Start();
+        fuel = maxFuel;
+        health = maxHealth;
+        OnHealthChange?.Invoke(health / maxHealth);
+        OnFuelChange?.Invoke(fuel / maxFuel);
         tm.position = Game1._screenCenter;
         tm.scale = new Vector2(0.8f, 0.8f);
+        explode.tm.scale = new Vector2(2.5f, 2.5f);
+        explode.sortingOrder = 1f;
+        flame.tm.scale = new Vector2(1.4f, 1.4f);
+        flame.PlayAnimation(true,5);
         foreach (Animation animation in animations.Values)
         {
             animation.PlayAnimation();
         }
-
     }
 
     public override void Update(GameTime gameTime)
@@ -60,6 +91,18 @@ public class Player : Animation
         prevPosition = tm.position;
         
         ReadInput();
+        if ((fuel <= 0 || health <=0) && !isDead)
+            Die();
+
+        if (isDead)
+        {
+            explode.tm.position = tm.position;
+            explode.Update(gameTime);
+            return;
+        }
+            
+        if (movingDirection != DrillDirection.None || isFlying)
+            BurnFuel(burnRate * deltaTime);
         
         MoveX();
         MoveY();
@@ -85,22 +128,31 @@ public class Player : Animation
                 AddOreToInventory(ore);
                 break;
         }
-
+        
         if (drillDirection != DrillDirection.None)
         {
             animations[drillDirection].tm.position = tm.position + offsets[drillDirection];
             animations[drillDirection].Update(gameTime);
         }
+
+        if (isFlying)
+        {
+            flame.tm.position = tm.position + offsets[DrillDirection.Down];
+            flame.Update(gameTime);
+        }
         base.Update(gameTime);
-        
     }
     
     public override void Draw(SpriteBatch spriteBatch)
     {
-        base.Draw(spriteBatch);
+        if(!isDead)
+            base.Draw(spriteBatch);
         if (drillDirection != DrillDirection.None)
             animations[drillDirection].Draw(spriteBatch);
-        
+        if(isFlying)
+            flame.Draw(spriteBatch);
+        if(isDead)
+            explode.Draw(spriteBatch);
     }
 
     private void MoveX()
@@ -125,10 +177,15 @@ public class Player : Animation
         isGrounded = false;
         if (world.IsSolid(destRect))
         {
-            if(velocity.Y > 0) isGrounded = true;
+            if (velocity.Y > 0) isGrounded = true;
             if (movingDirection == DrillDirection.Down)
                 drillDirection = DrillDirection.Down;
             tm.position.Y = prevPosition.Y;
+            if (velocity.Y > minFallSpeed)
+            {
+                float fallDamage = (velocity.Y - minFallSpeed) * fallDamageMultiplier;
+                LoseHealth(fallDamage);
+            }
             velocity.Y = 0;
         }
     }
@@ -159,9 +216,8 @@ public class Player : Animation
     {
         foreach (var item in inventory)
         {
-            Console.WriteLine($"{item.Name}");
+            Console.WriteLine($"{item}");
         }
-        showInv = false;
     }
     private void ReadInput()
     {
@@ -187,12 +243,65 @@ public class Player : Animation
         }
         if (Keyboard.GetState().IsKeyDown(Keys.W))
         {
+            isFlying = true;
             velocity.Y = -speedMovement;
         }
-        if (Keyboard.GetState().IsKeyDown(Keys.I) && !showInv )
+        else isFlying = false;
+        
+        /*if (Keyboard.GetState().IsKeyDown(Keys.I) && !showInv )
         {
             ShowInventory();
             showInv = true;
         }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.F))
+        {
+            showInv = false;
+        }*/
+    }
+
+    private void Die()
+    {
+        isDead = true;
+        explode.PlayAnimation(false,13);
+        OnPlayerDeath?.Invoke();
+    }
+
+    private void BurnFuel(float amount)
+    {
+        fuel = Math.Clamp(fuel - amount, 0f, maxFuel);
+        OnFuelChange?.Invoke(fuel / maxFuel);
+    }
+
+    private void LoseHealth(float amount)
+    {
+        health = Math.Clamp(health - amount, 0f, maxHealth);
+        OnHealthChange?.Invoke(health / maxHealth);
+    }
+
+    public void Refuel(float amount)
+    {
+        fuel = Math.Clamp(fuel + amount, 0f, maxFuel);
+        OnFuelChange?.Invoke(fuel / maxFuel);
+    }
+
+    public void Repair(float amount)
+    {
+        health = Math.Clamp(health + amount, 0f, maxHealth);
+        OnHealthChange?.Invoke(health / maxHealth);
+    }
+    public void AddMoney(int amount)
+    {
+        money += amount;
+        OnMoneyChange?.Invoke(money);
+    }
+
+    public bool TrySpendMoney(int amount)
+    {
+        if (money < amount)
+            return false;
+        money -= amount;
+        OnMoneyChange?.Invoke(money);
+        return true;
     }
 }

@@ -6,6 +6,7 @@ public class GameManager
     public enum GameState
     {
         MainMenu,
+        GameOver,
         Playing
     }
 
@@ -21,5 +22,9 @@ public class GameManager
     {
         gameState = GameState.Playing;
         OnGameStart?.Invoke();
+    }
+    public void HandleGameOver()
+    {
+        gameState = GameState.GameOver;
     }
 }

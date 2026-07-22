@@ -31,17 +31,23 @@ public class Sprite : IDrawable, IUpdatable
     {
     }
 
-    private void UpdateOrigin()
-    {
-        origin = new Vector2(sourceRect.Value.Width * 0.5f, sourceRect.Value.Height * 0.5f);
-    }
+    public void CenterOrigin() => origin = new Vector2(sourceRect.Value.Width * 0.5f, sourceRect.Value.Height * 0.5f);
+    public void CenterLeftOrigin() => origin = new Vector2(0, sourceRect.Value.Height * 0.5f);
+    public void CenterRightOrigin() => origin = new Vector2(sourceRect.Value.Width, sourceRect.Value.Height * 0.5f);
+    public void TopRightOrigin() => origin = new Vector2(sourceRect.Value.Width, 0);
+    public void TopLeftOrigin() => origin = Vector2.Zero;
+    public void BottomLeftOrigin() => origin = new Vector2(0,sourceRect.Value.Height);
+    public void BottomRightOrigin() => origin = new Vector2(sourceRect.Value.Width,sourceRect.Value.Height);
+    //public Vector2 GetOrigin() => origin;
+    
+    
     private void UpdateDestRect()
     {
         destRect = GetDestRect(sourceRect);
     }
     public virtual void Update(GameTime gameTime)
     {
-        UpdateOrigin();
+        CenterOrigin();
         UpdateDestRect();
     }
     

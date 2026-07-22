@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 namespace DrillDown;
 
 public class Animation : Sprite
@@ -16,6 +17,8 @@ public class Animation : Sprite
     
     public void PlayAnimation(bool isLooping = true, int samples = 60)
     {
+        this.isLooping = isLooping;
+        this.samples = samples;
         Reset();
         isAnimating = true;
     }

@@ -30,7 +30,7 @@ public class Collider : Sprite
             _OnCollision?.Invoke(this, other);
     }
 
-    public override void Draw(SpriteBatch _spriteBatch)
+    /*public override void Draw(SpriteBatch _spriteBatch)
     {
 #if DEBUG
         // draw outline bounds
@@ -59,7 +59,7 @@ public class Collider : Sprite
             color);
         
 #endif
-    }
+    }*/
 
     public void RegisterOnTrigger(Action<Collider, Collider> action)
     {

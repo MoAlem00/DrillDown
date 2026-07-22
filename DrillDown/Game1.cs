@@ -14,11 +14,15 @@ public class Game1 : Game
     private int totalLayers = 5;
     public static Vector2 _screenCenter;
     public static Vector2 _screenLeftCenter;
-    private int blockSize = 64;
-    private int columns = 30;
-    private int rows = 15;
+    public static Vector2 _screenRightCorner;
+    public static Vector2 _screenLeftCorner;
+    public static int _screenWidth;
+    public const int blockSize = 64;
+    private int columns = 50;
+    private int rows = 50;
     private Player player;
     private Sprite backGround;
+    private Sprite bottomBackGround;
     private SpriteFont _font;
     private Button startButton, settingsButton, quitButton;
     private int buttonWidth = 200;
@@ -32,6 +36,10 @@ public class Game1 : Game
     private Block[,] grid;
     private World world;
     private Camera camera;
+    private HUD hud;
+    private GasStation gasStation;
+    private MineralsShop mineralsShop;
+    private RepairStation repairStation;
 
     
     public Game1()
@@ -55,6 +63,10 @@ public class Game1 : Game
         
         _screenLeftCenter = new Vector2(0, 
             _graphics.PreferredBackBufferHeight * 0.5f);
+        _screenWidth = _graphics.PreferredBackBufferWidth;
+        _screenRightCorner = new Vector2(_graphics.PreferredBackBufferWidth, 0);
+        
+        _screenLeftCorner = Vector2.Zero;
     }
 
     protected override void Initialize()
@@ -76,12 +88,23 @@ public class Game1 : Game
         
         
         SpriteManager.AddSprite("BackGround","Images/BG");
+        SpriteManager.AddSprite("Explosion","Images/ExplosionSheet",13,1);
+        SpriteManager.AddSprite("EarthBackground","Images/EarthBackground");
         SpriteManager.AddSprite("DrillPod","Images/DrillPod");
         SpriteManager.AddSprite("Pixel","Images/Pixel");
         SpriteManager.AddSprite("DownDrill","Images/DrillDownSpriteSheet",5,1);
         SpriteManager.AddSprite("RightDrill","Images/DrillRightSpriteSheet",5,1);
         SpriteManager.AddSprite("LeftDrill","Images/DrillLeftSpriteSheet",5,1);
-
+        SpriteManager.AddSprite("InventorySlots","Images/Inventory");
+        SpriteManager.AddSprite("BarFill","Images/BarFill");
+        SpriteManager.AddSprite("Bar","Images/Bar");
+        SpriteManager.AddSprite("FuelIcon","Images/FuelIcon");
+        SpriteManager.AddSprite("HealthIcon","Images/HealthIcon");
+        SpriteManager.AddSprite("Flame","Images/FlameSheet",4,1);
+        SpriteManager.AddSprite("GasStation","Shops/GasStation");
+        SpriteManager.AddSprite("MineralsShop","Shops/MineralsShop");
+        SpriteManager.AddSprite("RepairStation","Shops/RepairShop");
+        SpriteManager.AddSprite("Panel","Images/Panel");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
@@ -89,17 +112,30 @@ public class Game1 : Game
         SpriteManager.AddSprite("IronBlock","Blocks/IronBlock");
         SpriteManager.AddSprite("DiamondBlock","Blocks/DiamondBlock");
         SpriteManager.AddSprite("GoldBlock","Blocks/GoldBlock");
+        SpriteManager.AddSprite("EmeraldBlock","Blocks/EmeraldBlock");
+        SpriteManager.AddSprite("CoalBlock","Blocks/CoalBlock");
+        SpriteManager.AddSprite("CopperBlock","Blocks/CopperBlock");
+        SpriteManager.AddSprite("RubyBlock","Blocks/RubyBlock");
+        SpriteManager.AddSprite("SilverBlock","Blocks/SilverBlock");
         
         SpriteManager.AddSprite("IronOre","Ores/IronOre");
         SpriteManager.AddSprite("DiamondOre","Ores/DiamondOre");
         SpriteManager.AddSprite("GoldOre","Ores/GoldOre");
+        SpriteManager.AddSprite("CoalOre","Ores/CoalOre");
+        SpriteManager.AddSprite("RubyOre","Ores/RubyOre");
+        SpriteManager.AddSprite("SilverOre","Ores/SilverOre");
+        SpriteManager.AddSprite("CopperOre","Ores/CopperOre");
+        SpriteManager.AddSprite("EmeraldOre","Ores/EmeraldOre");
         
         
-        Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,5f,50);
-        Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,5f,500);
-        Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,5f,1000);
-        
-        
+        Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,1f,50);
+        Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,1f,500);
+        Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,1f,1000);
+        Material emeraldOre = new Material("EmeraldOre",SpriteManager.GetSprite("EmeraldOre").texture,1f,2000);
+        Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,2000);
+        Material copperOre = new Material("CopperOre",SpriteManager.GetSprite("CopperOre").texture,1f,2000);
+        Material rubyOre = new Material("RubyOre",SpriteManager.GetSprite("RubyOre").texture,1f,2000);
+        Material silverOre = new Material("SilverOre",SpriteManager.GetSprite("SilverOre").texture,1f,2000);
         
         BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.2f);
         BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.2f);
@@ -107,6 +143,11 @@ public class Game1 : Game
         BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.2f,ironOre);
         BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.2f,goldOre);
         BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,0.2f,diamondOre);
+        BlockType emeraldType = new BlockType("Emerald",SpriteManager.GetSprite("EmeraldBlock").texture,0.2f,emeraldOre);
+        BlockType coalType = new BlockType("Coal",SpriteManager.GetSprite("CoalBlock").texture,0.2f,coalOre);
+        BlockType rubyType = new BlockType("Ruby",SpriteManager.GetSprite("RubyBlock").texture,0.2f,rubyOre);
+        BlockType silverType = new BlockType("Silver",SpriteManager.GetSprite("SilverBlock").texture,0.2f,silverOre);
+        BlockType copperType = new BlockType("Copper",SpriteManager.GetSprite("CopperBlock").texture,0.2f,copperOre);
         List<BlockType> blockTypes = new List<BlockType>();
         blockTypes.Add(grassType);
         blockTypes.Add(dirtType);
@@ -114,6 +155,11 @@ public class Game1 : Game
         blockTypes.Add(ironType);
         blockTypes.Add(goldType);
         blockTypes.Add(diamondType);
+        blockTypes.Add(emeraldType);
+        blockTypes.Add(coalType);
+        blockTypes.Add(rubyType);
+        blockTypes.Add(silverType);
+        blockTypes.Add(copperType);
         
         worldGenerator = new WorldGenerator(rows, columns, blockTypes);
         grid = worldGenerator.GenerateWorld();
@@ -122,7 +168,9 @@ public class Game1 : Game
         
         
         backGround = new Sprite("BackGround");
+        bottomBackGround = new Sprite("EarthBackground");
         backGround.sortingOrder = 0f / totalLayers;
+
         
         buttonsCentered = _screenCenter - new Vector2(buttonWidth / 2f, buttonHeight / 2f);
         float textLayer = 5f / totalLayers;
@@ -147,17 +195,22 @@ public class Game1 : Game
     private void Start()
     {
         player = SceneManager.Create<Player>();
+        hud = new HUD(player.Inventory,_font);
         player.world = world;
         player.PlayAnimation();
-        player.sortingOrder = 3f / totalLayers;
-        
+        player.sortingOrder = 0.9f; //3f / totalLayers;
         player.collider.RegisterOnCollision(player.OnCollision);
         player.collider.RegisterOnTrigger(player.OnTrigger);
-        
+        player.OnFuelChange += hud.HandleFuelChange;
+        player.OnHealthChange += hud.HandleHealthChange;
+        player.OnPlayerDeath += gameManager.HandleGameOver;
         startButton.Start();
         settingsButton.Start();
         quitButton.Start();
 
+        repairStation = new RepairStation("RepairStation", 0.3f, 20);
+        mineralsShop = new MineralsShop("MineralsShop",0.5f,30);
+        gasStation = new GasStation("GasStation",0.4f, 5);
         SceneManager.Instance.Start();
     }
 
@@ -176,6 +229,10 @@ public class Game1 : Game
                 break;
             case GameManager.GameState.Playing:
                 player.Update(gameTime);
+                gasStation.UpdatePanel(player);
+                break;
+            case GameManager.GameState.GameOver:
+                player.Update(gameTime);
                 break;
         }
         SceneManager.Instance.Update(gameTime);
@@ -184,24 +241,37 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Brown);
+        GraphicsDevice.Clear(Color.SaddleBrown);
 
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp,
             transformMatrix: camera.position);
         backGround.Draw(_spriteBatch);
         world.Draw(_spriteBatch);
+        
         if (gameManager.gameState == GameManager.GameState.Playing)
         {
             player.Draw(_spriteBatch);
-            _spriteBatch.Draw(Button.Pixel, player.destRect, Color.White * 0.9f);
-            int col = (int)((player.tm.position.X - groundLevel.X) / blockSize);
+            /*int col = (int)((player.tm.position.X - groundLevel.X) / blockSize);
             int row = (int)((player.tm.position.Y - groundLevel.Y) / blockSize);
-            _spriteBatch.Draw(Button.Pixel, world.CellRect(row, col), Color.Red * 0.9f);
+            _spriteBatch.Draw(Button.Pixel, world.CellRect(row, col), Color.Red * 0.9f);*/
             SceneManager.Instance.Draw(_spriteBatch);
+            gasStation.Draw(_spriteBatch);
+            mineralsShop.Draw(_spriteBatch);
+            repairStation.Draw(_spriteBatch);
+            _spriteBatch.Draw(Button.Pixel, gasStation.Bounds, Color.Black);
+            _spriteBatch.Draw(Button.Pixel, mineralsShop.Bounds, Color.Blue);
+            _spriteBatch.Draw(Button.Pixel, repairStation.Bounds, Color.Red);
+        }
+
+        if (gameManager.gameState == GameManager.GameState.GameOver)
+        {
+            player.Draw(_spriteBatch);
         }
         _spriteBatch.End();
         
         _spriteBatch.Begin();
+        hud.Draw(_spriteBatch);
+        gasStation.DrawPanel(_spriteBatch);
         if (gameManager.gameState == GameManager.GameState.MainMenu)
         {
             startButton.Draw(_spriteBatch);

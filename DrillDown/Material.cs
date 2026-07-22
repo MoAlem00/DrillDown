@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DrillDown;
 
@@ -12,6 +13,7 @@ public class Material
     public float Weight => weight;
     public string Name => name;
     public int SellCost => sellCost;
+    public Texture2D Texture => texture;
 
     public Material(string name, Texture2D texture, float weight, int sellCost)
     {
@@ -20,5 +22,9 @@ public class Material
         this.weight = weight;
         this.sellCost = sellCost;
     }
-    
+
+    public override string ToString()
+    {
+        return $"{name}";
+    }
 }
