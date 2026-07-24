@@ -47,7 +47,7 @@ public class Player : Animation
     
     private DrillDirection drillDirection = DrillDirection.None;
     private DrillDirection movingDirection = DrillDirection.None;
-    private Dictionary<DrillDirection, Animation> animations = new Dictionary<DrillDirection, Animation>();
+    private Dictionary<DrillDirection, Animation> animations = new();
     private Dictionary<DrillDirection, Vector2> offsets = new()
     {
         { DrillDirection.Down,  new Vector2(0, 32f) },

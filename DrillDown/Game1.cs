@@ -39,9 +39,10 @@ public class Game1 : Game
     private World world;
     private Camera camera;
     private HUD hud;
-    private GasStation gasStation;
-    private MineralsShop mineralsShop;
-    private RepairStation repairStation;
+    private List<Shop> shops = new();
+    /*private Shop gasStation;
+    private Shop mineralsShop;
+    private Shop repairStation;*/
 
     
     public Game1()
@@ -112,6 +113,7 @@ public class Game1 : Game
         SpriteManager.AddSprite("GasStation","Shops/GasStation");
         SpriteManager.AddSprite("MineralsShop","Shops/MineralsShop");
         SpriteManager.AddSprite("RepairStation","Shops/RepairShop");
+        SpriteManager.AddSprite("UpgradesShop","Shops/UpgradesShop");
         SpriteManager.AddSprite("Panel","Images/Panel");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
@@ -196,7 +198,6 @@ public class Game1 : Game
         settingsButton.OnClick += () => Console.WriteLine("Settings");
         //gameManager.OnGameStart += () => IsMouseVisible = false;
         quitButton.OnClick += Exit;
-        
         Start();
         
     }
@@ -206,7 +207,7 @@ public class Game1 : Game
         hud = new HUD(player.Inventory,_font);
         player.world = world;
         player.PlayAnimation();
-        player.sortingOrder = 0.9f; //3f / totalLayers;
+        player.sortingOrder = 0.99f; //3f / totalLayers;
         player.collider.RegisterOnCollision(player.OnCollision);
         player.collider.RegisterOnTrigger(player.OnTrigger);
         player.OnFuelChange += hud.HandleFuelChange;
@@ -216,10 +217,11 @@ public class Game1 : Game
         startButton.Start();
         settingsButton.Start();
         quitButton.Start();
-
-        repairStation = new RepairStation("RepairStation", 0.3f, 20,player);
-        mineralsShop = new MineralsShop("MineralsShop",0.5f,30,player);
-        gasStation = new GasStation("GasStation",0.4f, 5,player);
+        shops.Add(new RepairStation("RepairStation", 0.3f, 65,player));
+        shops.Add(new MineralsShop("MineralsShop",0.5f,45,player));
+        shops.Add(new GasStation("GasStation",0.4f, 5,player));
+        //shops.Add(new GasStation("UpgradesShop",0.3f, 25,player));
+        MakeBlocksBelowShopsUnbreakable(shops);
         SceneManager.Instance.Start();
     }
 
@@ -238,13 +240,11 @@ public class Game1 : Game
                 break;
             case GameManager.GameState.Playing:
                 player.Update(gameTime);
-                gasStation.Update();
-                gasStation.UpdatePanel(gameTime);
-                repairStation.Update();
-                repairStation.UpdatePanel(gameTime);
-                mineralsShop.Update();
-                mineralsShop.UpdatePanel(gameTime);
-                
+                foreach (var shop in shops)
+                {
+                    shop.Update();
+                    shop.UpdatePanel(gameTime);
+                }
                 break;
             case GameManager.GameState.GameOver:
                 player.Update(gameTime);
@@ -270,15 +270,11 @@ public class Game1 : Game
             int row = (int)((player.tm.position.Y - groundLevel.Y) / blockSize);
             _spriteBatch.Draw(Button.Pixel, world.CellRect(row, col), Color.Red * 0.9f);*/
             SceneManager.Instance.Draw(_spriteBatch);
-            gasStation.Draw(_spriteBatch);
-            mineralsShop.Draw(_spriteBatch);
-            repairStation.Draw(_spriteBatch);
-            _spriteBatch.Draw(Button.Pixel, gasStation.EntranceBounds, Color.Black);
-            _spriteBatch.Draw(Button.Pixel, mineralsShop.EntranceBounds, Color.Blue);
-            _spriteBatch.Draw(Button.Pixel, repairStation.EntranceBounds, Color.Red);
-            gasStation.DrawPrompt(_spriteBatch);
-            repairStation.DrawPrompt(_spriteBatch);
-            mineralsShop.DrawPrompt(_spriteBatch);
+            foreach (var shop in shops)
+            {
+                shop.Draw(_spriteBatch);
+                shop.DrawPrompt(_spriteBatch);
+            }
         }
 
         if (gameManager.gameState == GameManager.GameState.GameOver)
@@ -289,9 +285,11 @@ public class Game1 : Game
         
         _spriteBatch.Begin();
         hud.Draw(_spriteBatch);
-        gasStation.DrawPanel(_spriteBatch);
-        repairStation.DrawPanel(_spriteBatch);
-        mineralsShop.DrawPanel(_spriteBatch);
+        foreach (var shop in shops)
+        {
+            shop.DrawPanel(_spriteBatch);
+        }
+
         if (gameManager.gameState == GameManager.GameState.MainMenu)
         {
             startButton.Draw(_spriteBatch);
@@ -300,5 +298,20 @@ public class Game1 : Game
         }
         _spriteBatch.End();
         base.Draw(gameTime);
+    }
+
+    private void MakeBlocksBelowShopsUnbreakable(List<Shop> shops)
+    {
+        foreach (Shop shop in shops)
+        {
+            Vector2 shopPos = shop.GetShopPosition();
+            int blocksCovered = shop.GetShopWidthInBlocks();
+            int shopStartingCol = world.WorldToCol(shopPos);
+            for (int c = shopStartingCol ; c < blocksCovered + shopStartingCol; c++)
+            {
+                Console.WriteLine(c);
+                world.SetBlockUnbreakable(0,c);
+            }
+        }
     }
 }

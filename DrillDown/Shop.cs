@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,10 +20,12 @@ public class Shop : IDrawable
     private Text promptText;
     private float promptOffsetY = -50f;
     private float promptOffsetX = 40f;
+    private float scale;
     public Rectangle EntranceBounds => entranceBounds;
 
     protected Shop(string spriteName, float scale, float worldXPos, Player player)
     {
+        this.scale = scale;
         this.player = player;
         shopSprite = new Sprite(spriteName);
         shopSprite.BottomLeftOrigin();
@@ -105,5 +108,14 @@ public class Shop : IDrawable
     {
         isOpen = false;
     }
-    
+
+    public Vector2 GetShopPosition()
+    {
+        return shopSprite.tm.position;
+    }
+
+    public int GetShopWidthInBlocks()
+    {
+        return (int)Math.Ceiling(shopSprite.texture.Width * scale / Game1.blockSize);
+    }
 }
