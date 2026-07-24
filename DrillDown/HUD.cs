@@ -19,10 +19,12 @@ public class HUD : IDrawable
     private int iconPaddingY = 2;
     private int textPaddingX = 32;
     private int textPaddingY = 45;
+    private Text moneyText;
+    private int slotSize = 64;
+    
     private Bar fuelBar;
     private Sprite fuelIcon;
-
-    private int slotSize = 64;
+    
     private Bar healthBar;
     private Sprite healthIcon;
 
@@ -30,8 +32,9 @@ public class HUD : IDrawable
     {
         fuelIcon = new Sprite("FuelIcon");
         healthIcon = new Sprite("HealthIcon");
+        healthIcon.tm.scale = new Vector2(1.2f, 1.2f);
         healthBar = new Bar(SpriteManager.GetSprite("Bar").texture,
-            SpriteManager.GetSprite("BarFill").texture,healthIcon.texture,new Vector2(margin,margin*2),Color.Red,Color.DarkRed);
+            SpriteManager.GetSprite("BarFill").texture,healthIcon.texture,new Vector2(margin,margin*2.2f),Color.Red,Color.DarkRed);
         fuelBar = new Bar(SpriteManager.GetSprite("Bar").texture,
             SpriteManager.GetSprite("BarFill").texture,fuelIcon.texture,new Vector2(margin,margin),Color.Yellow,Color.DarkGoldenrod);
         counterText = new Text
@@ -40,6 +43,14 @@ public class HUD : IDrawable
             color = Color.White,
             sortingOrder = 1f
         };
+        moneyText = new Text
+        {
+            text = "$" + "0",
+            font = font,
+            color = Color.White,
+            sortingOrder = 1f
+        };
+        moneyText.tm.position = new Vector2(Game1._screenTopCenter.X, 50f);
         counterText.tm.scale = new Vector2(0.7f, 0.7f);
         this.inventory = inventory;
         inventorySlots = new Sprite("InventorySlots");
@@ -65,8 +76,11 @@ public class HUD : IDrawable
             counterText.Draw(spriteBatch);
             slot++;
         }
+        
+        moneyText.DrawTextBackground(spriteBatch);
         fuelBar.Draw(spriteBatch);
         healthBar.Draw(spriteBatch);
+        moneyText.Draw(spriteBatch);
     }
 
     public void HandleFuelChange(float ratio)
@@ -78,4 +92,10 @@ public class HUD : IDrawable
     {
         healthBar.SetRatio(ratio);
     }
+
+    public void HandleMoneyChange(int amount)
+    {
+        moneyText.text = "$" + amount;
+    }
+    
 }

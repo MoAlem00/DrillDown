@@ -6,7 +6,7 @@ namespace DrillDown;
 
 public class Button : IUpdatable, IDrawable
 {
-    private readonly Texture2D texture;
+    private readonly Sprite sprite;
     private readonly Vector2 position;
     private readonly int width, height;
     private readonly Color tintColor;
@@ -19,9 +19,9 @@ public class Button : IUpdatable, IDrawable
     private readonly float sortingOrder;
     private bool isInside;
 
-    public Button(Texture2D texture, Vector2 position, int width, int height,float layer = 0.9f)//constructor for a button with texture
+    public Button(Sprite sprite, Vector2 position, int width, int height,float layer = 0.9f)//constructor for a button with texture
     {
-        this.texture = texture;
+        this.sprite = sprite;
         tintColor = Color.White;
         hoverColor = Color.Gray;
         this.position = position;
@@ -32,7 +32,7 @@ public class Button : IUpdatable, IDrawable
 
     public Button(Color color, Vector2 position, int width, int height, float layer = 0.9f)//constructor for a button without texture
     {
-        texture = null;
+        sprite = null;
         tintColor = color;
         hoverColor = Color.Gray;
         this.position = position;
@@ -64,7 +64,7 @@ public class Button : IUpdatable, IDrawable
         
     public void Draw(SpriteBatch spriteBatch)//draw the button either with texture or without
     {
-        Texture2D drawTexture = texture ?? Pixel;
+        Texture2D drawTexture = sprite.texture ?? Pixel;
         Color drawColor = isInside ? hoverColor : tintColor;
         spriteBatch.Draw(
             drawTexture,

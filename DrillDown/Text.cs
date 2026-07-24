@@ -39,4 +39,22 @@ public class Text : IUpdatable, IDrawable
             sortingOrder
         );
     }
+    
+    public Rectangle GetTextBackgroundRect(int padding = 5)
+    {
+        Vector2 size = font.MeasureString(text) * tm.scale;
+
+        return new Rectangle(
+            (int)(tm.position.X - size.X * 0.5f - padding),
+            (int)(tm.position.Y - size.Y * 0.5f - padding),
+            (int)size.X + padding * 2,
+            (int)size.Y + padding * 2
+        );
+    }
+
+    public void DrawTextBackground(SpriteBatch spriteBatch)
+    {
+        spriteBatch.Draw(Button.Pixel, GetTextBackgroundRect(), null, Color.Black * 0.7f,
+            0f, Vector2.Zero, SpriteEffects.None, sortingOrder - 0.01f);
+    }
 }

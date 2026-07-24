@@ -16,6 +16,7 @@ public class Game1 : Game
     public static Vector2 _screenLeftCenter;
     public static Vector2 _screenRightCorner;
     public static Vector2 _screenLeftCorner;
+    public static Vector2 _screenTopCenter;
     public static int _screenWidth;
     public const int blockSize = 64;
     private int columns = 50;
@@ -23,7 +24,8 @@ public class Game1 : Game
     private Player player;
     private Sprite backGround;
     private Sprite bottomBackGround;
-    private SpriteFont _font;
+    public static SpriteFont _font;
+    //public static SpriteFont _titleFont;
     private Button startButton, settingsButton, quitButton;
     private int buttonWidth = 200;
     private int buttonHeight = 80;
@@ -65,6 +67,8 @@ public class Game1 : Game
             _graphics.PreferredBackBufferHeight * 0.5f);
         _screenWidth = _graphics.PreferredBackBufferWidth;
         _screenRightCorner = new Vector2(_graphics.PreferredBackBufferWidth, 0);
+
+        _screenTopCenter = new Vector2(_graphics.PreferredBackBufferWidth * 0.5f, 0);
         
         _screenLeftCorner = Vector2.Zero;
     }
@@ -81,13 +85,17 @@ public class Game1 : Game
         groundLevel = _screenLeftCenter + yLevelOffset;
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _font = Content.Load<SpriteFont>("Fonts/GeistPixel");
-        Texture2D buttonTexture =  Content.Load<Texture2D>("Images/CrackedButton");
         
         Button.Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Button.Pixel.SetData(new Color[] { Color.White });
         
         
         SpriteManager.AddSprite("BackGround","Images/BG");
+        SpriteManager.AddSprite("Button","Images/CrackedButton");
+        SpriteManager.AddSprite("Button1","Images/CrackedButton1");
+        SpriteManager.AddSprite("CloseButton","Images/XButton");
+        SpriteManager.AddSprite("CloseButton32","Images/XButton32");
+        SpriteManager.AddSprite("CloseButton64","Images/XButton64");
         SpriteManager.AddSprite("Explosion","Images/ExplosionSheet",13,1);
         SpriteManager.AddSprite("EarthBackground","Images/EarthBackground");
         SpriteManager.AddSprite("DrillPod","Images/DrillPod");
@@ -171,22 +179,22 @@ public class Game1 : Game
         bottomBackGround = new Sprite("EarthBackground");
         backGround.sortingOrder = 0f / totalLayers;
 
-        
+        Sprite button = new Sprite("Button");
         buttonsCentered = _screenCenter - new Vector2(buttonWidth / 2f, buttonHeight / 2f);
         float textLayer = 5f / totalLayers;
-        startButton = new Button(buttonTexture, buttonsCentered, buttonWidth, buttonHeight);
+        startButton = new Button(button, buttonsCentered, buttonWidth, buttonHeight);
         startButton.SetText("Start", _font, Color.White,textLayer);
         
-        settingsButton = new Button(buttonTexture,buttonsCentered + buttonsOffset, buttonWidth, buttonHeight);
+        settingsButton = new Button(button,buttonsCentered + buttonsOffset, buttonWidth, buttonHeight);
         settingsButton.SetText("Settings", _font, Color.White,textLayer);
         
-        quitButton = new Button(buttonTexture,buttonsCentered + buttonsOffset*2, buttonWidth, buttonHeight);
+        quitButton = new Button(button,buttonsCentered + buttonsOffset*2, buttonWidth, buttonHeight);
         quitButton.SetText("Quit", _font, Color.White,textLayer);
         
         
         startButton.OnClick += gameManager.StartGame;
         settingsButton.OnClick += () => Console.WriteLine("Settings");
-        gameManager.OnGameStart += () => IsMouseVisible = false;
+        //gameManager.OnGameStart += () => IsMouseVisible = false;
         quitButton.OnClick += Exit;
         
         Start();
@@ -203,14 +211,15 @@ public class Game1 : Game
         player.collider.RegisterOnTrigger(player.OnTrigger);
         player.OnFuelChange += hud.HandleFuelChange;
         player.OnHealthChange += hud.HandleHealthChange;
+        player.OnMoneyChange += hud.HandleMoneyChange;
         player.OnPlayerDeath += gameManager.HandleGameOver;
         startButton.Start();
         settingsButton.Start();
         quitButton.Start();
 
-        repairStation = new RepairStation("RepairStation", 0.3f, 20);
-        mineralsShop = new MineralsShop("MineralsShop",0.5f,30);
-        gasStation = new GasStation("GasStation",0.4f, 5);
+        repairStation = new RepairStation("RepairStation", 0.3f, 20,player);
+        mineralsShop = new MineralsShop("MineralsShop",0.5f,30,player);
+        gasStation = new GasStation("GasStation",0.4f, 5,player);
         SceneManager.Instance.Start();
     }
 
@@ -229,7 +238,13 @@ public class Game1 : Game
                 break;
             case GameManager.GameState.Playing:
                 player.Update(gameTime);
-                gasStation.UpdatePanel(player);
+                gasStation.Update();
+                gasStation.UpdatePanel(gameTime);
+                repairStation.Update();
+                repairStation.UpdatePanel(gameTime);
+                mineralsShop.Update();
+                mineralsShop.UpdatePanel(gameTime);
+                
                 break;
             case GameManager.GameState.GameOver:
                 player.Update(gameTime);
@@ -258,9 +273,12 @@ public class Game1 : Game
             gasStation.Draw(_spriteBatch);
             mineralsShop.Draw(_spriteBatch);
             repairStation.Draw(_spriteBatch);
-            _spriteBatch.Draw(Button.Pixel, gasStation.Bounds, Color.Black);
-            _spriteBatch.Draw(Button.Pixel, mineralsShop.Bounds, Color.Blue);
-            _spriteBatch.Draw(Button.Pixel, repairStation.Bounds, Color.Red);
+            _spriteBatch.Draw(Button.Pixel, gasStation.EntranceBounds, Color.Black);
+            _spriteBatch.Draw(Button.Pixel, mineralsShop.EntranceBounds, Color.Blue);
+            _spriteBatch.Draw(Button.Pixel, repairStation.EntranceBounds, Color.Red);
+            gasStation.DrawPrompt(_spriteBatch);
+            repairStation.DrawPrompt(_spriteBatch);
+            mineralsShop.DrawPrompt(_spriteBatch);
         }
 
         if (gameManager.gameState == GameManager.GameState.GameOver)
@@ -272,6 +290,8 @@ public class Game1 : Game
         _spriteBatch.Begin();
         hud.Draw(_spriteBatch);
         gasStation.DrawPanel(_spriteBatch);
+        repairStation.DrawPanel(_spriteBatch);
+        mineralsShop.DrawPanel(_spriteBatch);
         if (gameManager.gameState == GameManager.GameState.MainMenu)
         {
             startButton.Draw(_spriteBatch);

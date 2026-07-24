@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace DrillDown;
 
@@ -15,8 +16,7 @@ public class Inventory : IEnumerable
     private float minCapacity = 0f;
     
     public Dictionary<Material, int> Materials => materials;
-
-    //public Dictionary<Material, int> SetMaterials { get => materials; set => materials = value; }
+    
     public Inventory(float startingCapacity)
     {
         materials = new Dictionary<Material, int>();
@@ -41,6 +41,15 @@ public class Inventory : IEnumerable
     public void UpgradeCapacity(float amount)
     {
         capacity = Math.Clamp(capacity + amount, minCapacity, maxCapacity);
+    }
+    
+    
+    public int GetOresTotalValue() => materials.Sum(m => m.Key.SellCost * m.Value);
+
+    public void ClearInventory()
+    {
+        materials.Clear();
+        currentWeight = 0f;
     }
     
     IEnumerator IEnumerable.GetEnumerator()

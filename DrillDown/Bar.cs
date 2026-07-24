@@ -6,9 +6,9 @@ namespace DrillDown;
 
 public class Bar
 {
-    public Texture2D background {get; set;}
-    private Texture2D fill {get; set;}
-    private Texture2D icon {get; set;}
+    public Texture2D background;
+    private Texture2D fill;
+    private Texture2D icon;
     private Vector2 position;
     private Color fillColor,bgColor;
     private Vector2 fillOffset = new Vector2(1f, 1f);

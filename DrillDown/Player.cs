@@ -10,7 +10,7 @@ public class Player : Animation
 {
     private const float gravity = 150f;
     private Vector2 velocity;
-    float speedMovement = 100;
+    float speedMovement = 150;
     private float minFallSpeed = 300f;
     private float fallDamageMultiplier = 0.2f;
     bool isColliding = false;
@@ -26,7 +26,8 @@ public class Player : Animation
     public float MaxFuel => maxFuel;
     private float health;
     public float Health => health;
-    private float maxHealth { get; set; } = 100f;
+    private float maxHealth = 100f;
+    public float MaxHealth => maxHealth;
     private float burnRate = 1f;
     private int money;
     public int Money => money;
@@ -248,13 +249,12 @@ public class Player : Animation
         }
         else isFlying = false;
         
-        /*if (Keyboard.GetState().IsKeyDown(Keys.I) && !showInv )
+        if (Keyboard.GetState().IsKeyDown(Keys.I))
         {
-            ShowInventory();
-            showInv = true;
+            inventory.GetOresTotalValue();
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.F))
+        /*if (Keyboard.GetState().IsKeyDown(Keys.F))
         {
             showInv = false;
         }*/
