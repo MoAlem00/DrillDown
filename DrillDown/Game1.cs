@@ -26,7 +26,7 @@ public class Game1 : Game
     private Sprite bottomBackGround;
     public static SpriteFont _font;
     //public static SpriteFont _titleFont;
-    private Button startButton, settingsButton, quitButton;
+    private List<Button> menuButtons = new();
     private int buttonWidth = 200;
     private int buttonHeight = 80;
     private Vector2 buttonsOffset = new Vector2(0,100);
@@ -184,20 +184,21 @@ public class Game1 : Game
         Sprite button = new Sprite("Button");
         buttonsCentered = _screenCenter - new Vector2(buttonWidth / 2f, buttonHeight / 2f);
         float textLayer = 5f / totalLayers;
-        startButton = new Button(button, buttonsCentered, buttonWidth, buttonHeight);
-        startButton.SetText("Start", _font, Color.White,textLayer);
-        
-        settingsButton = new Button(button,buttonsCentered + buttonsOffset, buttonWidth, buttonHeight);
-        settingsButton.SetText("Settings", _font, Color.White,textLayer);
-        
-        quitButton = new Button(button,buttonsCentered + buttonsOffset*2, buttonWidth, buttonHeight);
-        quitButton.SetText("Quit", _font, Color.White,textLayer);
+        menuButtons.Add(new Button(button, buttonsCentered, buttonWidth, buttonHeight));
+        menuButtons[0].SetText("Start", _font, Color.White,textLayer);
         
         
-        startButton.OnClick += gameManager.StartGame;
-        settingsButton.OnClick += () => Console.WriteLine("Settings");
+        menuButtons.Add(new Button(button,buttonsCentered + buttonsOffset, buttonWidth, buttonHeight));
+        menuButtons[1].SetText("Settings", _font, Color.White,textLayer);
+        
+        menuButtons.Add(new Button(button,buttonsCentered + buttonsOffset*2, buttonWidth, buttonHeight));
+        menuButtons[2].SetText("Quit", _font, Color.White,textLayer);
+        
+        
+        menuButtons[0].OnClick += gameManager.StartGame;
+        menuButtons[1].OnClick += () => Console.WriteLine("Settings");
         //gameManager.OnGameStart += () => IsMouseVisible = false;
-        quitButton.OnClick += Exit;
+        menuButtons[2].OnClick += Exit;
         Start();
         
     }
@@ -214,11 +215,12 @@ public class Game1 : Game
         player.OnHealthChange += hud.HandleHealthChange;
         player.OnMoneyChange += hud.HandleMoneyChange;
         player.OnPlayerDeath += gameManager.HandleGameOver;
-        startButton.Start();
-        settingsButton.Start();
-        quitButton.Start();
-        shops.Add(new RepairStation("RepairStation", 0.3f, 65,player));
-        shops.Add(new MineralsShop("MineralsShop",0.5f,45,player));
+        foreach (var button in menuButtons)
+        {
+            button.Start();
+        }
+        shops.Add(new RepairStation("RepairStation", 0.3f, 35,player));
+        shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
         shops.Add(new GasStation("GasStation",0.4f, 5,player));
         //shops.Add(new GasStation("UpgradesShop",0.3f, 25,player));
         MakeBlocksBelowShopsUnbreakable(shops);
@@ -234,9 +236,10 @@ public class Game1 : Game
         switch (gameManager.gameState)
         {
             case GameManager.GameState.MainMenu:
-                startButton.Update(gameTime);
-                settingsButton.Update(gameTime);
-                quitButton.Update(gameTime);
+                foreach (var button in menuButtons)
+                {
+                    button.Update(gameTime);
+                }
                 break;
             case GameManager.GameState.Playing:
                 player.Update(gameTime);
@@ -292,9 +295,10 @@ public class Game1 : Game
 
         if (gameManager.gameState == GameManager.GameState.MainMenu)
         {
-            startButton.Draw(_spriteBatch);
-            settingsButton.Draw(_spriteBatch);
-            quitButton.Draw(_spriteBatch);
+            foreach (var button in menuButtons)
+            {
+                button.Draw(_spriteBatch);
+            }
         }
         _spriteBatch.End();
         base.Draw(gameTime);
@@ -308,10 +312,7 @@ public class Game1 : Game
             int blocksCovered = shop.GetShopWidthInBlocks();
             int shopStartingCol = world.WorldToCol(shopPos);
             for (int c = shopStartingCol ; c < blocksCovered + shopStartingCol; c++)
-            {
-                Console.WriteLine(c);
                 world.SetBlockUnbreakable(0,c);
-            }
         }
     }
 }
