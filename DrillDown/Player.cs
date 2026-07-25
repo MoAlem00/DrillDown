@@ -74,7 +74,7 @@ public class Player : Animation
         health = maxHealth;
         OnHealthChange?.Invoke(health / maxHealth);
         OnFuelChange?.Invoke(fuel / maxFuel);
-        tm.position = Game1._screenCenter;
+        tm.position = new Vector2(Game1._screenCenter.X, Game1.groundLevel.Y - 30);
         tm.scale = new Vector2(0.8f, 0.8f);
         explode.tm.scale = new Vector2(2.5f, 2.5f);
         explode.sortingOrder = 1f;

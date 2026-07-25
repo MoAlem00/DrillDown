@@ -5,17 +5,21 @@ namespace DrillDown;
 public class Camera
 {
     public Matrix position;
+    private World world;
 
-    public Camera()
+    public Camera(World world)
     {
+        this.world = world;
     }
 
     public void Follow(Player target)
     {
+        float halfW = Game1._screenCenter.X;
+        float halfH = Game1._screenCenter.Y;
+        float x = MathHelper.Clamp(target.tm.position.X,world.GetWorldLeft()+halfW,world.GetWorldRight()-halfW);
+        float y = MathHelper.Min(target.tm.position.Y,world.GetWorldBottom() - halfH);
         position = Matrix.CreateTranslation(
-            -target.tm.position.X + Game1._screenCenter.X,
-            -target.tm.position.Y + Game1._screenCenter.Y,
-            0);
+            -x + halfW,-y + halfH,0);
     }
     
 }

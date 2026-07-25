@@ -19,8 +19,8 @@ public class Game1 : Game
     public static Vector2 _screenTopCenter;
     public static int _screenWidth;
     public const int blockSize = 64;
-    private int columns = 50;
-    private int rows = 50;
+    private int columns = 55;
+    private int rows = 70;
     private Player player;
     private Sprite backGround;
     private Sprite bottomBackGround;
@@ -40,9 +40,6 @@ public class Game1 : Game
     private Camera camera;
     private HUD hud;
     private List<Shop> shops = new();
-    /*private Shop gasStation;
-    private Shop mineralsShop;
-    private Shop repairStation;*/
 
     
     public Game1()
@@ -50,7 +47,7 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         spriteManager = new SpriteManager(Content);
         gameManager = new GameManager();
-        camera = new Camera();
+        
         
         
         Content.RootDirectory = "Content";
@@ -175,7 +172,7 @@ public class Game1 : Game
         grid = worldGenerator.GenerateWorld();
 
         world = new World(grid, blockSize, groundLevel, 4f/totalLayers);
-        
+        camera = new Camera(world);
         
         backGround = new Sprite("BackGround");
         bottomBackGround = new Sprite("EarthBackground");
@@ -222,7 +219,7 @@ public class Game1 : Game
         shops.Add(new RepairStation("RepairStation", 0.3f, 35,player));
         shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
         shops.Add(new GasStation("GasStation",0.4f, 5,player));
-        //shops.Add(new GasStation("UpgradesShop",0.3f, 25,player));
+        shops.Add(new GasStation("UpgradesShop",0.3f, 50,player));
         MakeBlocksBelowShopsUnbreakable(shops);
         SceneManager.Instance.Start();
     }
@@ -263,7 +260,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp,
             transformMatrix: camera.position);
-        backGround.Draw(_spriteBatch);
+        //backGround.Draw(_spriteBatch);
         world.Draw(_spriteBatch);
         
         if (gameManager.gameState == GameManager.GameState.Playing)

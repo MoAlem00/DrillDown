@@ -102,4 +102,10 @@ public class World : IDrawable
         if (block == null) return;
         block.SetBlockUnbreakable();
     }
+
+    public float GetWorldRight() => groundLevel.X + columns * blockSize;
+    public float GetWorldLeft() => groundLevel.X;
+    public float GetWorldTop() => groundLevel.Y;
+    public float GetWorldBottom() => groundLevel.Y + rows * blockSize;
+    
 }
