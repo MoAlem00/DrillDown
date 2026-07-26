@@ -8,9 +8,9 @@ namespace DrillDown;
 public enum DrillDirection { None, Down, Left, Right}
 public class Player : Animation
 {
-    private const float gravity = 150f;
+    private const float gravity = 200f;
     private Vector2 velocity;
-    float speedMovement = 150;
+    float speedMovement = 230;
     private float minFallSpeed = 300f;
     private float fallDamageMultiplier = 0.2f;
     bool isColliding = false;
@@ -57,8 +57,6 @@ public class Player : Animation
     
     public Player() : base("DrillPod")
     {
-        collider = SceneManager.Create<Collider>();
-        collider.Parent = this;
         inventory = new Inventory(startingCapacity);
         flame = new Animation("Flame");
         explode = new Animation("Explosion");
@@ -190,19 +188,7 @@ public class Player : Animation
             velocity.Y = 0;
         }
     }
-    public void OnCollision(Collider selfCollider, Collider otherCollider)
-    {
-        isColliding = true;
-        Console.WriteLine("Self " + selfCollider.Parent + " is colliding with " + otherCollider.Parent);
-    }
     
-    public void OnTrigger(Collider selfCollider, Collider otherCollider)
-    {
-        Console.WriteLine("Self " + selfCollider.Parent + " is trigger with " + otherCollider.Parent);
-        
-        SceneManager.Remove(otherCollider);
-        SceneManager.Remove(otherCollider.Parent);
-    }
 
     private void AddOreToInventory(Material material)
     {
@@ -249,15 +235,6 @@ public class Player : Animation
         }
         else isFlying = false;
         
-        if (Keyboard.GetState().IsKeyDown(Keys.I))
-        {
-            inventory.GetOresTotalValue();
-        }
-
-        /*if (Keyboard.GetState().IsKeyDown(Keys.F))
-        {
-            showInv = false;
-        }*/
     }
 
     private void Die()

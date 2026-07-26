@@ -10,7 +10,7 @@ public class MineralsShop : Shop
     private Text totalValueText;
     public MineralsShop(string spriteName, float scale, float worldXPos, Player player) : base(spriteName, scale, worldXPos, player)
     {
-        panel = new Panel(new Sprite("Panel"), 3, 3);
+        panel = new Panel(new Sprite("Panel1"), 3, 3);
         panel.SetTitle("MineralsShop");
         panel.AddButton(7,"Sell All",() => SellAll());
         panel.AddCloseButton(2,CloseShop);

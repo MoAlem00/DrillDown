@@ -5,10 +5,9 @@ public class GasStation : Shop
 {
     private float gasPrice = 0.7f;
 
-
     public GasStation(string spriteName, float scale, float worldXPos, Player player) : base(spriteName, scale, worldXPos, player)
     {
-        panel = new Panel(new Sprite("Panel"), 3, 3);
+        panel = new Panel(new Sprite("Panel1"), 3, 3);
         panel.SetTitle("Gas Station");
         panel.AddButton(3,"20$", () => BuyFuel(20));
         panel.AddButton(4,"50$",() => BuyFuel(50));

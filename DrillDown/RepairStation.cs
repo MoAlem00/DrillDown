@@ -8,7 +8,7 @@ public class RepairStation : Shop
     private float repairPrice = 10f;
     public RepairStation(string spriteName, float scale, float worldXPos, Player player) : base(spriteName, scale, worldXPos, player)
     {
-        panel = new Panel(new Sprite("Panel"), 3, 3);
+        panel = new Panel(new Sprite("Panel1"), 3, 3);
         panel.SetTitle("Repair Station");
         panel.AddButton(3,"50$",() => Repair(50));
         panel.AddButton(4,"100$",() => Repair(100));
