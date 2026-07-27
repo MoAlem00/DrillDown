@@ -113,19 +113,23 @@ public class Player : Animation
         int col = world.WorldToCol(tm.position);
         
         float drillAmount = deltaTime * drillPower;
+        Console.WriteLine(drillAmount);
         switch (drillDirection)
         {
             case DrillDirection.Down:
                 ore = world.Drill(row + 1, col, drillAmount);
+                AddOreToInventory(ore);
                 break;
             case DrillDirection.Left: 
                 ore = world.Drill(row, col - 1, drillAmount); 
+                AddOreToInventory(ore);
                 break;
             case DrillDirection.Right: 
                 ore = world.Drill(row, col + 1, drillAmount);
+                AddOreToInventory(ore);
                 break;
         }
-        AddOreToInventory(ore);
+        
         if (drillDirection != DrillDirection.None)
         {
             animations[drillDirection].tm.position = tm.position + offsets[drillDirection];
