@@ -13,37 +13,37 @@ public class Player : Animation
     float speedMovement = 230;
     private float minFallSpeed = 300f;
     private float fallDamageMultiplier = 0.2f;
-    bool isColliding = false;
-    private bool isFlying = false;
+    private bool isFlying;
     private bool isDead;
     private bool isGrounded;
     private float deltaTime;
-    private bool showInv;
     private float startingCapacity = 100f;
     private float fuel;
-    public float Fuel => fuel;
     private float maxFuel = 100f;
-    public float MaxFuel => maxFuel;
     private float health;
-    public float Health => health;
     private float maxHealth = 100f;
-    public float MaxHealth => maxHealth;
     private float burnRate = 1f;
     private int money;
-    public int Money => money;
+    private float drillPower = 1f;
+    private float maxDrillPower = 4f;
+    private Vector2 prevPosition;
     private Material ore;
     private Animation flame;
     private Animation explode;
     public World world { get; set; }
-    public Collider collider { get; }
     private Inventory inventory;
     public Inventory Inventory => inventory;
     public event Action<float> OnFuelChange;
     public event Action<float> OnHealthChange;
     public event Action<int> OnMoneyChange;
     public event Action OnPlayerDeath;
+    public float Fuel => fuel;
+    public float MaxFuel => maxFuel;
+    public float Health => health;
+    public float MaxHealth => maxHealth;
+    public int Money => money;
+    public float DrillPower => drillPower;
     
-    Vector2 prevPosition;
     
     private DrillDirection drillDirection = DrillDirection.None;
     private DrillDirection movingDirection = DrillDirection.None;
@@ -112,22 +112,20 @@ public class Player : Animation
         int row = world.WorldToRow(tm.position);
         int col = world.WorldToCol(tm.position);
         
+        float drillAmount = deltaTime * drillPower;
         switch (drillDirection)
         {
-            case DrillDirection.Down: 
-                ore = world.Drill(row + 1, col, deltaTime);
-                AddOreToInventory(ore);
+            case DrillDirection.Down:
+                ore = world.Drill(row + 1, col, drillAmount);
                 break;
             case DrillDirection.Left: 
-                ore = world.Drill(row, col - 1, deltaTime); 
-                AddOreToInventory(ore);
+                ore = world.Drill(row, col - 1, drillAmount); 
                 break;
             case DrillDirection.Right: 
-                ore = world.Drill(row, col + 1, deltaTime);
-                AddOreToInventory(ore);
+                ore = world.Drill(row, col + 1, drillAmount);
                 break;
         }
-        
+        AddOreToInventory(ore);
         if (drillDirection != DrillDirection.None)
         {
             animations[drillDirection].tm.position = tm.position + offsets[drillDirection];
@@ -280,5 +278,10 @@ public class Player : Animation
         money -= amount;
         OnMoneyChange?.Invoke(money);
         return true;
+    }
+
+    public void UpgradeDrill(float amount)
+    {
+        drillPower = Math.Clamp(drillPower + amount, 0, maxDrillPower);
     }
 }
