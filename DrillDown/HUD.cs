@@ -55,7 +55,7 @@ public class HUD : IDrawable
         this.inventory = inventory;
         inventorySlots = new Sprite("InventorySlots");
         imageWidth = inventorySlots.texture.Width;
-        inventorySlots.TopLeftOrigin();
+        inventorySlots.anchor = Anchor.TopLeft;
         inventorySlotsOrigin = new Vector2(Game1._screenWidth - imageWidth - margin, margin);
     }
     public void Draw(SpriteBatch spriteBatch)

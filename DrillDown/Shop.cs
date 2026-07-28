@@ -28,7 +28,7 @@ public class Shop : IDrawable
         this.scale = scale;
         this.player = player;
         shopSprite = new Sprite(spriteName);
-        shopSprite.BottomLeftOrigin();
+        shopSprite.anchor = Anchor.BottomLeft;
         shopSprite.tm.scale = new Vector2(scale, scale);
         shopSprite.tm.position = new Vector2(Game1.groundLevel.X + worldXPos * Game1.blockSize, Game1.groundLevel.Y);
         shopSprite.sortingOrder = 0.8f;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Intrinsics.X86;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -32,6 +31,22 @@ public class Panel
         cellW = scaledWidth / cols;
     }
     
+    public void DrawGridDebug(SpriteBatch spriteBatch)
+    {
+        int t = 2;   // border thickness
+        for (int i = 0; i < cols * rows; i++)
+        {
+            Vector2 pos = GetSlotPosition(i);
+            int x = (int)pos.X, y = (int)pos.Y;
+
+            // top, bottom, left, right edges
+            spriteBatch.Draw(Button.Pixel, new Rectangle(x, y, cellW, t), Color.Red);
+            spriteBatch.Draw(Button.Pixel, new Rectangle(x, y + cellH - t, cellW, t), Color.Red);
+            spriteBatch.Draw(Button.Pixel, new Rectangle(x, y, t, cellH), Color.Red);
+            spriteBatch.Draw(Button.Pixel, new Rectangle(x + cellW - t, y, t, cellH), Color.Red);
+        }
+    }
+    
     
     public void UpdatePanel(GameTime gameTime)
     {
@@ -45,6 +60,7 @@ public class Panel
         titleText?.Draw(spriteBatch);
         foreach (var button in buttons)
             button.Draw(spriteBatch);
+        DrawGridDebug(spriteBatch);
     }
 
 
@@ -60,10 +76,15 @@ public class Panel
         return GetSlotPosition(slotIndex) + new Vector2(cellW * 0.5f, cellH * 0.5f); 
     }
 
+    public Vector2 GetSlotUpperCenter(int slotIndex)
+    {
+        return GetSlotCenter(slotIndex) - new Vector2(0, cellH * 0.5f);
+    }
+
     public void AddButton(int slotIndex, string label, Action onClick, int width = 200, int height = 80)
     {
         buttonSprite = new Sprite("Button1");
-        Vector2 pos = GetSlotPosition(slotIndex) + new Vector2(padding, padding);
+        Vector2 pos = GetSlotCenter(slotIndex);// + new Vector2(padding, padding);
         Button b = new Button(buttonSprite, pos, width, height);
         b.SetText(label, Game1._font, Color.White);
         b.OnClick += onClick;
@@ -74,7 +95,7 @@ public class Panel
     public void AddCloseButton(int slotIndex, Action onClick)
     {
         buttonSprite = new Sprite("CloseButton64");
-        Vector2 pos = GetSlotPosition(slotIndex) + new Vector2(padding * 7, padding*2);
+        Vector2 pos = GetSlotCenter(slotIndex);// + new Vector2(padding * 7, padding*2);
         Button b = new Button(buttonSprite, pos, 64, 64);
         b.OnClick += onClick;
         b.Start();

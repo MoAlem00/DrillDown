@@ -10,6 +10,7 @@ public class Text : IUpdatable, IDrawable
     public float sortingOrder = 0;
     public SpriteEffects effects = SpriteEffects.None;
     public string text = string.Empty;
+    public bool centered = true;
     
     
     public virtual void Start()
@@ -25,7 +26,7 @@ public class Text : IUpdatable, IDrawable
     public void Draw(SpriteBatch spriteBatch)
     {
         if (font == null || text == null) return;
-        Vector2 textCenter = font.MeasureString(text) * 0.5f;
+        Vector2 origin = centered ? font.MeasureString(text) * 0.5f : Vector2.Zero;
         
         spriteBatch.DrawString(
             font,
@@ -33,7 +34,7 @@ public class Text : IUpdatable, IDrawable
             tm.position, 
             color,
             MathHelper.ToRadians(tm.rotation),
-            textCenter,
+            origin,
             tm.scale,
             effects,
             sortingOrder

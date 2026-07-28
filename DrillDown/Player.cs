@@ -57,12 +57,15 @@ public class Player : Animation
     
     public Player() : base("DrillPod")
     {
+        anchor = Anchor.Center;
         inventory = new Inventory(startingCapacity);
         flame = new Animation("Flame");
+        flame.anchor = Anchor.Center;
         explode = new Animation("Explosion");
-        animations.Add(DrillDirection.Down, new Animation("DownDrill"));
-        animations.Add(DrillDirection.Right, new Animation("RightDrill"));
-        animations.Add(DrillDirection.Left, new Animation("LeftDrill"));
+        explode.anchor = Anchor.Center;
+        animations.Add(DrillDirection.Down, new Animation("DownDrill") { anchor = Anchor.Center });
+        animations.Add(DrillDirection.Right, new Animation("RightDrill") { anchor = Anchor.Center });
+        animations.Add(DrillDirection.Left, new Animation("LeftDrill") { anchor = Anchor.Center });
     }
 
     public override void Start()
@@ -72,7 +75,7 @@ public class Player : Animation
         health = maxHealth;
         OnHealthChange?.Invoke(health / maxHealth);
         OnFuelChange?.Invoke(fuel / maxFuel);
-        tm.position = new Vector2(Game1._screenCenter.X, Game1.groundLevel.Y - 30);
+        tm.position = new Vector2(Game1._screenCenter.X, Game1.groundLevel.Y - 55);
         tm.scale = new Vector2(0.8f, 0.8f);
         explode.tm.scale = new Vector2(2.5f, 2.5f);
         explode.sortingOrder = 1f;
@@ -113,7 +116,6 @@ public class Player : Animation
         int col = world.WorldToCol(tm.position);
         
         float drillAmount = deltaTime * drillPower;
-        Console.WriteLine(drillAmount);
         switch (drillDirection)
         {
             case DrillDirection.Down:
