@@ -33,7 +33,7 @@ public class Panel
     
     public void DrawGridDebug(SpriteBatch spriteBatch)
     {
-        int t = 2;   // border thickness
+        int t = 1;   // border thickness
         for (int i = 0; i < cols * rows; i++)
         {
             Vector2 pos = GetSlotPosition(i);
@@ -63,8 +63,11 @@ public class Panel
         DrawGridDebug(spriteBatch);
     }
 
-
-    public Vector2 GetSlotPosition(int slotIndex)
+    private Vector2 GetSlotTopRightCorner(int slotIndex)
+    {
+        return GetSlotPosition(slotIndex) + new Vector2(cellW, 0);
+    }
+    private Vector2 GetSlotPosition(int slotIndex)
     {
         int col = slotIndex % cols;
         int row = slotIndex / cols;
@@ -84,7 +87,8 @@ public class Panel
     public void AddButton(int slotIndex, string label, Action onClick, int width = 200, int height = 80)
     {
         buttonSprite = new Sprite("Button1");
-        Vector2 pos = GetSlotCenter(slotIndex);// + new Vector2(padding, padding);
+        Vector2 btnSize = new Vector2(width /2f, height/2f);//used to center the buttons to the center of the cell
+        Vector2 pos = GetSlotCenter(slotIndex) - btnSize;
         Button b = new Button(buttonSprite, pos, width, height);
         b.SetText(label, Game1._font, Color.White);
         b.OnClick += onClick;
@@ -95,7 +99,9 @@ public class Panel
     public void AddCloseButton(int slotIndex, Action onClick)
     {
         buttonSprite = new Sprite("CloseButton64");
-        Vector2 pos = GetSlotCenter(slotIndex);// + new Vector2(padding * 7, padding*2);
+        float btnWidth = buttonSprite.texture.Width;
+        //float btnHeight = buttonSprite.texture.Height;
+        Vector2 pos = GetSlotTopRightCorner(slotIndex) - new Vector2(btnWidth, 0);
         Button b = new Button(buttonSprite, pos, 64, 64);
         b.OnClick += onClick;
         b.Start();

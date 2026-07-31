@@ -15,6 +15,7 @@ public class Inventory : IEnumerable
     private float maxCapacity = 300f;
     private float minCapacity = 0f;
     
+    public float MaxCapacity => maxCapacity;
     public Dictionary<Material, int> Materials => materials;
     
     public Inventory(float startingCapacity)

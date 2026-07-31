@@ -4,8 +4,8 @@ namespace DrillDown;
 
 public class Upgrades
 {
-    private int[] upgradesCosts = [5000, 10000, 20000, 50000, 100000];
-    private int level = 0;
+    public int[] upgradesCosts = [5000, 10000, 20000, 50000, 100000];
+    public int level = 0;
     private float[] upgradesValues;
     
     public Upgrades(float[] upgradesValues)
@@ -13,7 +13,7 @@ public class Upgrades
         this.upgradesValues = upgradesValues;
     }
     
-    public float CurrentValue() => upgradesValues[level];
+    public float CurrentValue() => upgradesValues[level-1];
     public bool IsMaxed => level >= upgradesCosts.Length;
     public int NextCost => IsMaxed ? -1 : upgradesCosts[level];
 

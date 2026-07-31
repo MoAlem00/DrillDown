@@ -135,7 +135,7 @@ public class Game1 : Game
         Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,1f,50);
         Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,1f,500);
         Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,1f,1000);
-        Material emeraldOre = new Material("EmeraldOre",SpriteManager.GetSprite("EmeraldOre").texture,1f,2000);
+        Material emeraldOre = new Material("EmeraldOre",SpriteManager.GetSprite("EmeraldOre").texture,1f,1000000);
         Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,2000);
         Material copperOre = new Material("CopperOre",SpriteManager.GetSprite("CopperOre").texture,1f,2000);
         Material rubyOre = new Material("RubyOre",SpriteManager.GetSprite("RubyOre").texture,1f,2000);
@@ -189,7 +189,7 @@ public class Game1 : Game
         shops.Add(new RepairStation("RepairStation", 0.3f, 35,player));
         shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
         shops.Add(new GasStation("GasStation",0.4f, 5,player));
-        shops.Add(new GasStation("UpgradesShop",0.3f, 50,player));
+        shops.Add(new UpgradesShop("UpgradesShop",0.3f, 50,player));
         MakeBlocksBelowShopsUnbreakable(shops);
         mainMenu = new MainMenu(new Sprite("MenuBackground"));
     }

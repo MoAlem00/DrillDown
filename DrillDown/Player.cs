@@ -238,6 +238,11 @@ public class Player : Animation
             velocity.Y = -speedMovement;
         }
         else isFlying = false;
+
+        if (Keyboard.GetState().IsKeyDown(Keys.P))
+        {
+            ShowStats();
+        }
         
     }
 
@@ -289,5 +294,18 @@ public class Player : Animation
     public void UpgradeDrill(float amount)
     {
         drillPower = Math.Clamp(drillPower + amount, 0, maxDrillPower);
+    }
+
+    public void UpgradeFuel(float amount)
+    {
+        maxFuel = Math.Clamp(maxFuel + amount, 0, 200f);
+    }
+
+    private void ShowStats()
+    {
+        Console.WriteLine($"Drill Power: {drillPower}");
+        Console.WriteLine($"Drill Max Health: {maxHealth}");
+        Console.WriteLine($"Drill Max Fuel: {maxFuel}");
+        Console.WriteLine($"Capacity: {inventory.MaxCapacity}");
     }
 }

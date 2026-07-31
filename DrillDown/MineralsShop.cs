@@ -11,6 +11,7 @@ public class MineralsShop : Shop
 {
     private Text totalValueText;
     private Text oresList;
+    private Text emptyText;
     public MineralsShop(string spriteName, float scale, float worldXPos, Player player) : base(spriteName, scale, worldXPos, player)
     {
         panel = new Panel(new Sprite("Panel1"), 5, 5);
@@ -29,6 +30,12 @@ public class MineralsShop : Shop
             color = Color.Black,
             sortingOrder = 1f,
             centered = false,
+        };
+        emptyText = new Text
+        {
+            font = Game1._font,
+            color = Color.White,
+            sortingOrder = 1f,
         };
         totalValueText.tm.position = panel.GetSlotCenter(17);
     }
@@ -49,6 +56,13 @@ public class MineralsShop : Shop
         int row = 0;
         int padding = 0;
         Vector2 startPos = panel.GetSlotUpperCenter(5);
+        if (player.Inventory.Materials.Count == 0)
+        {
+            emptyText.text = "No Ores To Sell";
+            emptyText.tm.position = panel.GetSlotCenter(7);
+        }
+        else
+            emptyText.text = "";
         foreach (var material in player.Inventory.Materials)
         {
             oresList.tm.scale = new Vector2(0.6f, 0.6f);
@@ -63,7 +77,9 @@ public class MineralsShop : Shop
             oresList.Draw(spriteBatch);
             row++;
         }
+        emptyText.Draw(spriteBatch);
         totalValueText.DrawTextBackground(spriteBatch);
         totalValueText.Draw(spriteBatch);
     }
+    
 }
