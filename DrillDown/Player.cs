@@ -17,7 +17,7 @@ public class Player : Animation
     private bool isDead;
     private bool isGrounded;
     private float deltaTime;
-    private float startingCapacity = 100f;
+    private float startingCapacity = 10f;
     private float fuel;
     private float maxFuel = 100f;
     private float health;
@@ -301,11 +301,16 @@ public class Player : Animation
         maxFuel = Math.Clamp(maxFuel + amount, 0, 200f);
     }
 
+    public void UpgradeArmor(float amount)
+    {
+        maxHealth = Math.Clamp(maxHealth + amount, 0, 200f);
+    }
+
     private void ShowStats()
     {
         Console.WriteLine($"Drill Power: {drillPower}");
-        Console.WriteLine($"Drill Max Health: {maxHealth}");
-        Console.WriteLine($"Drill Max Fuel: {maxFuel}");
-        Console.WriteLine($"Capacity: {inventory.MaxCapacity}");
+        Console.WriteLine($"Max Health: {maxHealth}");
+        Console.WriteLine($"Max Fuel: {maxFuel}");
+        Console.WriteLine($"Capacity: {inventory.Capacity}");
     }
 }

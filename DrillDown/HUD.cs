@@ -21,6 +21,7 @@ public class HUD : IDrawable
     private int textPaddingY = 45;
     private Text moneyText;
     private int slotSize = 64;
+    private Text capacity;
     
     private Bar fuelBar;
     private Sprite fuelIcon;
@@ -50,6 +51,13 @@ public class HUD : IDrawable
             color = Color.White,
             sortingOrder = 1f
         };
+        capacity = new Text
+        {
+            text = "0" + "Kg",
+            font = font,
+            color = Color.White,
+            sortingOrder = 1f
+        };
         moneyText.tm.position = new Vector2(Game1._screenTopCenter.X, 50f);
         counterText.tm.scale = new Vector2(0.7f, 0.7f);
         this.inventory = inventory;
@@ -57,6 +65,7 @@ public class HUD : IDrawable
         imageWidth = inventorySlots.texture.Width;
         inventorySlots.anchor = Anchor.TopLeft;
         inventorySlotsOrigin = new Vector2(Game1._screenWidth - imageWidth - margin, margin);
+        capacity.tm.position = new Vector2(Game1._screenRightCorner.X - imageWidth - 100, 50f);
     }
     public void Draw(SpriteBatch spriteBatch)
     {
@@ -78,6 +87,7 @@ public class HUD : IDrawable
         }
         
         moneyText.DrawTextBackground(spriteBatch);
+        capacity.Draw(spriteBatch);
         fuelBar.Draw(spriteBatch);
         healthBar.Draw(spriteBatch);
         moneyText.Draw(spriteBatch);
@@ -96,6 +106,11 @@ public class HUD : IDrawable
     public void HandleMoneyChange(int amount)
     {
         moneyText.text = "$" + amount;
+    }
+
+    public void HandleCapacityChange(int amount)
+    {
+        capacity.text = amount + "Kg" + "/" + inventory.Capacity + "Kg";
     }
     
 }

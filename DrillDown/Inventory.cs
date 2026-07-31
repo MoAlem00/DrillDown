@@ -12,9 +12,11 @@ public class Inventory : IEnumerable
     private float currentWeight;
     private int materialsSellCost;
     private float capacity;
-    private float maxCapacity = 300f;
+    private float maxCapacity = 400f;
     private float minCapacity = 0f;
+    public event Action<int> OnCapacityChange;
     
+    public float Capacity => capacity;
     public float MaxCapacity => maxCapacity;
     public Dictionary<Material, int> Materials => materials;
     
@@ -36,12 +38,14 @@ public class Inventory : IEnumerable
         else 
             materials[material] = 1;
         currentWeight += material.Weight;
+        OnCapacityChange?.Invoke((int)currentWeight);
         return true;
     }
 
     public void UpgradeCapacity(float amount)
     {
         capacity = Math.Clamp(capacity + amount, minCapacity, maxCapacity);
+        OnCapacityChange?.Invoke((int)currentWeight);
     }
     
     
@@ -51,6 +55,7 @@ public class Inventory : IEnumerable
     {
         materials.Clear();
         currentWeight = 0f;
+        OnCapacityChange?.Invoke((int)currentWeight);
     }
     
     IEnumerator IEnumerable.GetEnumerator()

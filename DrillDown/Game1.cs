@@ -183,6 +183,7 @@ public class Game1 : Game
         player.OnFuelChange += hud.HandleFuelChange;
         player.OnHealthChange += hud.HandleHealthChange;
         player.OnMoneyChange += hud.HandleMoneyChange;
+        player.Inventory.OnCapacityChange += hud.HandleCapacityChange;
         player.OnPlayerDeath += GameManager.Instance.HandleGameOver;
         GameManager.Instance.OnQuitGame += Exit;
         player.Start();
