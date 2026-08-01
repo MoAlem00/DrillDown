@@ -109,6 +109,8 @@ public class Game1 : Game
         SpriteManager.AddSprite("UpgradesShop","Shops/UpgradesShop");
         //SpriteManager.AddSprite("Panel","Images/Panel");
         SpriteManager.AddSprite("Panel1","Images/Panel1");
+        SpriteManager.AddSprite("Drill","Images/DrillRight");
+        SpriteManager.AddSprite("Cargo","Images/CargoIcon");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
@@ -190,7 +192,7 @@ public class Game1 : Game
         shops.Add(new RepairStation("RepairStation", 0.3f, 35,player));
         shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
         shops.Add(new GasStation("GasStation",0.4f, 5,player));
-        shops.Add(new UpgradesShop("UpgradesShop",0.3f, 50,player));
+        shops.Add(new UpgradesShop("UpgradesShop",0.3f, 12,player));
         MakeBlocksBelowShopsUnbreakable(shops);
         mainMenu = new MainMenu(new Sprite("MenuBackground"));
     }

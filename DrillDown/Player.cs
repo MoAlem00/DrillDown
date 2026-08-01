@@ -10,7 +10,7 @@ public class Player : Animation
 {
     private const float gravity = 200f;
     private Vector2 velocity;
-    float speedMovement = 230;
+    float speedMovement = 300; //230
     private float minFallSpeed = 300f;
     private float fallDamageMultiplier = 0.2f;
     private bool isFlying;

@@ -96,6 +96,18 @@ public class Panel
         buttons.Add(b);
     }
 
+    public void AddSpriteButton(int slotIndex, string label, Action onClick, Sprite buttonSprite, int width = 64, int height = 64)
+    {
+        this.buttonSprite = buttonSprite;
+        Vector2 btnSize = new Vector2(width /2f, height/2f);//used to center the buttons to the center of the cell
+        Vector2 pos = GetSlotCenter(slotIndex) - btnSize;
+        Button b = new Button(buttonSprite, pos, width, height);
+        b.SetText(label, Game1._font, Color.White);
+        b.OnClick += onClick;
+        b.Start();
+        buttons.Add(b);
+    }
+
     public void AddCloseButton(int slotIndex, Action onClick)
     {
         buttonSprite = new Sprite("CloseButton64");

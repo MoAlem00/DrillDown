@@ -17,9 +17,12 @@ public class UpgradesShop : Shop
         capacityUpgrade =  new Upgrades([30, 50, 70, 120, 200]);
         panel = new Panel(new Sprite("Panel1"), 4, 4);
         panel.SetTitle("Upgrades Shop");
-        panel.AddButton(4,"Drill",()=>ApplyUpgrade(drillUpgrade,player.UpgradeDrill),180,60);
-        panel.AddButton(5,"Fuel",()=>ApplyUpgrade(fuelUpgrade,player.UpgradeFuel),180,60);
-        panel.AddButton(6,"Capacity",()=>ApplyUpgrade(capacityUpgrade,player.Inventory.UpgradeCapacity),180,60);
+        //panel.AddButton(4,"Drill",()=>ApplyUpgrade(drillUpgrade,player.UpgradeDrill),180,60);
+        panel.AddSpriteButton(4,"Drill",()=>ApplyUpgrade(drillUpgrade,player.UpgradeDrill),new Sprite("Drill"),100,100);
+        panel.AddSpriteButton(5,"Fuel",()=>ApplyUpgrade(fuelUpgrade,player.UpgradeFuel), new Sprite("FuelIcon"),80,80);
+        //panel.AddButton(5,"Fuel",()=>ApplyUpgrade(fuelUpgrade,player.UpgradeFuel),180,60);
+        panel.AddSpriteButton(6,"Capacity",()=>ApplyUpgrade(capacityUpgrade,player.Inventory.UpgradeCapacity),new Sprite("Cargo"),120,80);
+        //panel.AddButton(6,"Capacity",()=>ApplyUpgrade(capacityUpgrade,player.Inventory.UpgradeCapacity),180,60);
         panel.AddButton(7,"Armor",()=>ApplyUpgrade(armorUpgrade,player.UpgradeArmor),180,60);
         panel.AddCloseButton(2,CloseShop);
     }
