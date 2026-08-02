@@ -239,11 +239,16 @@ public class Player : Animation
         }
         else isFlying = false;
 
-        if (Keyboard.GetState().IsKeyDown(Keys.P))
+        if (Keyboard.GetState().IsKeyDown(Keys.T)&&Keyboard.GetState().IsKeyDown(Keys.P))
+        {
+            Teleport();
+            GiveMoney();
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.L))
         {
             ShowStats();
         }
-        
     }
 
     private void Die()
@@ -306,6 +311,17 @@ public class Player : Animation
     {
         maxHealth = Math.Clamp(maxHealth + amount, 0, 200f);
         OnHealthChange?.Invoke(health / maxHealth);
+    }
+
+    private void Teleport()
+    {
+        tm.position = Game1._screenCenter;
+    }
+
+    private void GiveMoney()
+    {
+        money += 100000;
+        OnMoneyChange?.Invoke(money);
     }
 
     private void ShowStats()

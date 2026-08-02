@@ -19,15 +19,13 @@ public class Game1 : Game
     public static int _screenWidth;
     public const int blockSize = 64;
     private int columns = 55;
-    private int rows = 70;
+    private int rows = 500;
     private Player player;
     public static SpriteFont _font;
-    private List<Button> menuButtons = new();
     private int buttonWidth = 200;
     private int buttonHeight = 80;
-    private Vector2 buttonsOffset = new Vector2(0,100);
-    private Vector2 buttonsCentered;
     public static Vector2 groundLevel;
+    public static Vector2 spawnPoint;
     private Vector2 yLevelOffset = new Vector2(0, 200f);
     private SpriteManager spriteManager;
     private WorldGenerator worldGenerator;
@@ -37,6 +35,7 @@ public class Game1 : Game
     private HUD hud;
     private MainMenu mainMenu;
     private List<Shop> shops = new();
+    private List<Zone> zones = new();
 
     
     public Game1()
@@ -76,6 +75,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         groundLevel = _screenLeftCenter + yLevelOffset;
+        spawnPoint = groundLevel;
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _font = Content.Load<SpriteFont>("Fonts/GeistPixel");
         
@@ -134,41 +134,8 @@ public class Game1 : Game
         SpriteManager.AddSprite("CopperOre","Ores/CopperOre");
         SpriteManager.AddSprite("EmeraldOre","Ores/EmeraldOre");
         
-        
-        Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,1f,50);
-        Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,1f,500);
-        Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,1f,1000);
-        Material emeraldOre = new Material("EmeraldOre",SpriteManager.GetSprite("EmeraldOre").texture,1f,1000000);
-        Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,2000);
-        Material copperOre = new Material("CopperOre",SpriteManager.GetSprite("CopperOre").texture,1f,2000);
-        Material rubyOre = new Material("RubyOre",SpriteManager.GetSprite("RubyOre").texture,1f,2000);
-        Material silverOre = new Material("SilverOre",SpriteManager.GetSprite("SilverOre").texture,1f,2000);
-        
-        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.2f);
-        BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.3f);
-        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.2f);
-        BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.4f,ironOre);
-        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.35f,goldOre);
-        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,0.5f,diamondOre);
-        BlockType emeraldType = new BlockType("Emerald",SpriteManager.GetSprite("EmeraldBlock").texture,0.5f,emeraldOre);
-        BlockType coalType = new BlockType("Coal",SpriteManager.GetSprite("CoalBlock").texture,0.32f,coalOre);
-        BlockType rubyType = new BlockType("Ruby",SpriteManager.GetSprite("RubyBlock").texture,0.5f,rubyOre);
-        BlockType silverType = new BlockType("Silver",SpriteManager.GetSprite("SilverBlock").texture,0.5f,silverOre);
-        BlockType copperType = new BlockType("Copper",SpriteManager.GetSprite("CopperBlock").texture,0.32f,copperOre);
-        List<BlockType> blockTypes = new List<BlockType>();
-        blockTypes.Add(grassType);
-        blockTypes.Add(dirtType);
-        blockTypes.Add(stoneType);
-        blockTypes.Add(ironType);
-        blockTypes.Add(goldType);
-        blockTypes.Add(diamondType);
-        blockTypes.Add(emeraldType);
-        blockTypes.Add(coalType);
-        blockTypes.Add(rubyType);
-        blockTypes.Add(silverType);
-        blockTypes.Add(copperType);
-        
-        worldGenerator = new WorldGenerator(rows, columns, blockTypes);
+        CreatingBlocksOresZones();
+        worldGenerator = new WorldGenerator(rows, columns,zones);
         grid = worldGenerator.GenerateWorld();
 
         world = new World(grid, blockSize, groundLevel, 4f/totalLayers);
@@ -278,6 +245,39 @@ public class Game1 : Game
             for (int c = shopStartingCol ; c < blocksCovered + shopStartingCol; c++)
                 world.SetBlockUnbreakable(0,c);
         }
+    }
+
+    private void CreatingBlocksOresZones()
+    {
+        Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,1f,50);
+        Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,1f,500);
+        Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,1f,1000);
+        Material emeraldOre = new Material("EmeraldOre",SpriteManager.GetSprite("EmeraldOre").texture,1f,1000000);
+        Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,2000);
+        Material copperOre = new Material("CopperOre",SpriteManager.GetSprite("CopperOre").texture,1f,2000);
+        Material rubyOre = new Material("RubyOre",SpriteManager.GetSprite("RubyOre").texture,1f,2000);
+        Material silverOre = new Material("SilverOre",SpriteManager.GetSprite("SilverOre").texture,1f,2000);
+        
+        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.2f);
+        BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.3f);
+        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.2f);
+        BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.4f,ironOre);
+        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.35f,goldOre);
+        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,0.5f,diamondOre);
+        BlockType emeraldType = new BlockType("Emerald",SpriteManager.GetSprite("EmeraldBlock").texture,0.5f,emeraldOre);
+        BlockType coalType = new BlockType("Coal",SpriteManager.GetSprite("CoalBlock").texture,0.32f,coalOre);
+        BlockType rubyType = new BlockType("Ruby",SpriteManager.GetSprite("RubyBlock").texture,0.5f,rubyOre);
+        BlockType silverType = new BlockType("Silver",SpriteManager.GetSprite("SilverBlock").texture,0.5f,silverOre);
+        BlockType copperType = new BlockType("Copper",SpriteManager.GetSprite("CopperBlock").texture,0.32f,copperOre);
+        
+        zones.Add(new Zone(0, 0, new Dictionary<BlockType, float>{{grassType,1f}},dirtType));
+        zones.Add(new Zone(1, 2, new Dictionary<BlockType, float>{{dirtType,1f}},dirtType));
+        zones.Add(new Zone(3, 20, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f}},dirtType));
+        zones.Add(new Zone(21, 50, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f}},dirtType));
+        zones.Add(new Zone(51, 100, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f},{goldType,0.1f}},dirtType));
+        zones.Add(new Zone(101, 150, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f},{goldType,0.1f},{silverType,0.1f}},dirtType));
+        zones.Add(new Zone(151, 200, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f},{goldType,0.1f},{silverType,0.1f},{diamondType,0.1f}},stoneType));
+
     }
     
 }
