@@ -20,7 +20,7 @@ public class UpgradesShop : Shop
             progressText = Text.CreateDefault();
             costText = Text.CreateDefault();
             statsValue = Text.CreateDefault();
-            costText.tm.scale = new Vector2(0.5f, 0.5f);
+            costText.tm.scale = new Vector2(0.7f, 0.7f);
             this.slot = slot;
             this.readStat = readStat;
         }

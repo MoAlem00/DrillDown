@@ -11,9 +11,10 @@ public class HUD : IDrawable
     private Sprite inventorySlots;
     private int columns = 5;
     private int rows = 3;
-    private int imageWidth;
+    private int inventoryWidth;
+    private int inventoryHeight;
     private int margin = 50;
-    private Vector2 inventorySlotsOrigin;
+    private Vector2 inventorySlotsPos;
     private Text counterText;
     private int iconPaddingX = 16;
     private int iconPaddingY = 2;
@@ -45,20 +46,22 @@ public class HUD : IDrawable
         counterText.tm.scale = new Vector2(0.7f, 0.7f);
         this.inventory = inventory;
         inventorySlots = new Sprite("InventorySlots");
-        imageWidth = inventorySlots.texture.Width;
+        inventoryWidth = inventorySlots.texture.Width;
+        inventoryHeight = inventorySlots.texture.Height;
         inventorySlots.anchor = Anchor.TopLeft;
-        inventorySlotsOrigin = new Vector2(Game1._screenWidth - imageWidth - margin, margin);
-        capacity.tm.position = new Vector2(Game1._screenRightCorner.X - imageWidth - 100, 50f);
+        inventorySlotsPos = new Vector2(Game1._screenWidth - inventoryWidth - margin, margin);
+        inventorySlots.tm.position = inventorySlotsPos;
+        capacity.tm.position = new Vector2(inventorySlotsPos.X + inventoryWidth/2f, inventorySlotsPos.Y + inventoryHeight + 30);
     }
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(inventorySlots.texture,inventorySlotsOrigin,Color.White);
+        inventorySlots.Draw(spriteBatch);
         int slot = 0;
         foreach (var material in inventory.Materials)
         {
             int col = slot % columns;
             int row = slot / columns;
-            Vector2 slotPos = inventorySlotsOrigin + new Vector2(col * slotSize, row * slotSize);
+            Vector2 slotPos = inventorySlotsPos + new Vector2(col * slotSize, row * slotSize);
             Rectangle iconRect = new Rectangle((int)slotPos.X + iconPaddingX, (int)slotPos.Y + iconPaddingY,
                 32, 32);
             spriteBatch.Draw(material.Key.Texture,iconRect,Color.White);
@@ -68,7 +71,6 @@ public class HUD : IDrawable
             counterText.Draw(spriteBatch);
             slot++;
         }
-        
         moneyText.DrawTextBackground(spriteBatch);
         capacity.Draw(spriteBatch);
         fuelBar.Draw(spriteBatch);
