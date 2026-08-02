@@ -93,4 +93,19 @@ public class Button : IUpdatable, IDrawable
             sortingOrder = layer
         };
     }
+    public void SetTextAtPos(string label, SpriteFont font, Color color,Vector2 pos,float layer = 1f ,float scale = 1f)//method to set text for the button, can change font, color and scale ...
+    {
+        text = new Text
+        {
+            tm =
+            {
+                scale = new Vector2(scale, scale),
+                position = pos
+            },
+            text = label,
+            font = font,
+            color = color,
+            sortingOrder = layer
+        };
+    }
 }

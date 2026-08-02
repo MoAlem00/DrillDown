@@ -11,7 +11,7 @@ public class Player : Animation
     private const float gravity = 200f;
     private Vector2 velocity;
     float speedMovement = 300; //230
-    private float minFallSpeed = 300f;
+    private float minFallSpeed = 350f; //300
     private float fallDamageMultiplier = 0.2f;
     private bool isFlying;
     private bool isDead;
@@ -299,11 +299,13 @@ public class Player : Animation
     public void UpgradeFuel(float amount)
     {
         maxFuel = Math.Clamp(maxFuel + amount, 0, 200f);
+        OnFuelChange?.Invoke(fuel / maxFuel);
     }
 
     public void UpgradeArmor(float amount)
     {
         maxHealth = Math.Clamp(maxHealth + amount, 0, 200f);
+        OnHealthChange?.Invoke(health / maxHealth);
     }
 
     private void ShowStats()

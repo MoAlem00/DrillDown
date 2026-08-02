@@ -83,6 +83,11 @@ public class Panel
     {
         return GetSlotCenter(slotIndex) - new Vector2(0, cellH * 0.5f);
     }
+    
+    public Vector2 GetSlotBottomCenter(int slotIndex)
+    {
+        return GetSlotCenter(slotIndex) + new Vector2(0, cellH * 0.5f);
+    }
 
     public void AddButton(int slotIndex, string label, Action onClick, int width = 200, int height = 80)
     {
@@ -101,8 +106,9 @@ public class Panel
         this.buttonSprite = buttonSprite;
         Vector2 btnSize = new Vector2(width /2f, height/2f);//used to center the buttons to the center of the cell
         Vector2 pos = GetSlotCenter(slotIndex) - btnSize;
+        Vector2 textPos = GetSlotUpperCenter(slotIndex);
         Button b = new Button(buttonSprite, pos, width, height);
-        b.SetText(label, Game1._font, Color.White);
+        b.SetTextAtPos(label,Game1._font, Color.White,textPos);
         b.OnClick += onClick;
         b.Start();
         buttons.Add(b);

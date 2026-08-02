@@ -111,6 +111,7 @@ public class Game1 : Game
         SpriteManager.AddSprite("Panel1","Images/Panel1");
         SpriteManager.AddSprite("Drill","Images/DrillRight");
         SpriteManager.AddSprite("Cargo","Images/CargoIcon");
+        SpriteManager.AddSprite("Hull","Images/HullIcon");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");

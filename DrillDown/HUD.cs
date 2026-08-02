@@ -38,26 +38,9 @@ public class HUD : IDrawable
             SpriteManager.GetSprite("BarFill").texture,healthIcon.texture,new Vector2(margin,margin*2.2f),Color.Red,Color.DarkRed);
         fuelBar = new Bar(SpriteManager.GetSprite("Bar").texture,
             SpriteManager.GetSprite("BarFill").texture,fuelIcon.texture,new Vector2(margin,margin),Color.Yellow,Color.DarkGoldenrod);
-        counterText = new Text
-        {
-            font = font,
-            color = Color.White,
-            sortingOrder = 1f
-        };
-        moneyText = new Text
-        {
-            text = "$" + "0",
-            font = font,
-            color = Color.White,
-            sortingOrder = 1f
-        };
-        capacity = new Text
-        {
-            text = "0" + "Kg",
-            font = font,
-            color = Color.White,
-            sortingOrder = 1f
-        };
+        counterText = Text.CreateDefault();
+        moneyText = Text.CreateDefault("$" + "0");
+        capacity = Text.CreateDefault("0" + "Kg");
         moneyText.tm.position = new Vector2(Game1._screenTopCenter.X, 50f);
         counterText.tm.scale = new Vector2(0.7f, 0.7f);
         this.inventory = inventory;

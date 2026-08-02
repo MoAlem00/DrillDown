@@ -58,4 +58,25 @@ public class Text : IUpdatable, IDrawable
         spriteBatch.Draw(Button.Pixel, GetTextBackgroundRect(), null, Color.Black * 0.7f,
             0f, Vector2.Zero, SpriteEffects.None, sortingOrder - 0.01f);
     }
+    
+    public static Text CreateDefault(string content = "")
+    {
+        return new Text
+        {
+            text = content,
+            font = Game1._font,
+            color = Color.White,
+            sortingOrder = 1f
+        };
+    }
+
+    /*public static Text CreateCustom(Color color,float scale)
+    {
+        return new Text
+        {
+            font = Game1._font,
+            color = Color.White,
+            sortingOrder = 1f,
+        };
+    }*/
 }
