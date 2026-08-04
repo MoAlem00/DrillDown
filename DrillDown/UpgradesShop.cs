@@ -34,9 +34,9 @@ public class UpgradesShop : Shop
         panel = new Panel(new Sprite("Panel1"), 4, 4);
         panel.SetTitle("Upgrades Shop");
         AddUpgrade([0.08f, 0.15f, 0.3f, 0.5f, 1f], 4, "Drill", "Drill", player.UpgradeDrill,()=>player.DrillPower,100,100);
-        AddUpgrade([10, 20, 50, 70, 100],5, "Fuel", "FuelIcon",player.UpgradeFuel,()=>player.MaxFuel);
-        AddUpgrade([30, 50, 70, 120, 200],6, "Capacity", "Cargo", player.Inventory.UpgradeCapacity,()=>player.Inventory.Capacity,120);
-        AddUpgrade([10, 20, 50, 70, 100],7, "Armor", "Hull", player.UpgradeArmor,()=>player.MaxHealth);
+        AddUpgrade([30, 50, 70, 100, 150],5, "Fuel", "FuelIcon",player.UpgradeFuel,()=>player.MaxFuel);
+        AddUpgrade([20, 40, 70, 120, 200],6, "Capacity", "Cargo", player.Inventory.UpgradeCapacity,()=>player.Inventory.Capacity,120);
+        AddUpgrade([30, 50, 70, 100, 150],7, "Armor", "Hull", player.UpgradeArmor,()=>player.MaxHealth);
         panel.AddCloseButton(3,CloseShop);
     }
     

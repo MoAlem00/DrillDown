@@ -83,56 +83,7 @@ public class Game1 : Game
         Button.Pixel.SetData(new Color[] { Color.White });
         
         
-        //SpriteManager.AddSprite("BackGround","Images/BG");
-        SpriteManager.AddSprite("MenuBackground","Images/MenuBG");
-        //SpriteManager.AddSprite("Button","Images/CrackedButton");
-        SpriteManager.AddSprite("Button1","Images/CrackedButton1");
-        //SpriteManager.AddSprite("CloseButton","Images/XButton");
-        //SpriteManager.AddSprite("CloseButton32","Images/XButton32");
-        SpriteManager.AddSprite("CloseButton64","Images/XButton64");
-        SpriteManager.AddSprite("Explosion","Images/ExplosionSheet",13,1);
-        //SpriteManager.AddSprite("EarthBackground","Images/EarthBackground");
-        SpriteManager.AddSprite("DrillPod","Images/DrillPod");
-        SpriteManager.AddSprite("Pixel","Images/Pixel");
-        SpriteManager.AddSprite("DownDrill","Images/DrillDownSpriteSheet",5,1);
-        SpriteManager.AddSprite("RightDrill","Images/DrillRightSpriteSheet",5,1);
-        SpriteManager.AddSprite("LeftDrill","Images/DrillLeftSpriteSheet",5,1);
-        SpriteManager.AddSprite("InventorySlots","Images/Inventory");
-        SpriteManager.AddSprite("BarFill","Images/BarFill");
-        SpriteManager.AddSprite("Bar","Images/Bar");
-        SpriteManager.AddSprite("FuelIcon","Images/FuelIcon");
-        SpriteManager.AddSprite("HealthIcon","Images/HealthIcon");
-        SpriteManager.AddSprite("Flame","Images/FlameSheet",4,1);
-        SpriteManager.AddSprite("GasStation","Shops/GasStation");
-        SpriteManager.AddSprite("MineralsShop","Shops/MineralsShop");
-        SpriteManager.AddSprite("RepairStation","Shops/RepairShop");
-        SpriteManager.AddSprite("UpgradesShop","Shops/UpgradesShop");
-        //SpriteManager.AddSprite("Panel","Images/Panel");
-        SpriteManager.AddSprite("Panel1","Images/Panel1");
-        SpriteManager.AddSprite("Drill","Images/DrillRight");
-        SpriteManager.AddSprite("Cargo","Images/CargoIcon");
-        SpriteManager.AddSprite("Hull","Images/HullIcon");
-        
-        SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
-        SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
-        SpriteManager.AddSprite("StoneBlock","Blocks/StoneBlock");
-        SpriteManager.AddSprite("IronBlock","Blocks/IronBlock");
-        SpriteManager.AddSprite("DiamondBlock","Blocks/DiamondBlock");
-        SpriteManager.AddSprite("GoldBlock","Blocks/GoldBlock");
-        SpriteManager.AddSprite("EmeraldBlock","Blocks/EmeraldBlock");
-        SpriteManager.AddSprite("CoalBlock","Blocks/CoalBlock");
-        SpriteManager.AddSprite("CopperBlock","Blocks/CopperBlock");
-        SpriteManager.AddSprite("RubyBlock","Blocks/RubyBlock");
-        SpriteManager.AddSprite("SilverBlock","Blocks/SilverBlock");
-        
-        SpriteManager.AddSprite("IronOre","Ores/IronOre");
-        SpriteManager.AddSprite("DiamondOre","Ores/DiamondOre");
-        SpriteManager.AddSprite("GoldOre","Ores/GoldOre");
-        SpriteManager.AddSprite("CoalOre","Ores/CoalOre");
-        SpriteManager.AddSprite("RubyOre","Ores/RubyOre");
-        SpriteManager.AddSprite("SilverOre","Ores/SilverOre");
-        SpriteManager.AddSprite("CopperOre","Ores/CopperOre");
-        SpriteManager.AddSprite("EmeraldOre","Ores/EmeraldOre");
+        AddGameSprites();
         
         CreatingBlocksOresZones();
         worldGenerator = new WorldGenerator(rows, columns,zones);
@@ -249,35 +200,124 @@ public class Game1 : Game
 
     private void CreatingBlocksOresZones()
     {
-        Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,1f,50);
-        Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,1f,500);
-        Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,1f,1000);
-        Material emeraldOre = new Material("EmeraldOre",SpriteManager.GetSprite("EmeraldOre").texture,1f,1000000);
-        Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,2000);
-        Material copperOre = new Material("CopperOre",SpriteManager.GetSprite("CopperOre").texture,1f,2000);
-        Material rubyOre = new Material("RubyOre",SpriteManager.GetSprite("RubyOre").texture,1f,2000);
-        Material silverOre = new Material("SilverOre",SpriteManager.GetSprite("SilverOre").texture,1f,2000);
+        Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,20);
+        Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,2f,30);
+        Material copperOre = new Material("CopperOre",SpriteManager.GetSprite("CopperOre").texture,2f,45);
+        Material silverOre = new Material("SilverOre",SpriteManager.GetSprite("SilverOre").texture,2.5f,90);
+        Material goldOre = new Material("GoldOre",SpriteManager.GetSprite("GoldOre").texture,4f,180);
+        Material titaniumOre = new Material("TitaniumOre",SpriteManager.GetSprite("TitaniumOre").texture,1.5f,250);
+        Material amethystOre = new Material("AmethystOre",SpriteManager.GetSprite("AmethystOre").texture,1.5f,300);
+        Material platinumOre = new Material("PlatinumOre",SpriteManager.GetSprite("PlatinumOre").texture,4.5f,450);
+        Material sapphireOre = new Material("SapphireOre",SpriteManager.GetSprite("SapphireOre").texture,2f,600);
+        Material rubyOre = new Material("RubyOre",SpriteManager.GetSprite("RubyOre").texture,2f,850);
+        Material emeraldOre = new Material("EmeraldOre",SpriteManager.GetSprite("EmeraldOre").texture,2f,1200);
+        Material opalOre = new Material("OpalOre",SpriteManager.GetSprite("OpalOre").texture,1.5f,2000);
+        Material diamondOre = new Material("DiamondOre",SpriteManager.GetSprite("DiamondOre").texture,1f,5000);
+        Material kryptoniteOre = new Material("KryptoniteOre",SpriteManager.GetSprite("KryptoniteOre").texture,3f,15000);
+        Material painiteOre = new Material("PainiteOre",SpriteManager.GetSprite("PainiteOre").texture,1f,30000);
         
-        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.2f);
-        BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.3f);
-        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.2f);
-        BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.4f,ironOre);
-        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.35f,goldOre);
-        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,0.5f,diamondOre);
-        BlockType emeraldType = new BlockType("Emerald",SpriteManager.GetSprite("EmeraldBlock").texture,0.5f,emeraldOre);
-        BlockType coalType = new BlockType("Coal",SpriteManager.GetSprite("CoalBlock").texture,0.32f,coalOre);
-        BlockType rubyType = new BlockType("Ruby",SpriteManager.GetSprite("RubyBlock").texture,0.5f,rubyOre);
-        BlockType silverType = new BlockType("Silver",SpriteManager.GetSprite("SilverBlock").texture,0.5f,silverOre);
-        BlockType copperType = new BlockType("Copper",SpriteManager.GetSprite("CopperBlock").texture,0.32f,copperOre);
+        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.3f);
+        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.15f);
+        BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.5f);
+        BlockType coalType = new BlockType("Coal",SpriteManager.GetSprite("CoalBlock").texture,0.4f,coalOre);
+        BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.6f,ironOre);
+        BlockType copperType = new BlockType("Copper",SpriteManager.GetSprite("CopperBlock").texture,0.6f,copperOre);
+        BlockType silverType = new BlockType("Silver",SpriteManager.GetSprite("SilverBlock").texture,0.8f,silverOre);
+        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.9f,goldOre);
+        BlockType titaniumType = new BlockType("Titanium",SpriteManager.GetSprite("TitaniumBlock").texture, 1.2f, titaniumOre);
+        BlockType amethystType = new BlockType("Amethyst", SpriteManager.GetSprite("AmethystBlock").texture, 1f, amethystOre);
+        BlockType platinumType = new BlockType("Platinum",SpriteManager.GetSprite("PlatinumBlock").texture, 1.3f, platinumOre);
+        BlockType sapphireType = new BlockType("Sapphire",SpriteManager.GetSprite("SapphireBlock").texture, 1.4f, sapphireOre);
+        BlockType rubyType = new BlockType("Ruby",SpriteManager.GetSprite("RubyBlock").texture,1.5f,rubyOre);
+        BlockType emeraldType = new BlockType("Emerald",SpriteManager.GetSprite("EmeraldBlock").texture,1.7f,emeraldOre);
+        BlockType opalType = new BlockType("Opal",SpriteManager.GetSprite("OpalBlock").texture, 1.8f, opalOre);
+        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,2.2f,diamondOre);
+        BlockType kryptoniteType = new BlockType("Kryptonite",SpriteManager.GetSprite("KryptoniteBlock").texture, 2.5f, kryptoniteOre);
+        BlockType painiteType = new BlockType("Painite",SpriteManager.GetSprite("PainiteBlock").texture, 2.5f, painiteOre);
+        BlockType obsidianType = new BlockType("Obsidian", SpriteManager.GetSprite("ObsidianBlock").texture, 3f);
         
-        zones.Add(new Zone(0, 0, new Dictionary<BlockType, float>{{grassType,1f}},dirtType));
-        zones.Add(new Zone(1, 2, new Dictionary<BlockType, float>{{dirtType,1f}},dirtType));
-        zones.Add(new Zone(3, 20, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f}},dirtType));
-        zones.Add(new Zone(21, 50, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f}},dirtType));
-        zones.Add(new Zone(51, 100, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f},{goldType,0.1f}},dirtType));
-        zones.Add(new Zone(101, 150, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f},{goldType,0.1f},{silverType,0.1f}},dirtType));
-        zones.Add(new Zone(151, 200, new Dictionary<BlockType, float>{{stoneType,0.1f},{ironType,0.1f},{coalType,0.1f},{copperType,0.1f},{goldType,0.1f},{silverType,0.1f},{diamondType,0.1f}},stoneType));
+        zones.Add(new Zone(0, 0, new Dictionary<BlockType, float>{{grassType,1f}},dirtType)); //0
+        zones.Add(new Zone(1, 2, new Dictionary<BlockType, float>{{dirtType,1f}},dirtType)); //1
+        zones.Add(new Zone(3, 50, new Dictionary<BlockType, float>{{stoneType,0.15f},{ironType,0.01f},{coalType,0.12f},{copperType,0.08f}},dirtType)); //2
+        zones.Add(new Zone(51, 100, new Dictionary<BlockType, float>{{stoneType,0.18f},{ironType,0.12f},{coalType,0.08f},{copperType,0.1f},{silverType,0.04f}},dirtType)); //3
+        zones.Add(new Zone(101, 150, new Dictionary<BlockType, float>{{ironType,0.1f},{copperType,0.08f},{goldType,0.04f},{silverType,0.07f},{titaniumType,0.05f}},stoneType)); //4
+        zones.Add(new Zone(151, 200, new Dictionary<BlockType, float>{{ironType,0.08f},{coalType,0.1f},{copperType,0.1f},{goldType,0.06f},{silverType,0.08f},{titaniumType,0.06f},{amethystType,0.04f}},stoneType));//5
+        zones.Add(new Zone(201, 250, new Dictionary<BlockType, float>{{silverType,0.06f},{goldType,0.07f},{titaniumType,0.05f},{amethystType,0.06f},{sapphireType,0.03f},{platinumType,0.03f}},stoneType));//6
+        zones.Add(new Zone(251, 300, new Dictionary<BlockType, float>{{obsidianType,0.01f},{goldType,0.06f},{amethystType,0.06f},{sapphireType,0.05f},{rubyType,0.03f},{platinumType,0.04f}},stoneType));//7
+        zones.Add(new Zone(301, 350, new Dictionary<BlockType, float>{{obsidianType,0.01f},{platinumType,0.04f},{amethystType,0.05f},{sapphireType,0.06f},{rubyType,0.05f},{emeraldType,0.03f}},stoneType));//8
+        zones.Add(new Zone(351, 400, new Dictionary<BlockType, float>{{diamondType,0.02f},{opalType,0.03f},{obsidianType,0.02f},{sapphireType,0.05f},{rubyType,0.06f},{emeraldType,0.05f}},stoneType));//9
+        zones.Add(new Zone(401, 450, new Dictionary<BlockType, float>{{diamondType,0.03f},{opalType,0.04f},{obsidianType,0.05f},{platinumType,0.04f},{rubyType,0.06f},{emeraldType,0.06f}},stoneType));//10
+        zones.Add(new Zone(451, 500, new Dictionary<BlockType, float>{{kryptoniteType,0.02f},{diamondType,0.04f},{opalType,0.05f},{obsidianType,0.06f},{painiteType,0.02f},{emeraldType,0.03f}},stoneType));//11
+        
+    }
 
+    private void AddGameSprites()
+    {
+        //SpriteManager.AddSprite("BackGround","Images/BG");
+        SpriteManager.AddSprite("MenuBackground","Images/MenuBG");
+        //SpriteManager.AddSprite("Button","Images/CrackedButton");
+        SpriteManager.AddSprite("Button1","Images/CrackedButton1");
+        //SpriteManager.AddSprite("CloseButton","Images/XButton");
+        //SpriteManager.AddSprite("CloseButton32","Images/XButton32");
+        SpriteManager.AddSprite("CloseButton64","Images/XButton64");
+        SpriteManager.AddSprite("Explosion","Images/ExplosionSheet",13,1);
+        //SpriteManager.AddSprite("EarthBackground","Images/EarthBackground");
+        SpriteManager.AddSprite("DrillPod","Images/DrillPod");
+        SpriteManager.AddSprite("Pixel","Images/Pixel");
+        SpriteManager.AddSprite("DownDrill","Images/DrillDownSpriteSheet",5,1);
+        SpriteManager.AddSprite("RightDrill","Images/DrillRightSpriteSheet",5,1);
+        SpriteManager.AddSprite("LeftDrill","Images/DrillLeftSpriteSheet",5,1);
+        SpriteManager.AddSprite("InventorySlots","Images/Inventory");
+        SpriteManager.AddSprite("BarFill","Images/BarFill");
+        SpriteManager.AddSprite("Bar","Images/Bar");
+        SpriteManager.AddSprite("FuelIcon","Images/FuelIcon");
+        SpriteManager.AddSprite("HealthIcon","Images/HealthIcon");
+        SpriteManager.AddSprite("Flame","Images/FlameSheet",4,1);
+        SpriteManager.AddSprite("GasStation","Shops/GasStation");
+        SpriteManager.AddSprite("MineralsShop","Shops/MineralsShop");
+        SpriteManager.AddSprite("RepairStation","Shops/RepairShop");
+        SpriteManager.AddSprite("UpgradesShop","Shops/UpgradesShop");
+        //SpriteManager.AddSprite("Panel","Images/Panel");
+        SpriteManager.AddSprite("Panel1","Images/Panel1");
+        SpriteManager.AddSprite("Drill","Images/DrillRight");
+        SpriteManager.AddSprite("Cargo","Images/CargoIcon");
+        SpriteManager.AddSprite("Hull","Images/HullIcon");
+        
+        SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
+        SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
+        SpriteManager.AddSprite("StoneBlock","Blocks/StoneBlock");
+        SpriteManager.AddSprite("IronBlock","Blocks/IronBlock");
+        SpriteManager.AddSprite("DiamondBlock","Blocks/DiamondBlock");
+        SpriteManager.AddSprite("GoldBlock","Blocks/GoldBlock");
+        SpriteManager.AddSprite("EmeraldBlock","Blocks/EmeraldBlock");
+        SpriteManager.AddSprite("CoalBlock","Blocks/CoalBlock");
+        SpriteManager.AddSprite("CopperBlock","Blocks/CopperBlock");
+        SpriteManager.AddSprite("RubyBlock","Blocks/RubyBlock");
+        SpriteManager.AddSprite("SilverBlock","Blocks/SilverBlock");
+        SpriteManager.AddSprite("SapphireBlock","Blocks/SapphireBlock");
+        SpriteManager.AddSprite("TitaniumBlock","Blocks/TitaniumBlock");
+        SpriteManager.AddSprite("AmethystBlock","Blocks/AmethystBlock");
+        SpriteManager.AddSprite("KryptoniteBlock","Blocks/KryptoniteBlock");
+        SpriteManager.AddSprite("PlatinumBlock","Blocks/PlatinumBlock");
+        SpriteManager.AddSprite("OpalBlock","Blocks/OpalBlock");
+        SpriteManager.AddSprite("PainiteBlock","Blocks/PainiteBlock");
+        SpriteManager.AddSprite("ObsidianBlock","Blocks/ObsidianBlock");
+        
+        SpriteManager.AddSprite("IronOre","Ores/IronOre");
+        SpriteManager.AddSprite("DiamondOre","Ores/DiamondOre");
+        SpriteManager.AddSprite("GoldOre","Ores/GoldOre");
+        SpriteManager.AddSprite("CoalOre","Ores/CoalOre");
+        SpriteManager.AddSprite("RubyOre","Ores/RubyOre");
+        SpriteManager.AddSprite("SilverOre","Ores/SilverOre");
+        SpriteManager.AddSprite("CopperOre","Ores/CopperOre");
+        SpriteManager.AddSprite("EmeraldOre","Ores/EmeraldOre");
+        SpriteManager.AddSprite("SapphireOre","Ores/SapphireOre");
+        SpriteManager.AddSprite("TitaniumOre","Ores/TitaniumOre");
+        SpriteManager.AddSprite("AmethystOre","Ores/AmethystOre");
+        SpriteManager.AddSprite("KryptoniteOre","Ores/KryptoniteOre");
+        SpriteManager.AddSprite("PlatinumOre","Ores/PlatinumOre");
+        SpriteManager.AddSprite("OpalOre","Ores/OpalOre");
+        SpriteManager.AddSprite("PainiteOre","Ores/PainiteOre");
     }
     
 }

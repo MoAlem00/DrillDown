@@ -17,7 +17,7 @@ public class Player : Animation
     private bool isDead;
     private bool isGrounded;
     private float deltaTime;
-    private float startingCapacity = 10f;
+    private float startingCapacity = 30f;
     private float fuel;
     private float maxFuel = 100f;
     private float health;
@@ -244,6 +244,8 @@ public class Player : Animation
             Teleport();
             GiveMoney();
         }
+        if(Keyboard.GetState().IsKeyDown(Keys.M)&&Keyboard.GetState().IsKeyDown(Keys.A)&&Keyboard.GetState().IsKeyDown(Keys.X))
+            Cheat();
 
         if (Keyboard.GetState().IsKeyDown(Keys.L))
         {
@@ -303,13 +305,13 @@ public class Player : Animation
 
     public void UpgradeFuel(float amount)
     {
-        maxFuel = Math.Clamp(maxFuel + amount, 0, 200f);
+        maxFuel = Math.Clamp(maxFuel + amount, 0, 500f);
         OnFuelChange?.Invoke(fuel / maxFuel);
     }
 
     public void UpgradeArmor(float amount)
     {
-        maxHealth = Math.Clamp(maxHealth + amount, 0, 200f);
+        maxHealth = Math.Clamp(maxHealth + amount, 0, 500f);
         OnHealthChange?.Invoke(health / maxHealth);
     }
 
@@ -322,6 +324,11 @@ public class Player : Animation
     {
         money += 100000;
         OnMoneyChange?.Invoke(money);
+    }
+
+    private void Cheat()
+    {
+        drillPower = 100;
     }
 
     private void ShowStats()

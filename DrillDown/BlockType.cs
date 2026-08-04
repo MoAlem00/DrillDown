@@ -5,7 +5,7 @@ namespace DrillDown;
 public class BlockType
 {
     public readonly string name;
-    public readonly Texture2D texture;
+    public readonly Texture2D? texture;
     public readonly float timeToDrill;
     public readonly Material? material;
     

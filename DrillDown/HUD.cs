@@ -93,9 +93,9 @@ public class HUD : IDrawable
         moneyText.text = "$" + amount;
     }
 
-    public void HandleCapacityChange(int amount)
+    public void HandleCapacityChange(float amount)
     {
-        capacity.text = amount + "Kg" + "/" + inventory.Capacity + "Kg";
+        capacity.text = $"{amount:0.0}Kg/{inventory.Capacity}Kg";
     }
     
 }

@@ -45,7 +45,11 @@ public class WorldGenerator
                         break;
                     }
                 }
-                grid[r, c] = new Block(chosenBlock);
+
+                if (random.NextDouble() < 0.02)
+                    grid[r, c] = null;
+                else
+                    grid[r, c] = new Block(chosenBlock);
             }
         }
         return grid;

@@ -14,7 +14,7 @@ public class Inventory : IEnumerable
     private float capacity;
     private float maxCapacity = 400f;
     private float minCapacity = 0f;
-    public event Action<int> OnCapacityChange;
+    public event Action<float> OnCapacityChange;
     
     public float Capacity => capacity;
     public float MaxCapacity => maxCapacity;
@@ -38,14 +38,14 @@ public class Inventory : IEnumerable
         else 
             materials[material] = 1;
         currentWeight += material.Weight;
-        OnCapacityChange?.Invoke((int)currentWeight);
+        OnCapacityChange?.Invoke(currentWeight);
         return true;
     }
 
     public void UpgradeCapacity(float amount)
     {
         capacity = Math.Clamp(capacity + amount, minCapacity, maxCapacity);
-        OnCapacityChange?.Invoke((int)currentWeight);
+        OnCapacityChange?.Invoke(currentWeight);
     }
     
     
@@ -55,7 +55,7 @@ public class Inventory : IEnumerable
     {
         materials.Clear();
         currentWeight = 0f;
-        OnCapacityChange?.Invoke((int)currentWeight);
+        OnCapacityChange?.Invoke(currentWeight);
     }
     
     IEnumerator IEnumerable.GetEnumerator()
