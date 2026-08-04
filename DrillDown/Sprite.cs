@@ -81,7 +81,15 @@ public class Sprite : IDrawable, IUpdatable
             height
         );
     }
-    
-    
-    
+
+    public Vector2 GetCenterPosition()
+    {
+        if (sourceRect == null) return tm.position;
+        Vector2 size = new Vector2(
+            sourceRect.Value.Width * tm.scale.X,
+            sourceRect.Value.Height * tm.scale.Y);
+        Vector2 anchorOrigin = AnchorHelper.GetOrigin(anchor, size);
+        Vector2 centerOrigin = AnchorHelper.GetOrigin(Anchor.Center, size);
+        return tm.position - anchorOrigin + centerOrigin;
+    }
 }

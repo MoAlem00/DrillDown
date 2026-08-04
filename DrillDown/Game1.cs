@@ -18,14 +18,13 @@ public class Game1 : Game
     public static Vector2 _screenTopCenter;
     public static int _screenWidth;
     public const int blockSize = 64;
-    private int columns = 55;
-    private int rows = 500;
+    public const int columns = 55;
+    public const int rows = 500;
     private Player player;
     public static SpriteFont _font;
     private int buttonWidth = 200;
     private int buttonHeight = 80;
     public static Vector2 groundLevel;
-    public static Vector2 spawnPoint;
     private Vector2 yLevelOffset = new Vector2(0, 200f);
     private SpriteManager spriteManager;
     private WorldGenerator worldGenerator;
@@ -34,8 +33,10 @@ public class Game1 : Game
     private Camera camera;
     private HUD hud;
     private MainMenu mainMenu;
+    private GameOver gameOver;
     private List<Shop> shops = new();
     private List<Zone> zones = new();
+    private Portal portal;
 
     
     public Game1()
@@ -75,7 +76,6 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         groundLevel = _screenLeftCenter + yLevelOffset;
-        spawnPoint = groundLevel;
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _font = Content.Load<SpriteFont>("Fonts/GeistPixel");
         
@@ -106,14 +106,19 @@ public class Game1 : Game
         player.OnMoneyChange += hud.HandleMoneyChange;
         player.Inventory.OnCapacityChange += hud.HandleCapacityChange;
         player.OnPlayerDeath += GameManager.Instance.HandleGameOver;
+        
         GameManager.Instance.OnQuitGame += Exit;
         player.Start();
         shops.Add(new RepairStation("RepairStation", 0.3f, 35,player));
         shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
         shops.Add(new GasStation("GasStation",0.4f, 5,player));
         shops.Add(new UpgradesShop("UpgradesShop",0.3f, 12,player));
+        portal = new Portal("Portal", 3f, player);
+        portal.PlaceAtRandomPosition();
+        Console.WriteLine(rows - 1);
         MakeBlocksBelowShopsUnbreakable(shops);
         mainMenu = new MainMenu(new Sprite("MenuBackground"));
+        gameOver = new GameOver();
     }
 
     protected override void Update(GameTime gameTime)
@@ -129,6 +134,7 @@ public class Game1 : Game
                 break;
             case GameManager.GameState.Playing:
                 player.Update(gameTime);
+                portal.Update(gameTime);
                 foreach (var shop in shops)
                 {
                     shop.Update();
@@ -136,7 +142,7 @@ public class Game1 : Game
                 }
                 break;
             case GameManager.GameState.GameOver:
-                Console.WriteLine("GameOver");
+                gameOver.Update(gameTime);
                 break;
         }
         base.Update(gameTime);
@@ -148,23 +154,19 @@ public class Game1 : Game
 
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp,
             transformMatrix: camera.position);
-        //backGround.Draw(_spriteBatch);
         
         world.Draw(_spriteBatch);
         if (GameManager.Instance.gameState == GameManager.GameState.Playing)
         {
+            portal.Draw(_spriteBatch);
+            portal.DrawPrompt(_spriteBatch);
             player.Draw(_spriteBatch);
+            _spriteBatch.Draw(Button.Pixel, portal.EntranceBounds, Color.Red * 0.5f);
             foreach (var shop in shops)
             {
                 shop.Draw(_spriteBatch);
                 shop.DrawPrompt(_spriteBatch);
             }
-        }
-
-        if (GameManager.Instance.gameState == GameManager.GameState.GameOver)
-        {
-            //player.Draw(_spriteBatch);
-            //Console.WriteLine("GameOver");
         }
         _spriteBatch.End();
         
@@ -182,6 +184,10 @@ public class Game1 : Game
         {
             mainMenu.Draw(_spriteBatch);
         }
+        if (GameManager.Instance.gameState == GameManager.GameState.GameOver)
+        {
+            gameOver.Draw(_spriteBatch);
+        }
         _spriteBatch.End();
         base.Draw(gameTime);
     }
@@ -197,7 +203,7 @@ public class Game1 : Game
                 world.SetBlockUnbreakable(0,c);
         }
     }
-
+    
     private void CreatingBlocksOresZones()
     {
         Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,20);
@@ -235,6 +241,7 @@ public class Game1 : Game
         BlockType kryptoniteType = new BlockType("Kryptonite",SpriteManager.GetSprite("KryptoniteBlock").texture, 2.5f, kryptoniteOre);
         BlockType painiteType = new BlockType("Painite",SpriteManager.GetSprite("PainiteBlock").texture, 2.5f, painiteOre);
         BlockType obsidianType = new BlockType("Obsidian", SpriteManager.GetSprite("ObsidianBlock").texture, 3f);
+        //BlockType bedrockType = new BlockType("Bedrock", SpriteManager.GetSprite("BedrockBlock").texture,0);
         
         zones.Add(new Zone(0, 0, new Dictionary<BlockType, float>{{grassType,1f}},dirtType)); //0
         zones.Add(new Zone(1, 2, new Dictionary<BlockType, float>{{dirtType,1f}},dirtType)); //1
@@ -247,21 +254,16 @@ public class Game1 : Game
         zones.Add(new Zone(301, 350, new Dictionary<BlockType, float>{{obsidianType,0.01f},{platinumType,0.04f},{amethystType,0.05f},{sapphireType,0.06f},{rubyType,0.05f},{emeraldType,0.03f}},stoneType));//8
         zones.Add(new Zone(351, 400, new Dictionary<BlockType, float>{{diamondType,0.02f},{opalType,0.03f},{obsidianType,0.02f},{sapphireType,0.05f},{rubyType,0.06f},{emeraldType,0.05f}},stoneType));//9
         zones.Add(new Zone(401, 450, new Dictionary<BlockType, float>{{diamondType,0.03f},{opalType,0.04f},{obsidianType,0.05f},{platinumType,0.04f},{rubyType,0.06f},{emeraldType,0.06f}},stoneType));//10
-        zones.Add(new Zone(451, 500, new Dictionary<BlockType, float>{{kryptoniteType,0.02f},{diamondType,0.04f},{opalType,0.05f},{obsidianType,0.06f},{painiteType,0.02f},{emeraldType,0.03f}},stoneType));//11
+        zones.Add(new Zone(451, 490, new Dictionary<BlockType, float>{{kryptoniteType,0.02f},{diamondType,0.04f},{opalType,0.05f},{obsidianType,0.06f},{painiteType,0.02f},{emeraldType,0.03f}},stoneType));//11
         
     }
 
     private void AddGameSprites()
     {
-        //SpriteManager.AddSprite("BackGround","Images/BG");
         SpriteManager.AddSprite("MenuBackground","Images/MenuBG");
-        //SpriteManager.AddSprite("Button","Images/CrackedButton");
         SpriteManager.AddSprite("Button1","Images/CrackedButton1");
-        //SpriteManager.AddSprite("CloseButton","Images/XButton");
-        //SpriteManager.AddSprite("CloseButton32","Images/XButton32");
         SpriteManager.AddSprite("CloseButton64","Images/XButton64");
         SpriteManager.AddSprite("Explosion","Images/ExplosionSheet",13,1);
-        //SpriteManager.AddSprite("EarthBackground","Images/EarthBackground");
         SpriteManager.AddSprite("DrillPod","Images/DrillPod");
         SpriteManager.AddSprite("Pixel","Images/Pixel");
         SpriteManager.AddSprite("DownDrill","Images/DrillDownSpriteSheet",5,1);
@@ -277,11 +279,11 @@ public class Game1 : Game
         SpriteManager.AddSprite("MineralsShop","Shops/MineralsShop");
         SpriteManager.AddSprite("RepairStation","Shops/RepairShop");
         SpriteManager.AddSprite("UpgradesShop","Shops/UpgradesShop");
-        //SpriteManager.AddSprite("Panel","Images/Panel");
         SpriteManager.AddSprite("Panel1","Images/Panel1");
         SpriteManager.AddSprite("Drill","Images/DrillRight");
         SpriteManager.AddSprite("Cargo","Images/CargoIcon");
         SpriteManager.AddSprite("Hull","Images/HullIcon");
+        SpriteManager.AddSprite("Portal","Images/Dimensional_Portal",3,2);
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
@@ -302,6 +304,7 @@ public class Game1 : Game
         SpriteManager.AddSprite("OpalBlock","Blocks/OpalBlock");
         SpriteManager.AddSprite("PainiteBlock","Blocks/PainiteBlock");
         SpriteManager.AddSprite("ObsidianBlock","Blocks/ObsidianBlock");
+        SpriteManager.AddSprite("BedrockBlock","Blocks/BedrockBlock");
         
         SpriteManager.AddSprite("IronOre","Ores/IronOre");
         SpriteManager.AddSprite("DiamondOre","Ores/DiamondOre");

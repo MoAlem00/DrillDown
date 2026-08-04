@@ -39,4 +39,9 @@ public class GameManager
     {
         gameState = GameState.GameOver;
     }
+    
+    public void WinGame()
+    {
+        gameState = GameState.GameOver;
+    }
 }
