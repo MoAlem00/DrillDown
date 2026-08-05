@@ -10,7 +10,8 @@ public class Animation : Sprite
     private int y = 0;
     bool isLooping = true;
     bool isAnimating = false;
-    
+    private bool isFinished = false;
+    public bool IsFinished => isFinished;
     public Animation(string spriteName) : base(spriteName)
     {
     }
@@ -85,6 +86,8 @@ public class Animation : Sprite
                 {
                     x = spriteSheet.columns - 1;
                     y = spriteSheet.rows - 1;
+                    isFinished = true;
+                    isAnimating = false;
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 namespace DrillDown;
@@ -26,6 +27,7 @@ public class Player : Animation
     private int money;
     private float drillPower = 1f;
     private float maxDrillPower = 4f;
+    private bool deathFired;
     private Vector2 prevPosition;
     private Material ore;
     private Animation flame;
@@ -43,6 +45,8 @@ public class Player : Animation
     public float MaxHealth => maxHealth;
     public int Money => money;
     public float DrillPower => drillPower;
+    private SoundEffectInstance drillSound;
+    private SoundEffectInstance fuelWarningSfx;
     
     
     private DrillDirection drillDirection = DrillDirection.None;
@@ -57,7 +61,6 @@ public class Player : Animation
     
     public Player() : base("DrillPod")
     {
-        
         anchor = Anchor.Center;
         inventory = new Inventory(startingCapacity);
         flame = new Animation("Flame");
@@ -67,6 +70,9 @@ public class Player : Animation
         animations.Add(DrillDirection.Down, new Animation("DownDrill") { anchor = Anchor.Center });
         animations.Add(DrillDirection.Right, new Animation("RightDrill") { anchor = Anchor.Center });
         animations.Add(DrillDirection.Left, new Animation("LeftDrill") { anchor = Anchor.Center });
+        drillSound = AudioManager.CreateSfxInstance("drillSfx",0.2f);
+        fuelWarningSfx = AudioManager.CreateSfxInstance("fuelWarningSfx",0.5f);
+        drillSound.Pitch = -0.5f;
     }
 
     public override void Start()
@@ -87,7 +93,7 @@ public class Player : Animation
         }
         sortingOrder = 5f/Game1.totalLayers;
         flame.sortingOrder = 4.8f/Game1.totalLayers;
-        explode.sortingOrder = 1f/Game1.totalLayers;
+        explode.sortingOrder = 10f/Game1.totalLayers;
         foreach (var a in animations)
         {
             a.Value.sortingOrder = 5f/Game1.totalLayers;
@@ -97,6 +103,7 @@ public class Player : Animation
     public override void Update(GameTime gameTime)
     {
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        
         prevPosition = tm.position;
         
         ReadInput();
@@ -107,6 +114,11 @@ public class Player : Animation
         {
             explode.tm.position = tm.position;
             explode.Update(gameTime);
+            if (explode.IsFinished && !deathFired)
+            {
+                deathFired = true;
+                OnPlayerDeath?.Invoke();
+            }
             return;
         }
             
@@ -138,6 +150,11 @@ public class Player : Animation
                 AddOreToInventory(ore);
                 break;
         }
+        bool isDrilling = drillDirection != DrillDirection.None;
+        if (isDrilling && drillSound.State != SoundState.Playing)
+            drillSound.Play();
+        else if (!isDrilling && drillSound.State == SoundState.Playing)
+            drillSound.Stop();
         
         if (drillDirection != DrillDirection.None)
         {
@@ -264,12 +281,14 @@ public class Player : Animation
     {
         isDead = true;
         explode.PlayAnimation(false,13);
-        OnPlayerDeath?.Invoke();
+        AudioManager.PlaySoundEffect("explosion");
     }
 
     private void BurnFuel(float amount)
     {
         fuel = Math.Clamp(fuel - amount, 0f, maxFuel);
+        if(fuel <= maxFuel/3f) fuelWarningSfx.Play();
+        else fuelWarningSfx.Stop();
         OnFuelChange?.Invoke(fuel / maxFuel);
     }
 
@@ -282,6 +301,7 @@ public class Player : Animation
     public void Refuel(float amount)
     {
         fuel = Math.Clamp(fuel + amount, 0f, maxFuel);
+        fuelWarningSfx.Stop();
         OnFuelChange?.Invoke(fuel / maxFuel);
     }
 

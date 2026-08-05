@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -17,6 +18,8 @@ public class Portal : IDrawable, IUpdatable
     private Text promptText;
     private float scale;
     private Random random = new Random();
+    private SoundEffectInstance portalSound;
+    float maxRange = 500f;
     public Rectangle EntranceBounds => entranceBounds;
 
     public Portal(string spriteName, float scale, Player player)
@@ -28,6 +31,8 @@ public class Portal : IDrawable, IUpdatable
         portalSprite.anchor = Anchor.TopLeft;
         portalSprite.tm.scale = new Vector2(scale, scale);
         portalSprite.sortingOrder = 1f;
+        portalSound = AudioManager.CreateSfxInstance("portalSound",0f);
+        portalSound.Play();
     }
     
     public void Start()
@@ -62,10 +67,14 @@ public class Portal : IDrawable, IUpdatable
         if (playerIsInside && ePressed && !wasEPressed)
         {
             Console.WriteLine("Entered Portal");
+            AudioManager.PlaySoundEffect("portalEnter");
+            portalSound.Stop();
             GameManager.Instance.WinGame();
         }
         wasEPressed = ePressed;
         portalSprite.Update(gameTime);
+        if(portalSound!=null)
+            portalSound.Volume = ComputeVolumeByDistance();
     }
     
     public void DrawPrompt(SpriteBatch spriteBatch)
@@ -101,5 +110,12 @@ public class Portal : IDrawable, IUpdatable
         portalSprite.tm.position = new Vector2(Game1.groundLevel.X + randomColumn * Game1.blockSize, Game1.groundLevel.Y + bottomRow * Game1.blockSize);
         SetPortalEntranceBounds(scale);
         SetPromptText();
+    }
+    
+
+    private float ComputeVolumeByDistance()
+    {
+        float distance = Vector2.Distance(player.tm.position, portalSprite.tm.position);
+        return Math.Clamp(1f - distance / maxRange, 0f, 1f);
     }
 }

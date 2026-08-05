@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace DrillDown;
 
@@ -30,21 +32,32 @@ public class Game1 : Game
     private World world;
     private Camera camera;
     private HUD hud;
-    private MainMenu mainMenu;
-    private GameOver gameOver;
+    private StartMenu startMenu;
+    private FinishMenu finishMenu;
     private List<Shop> shops = new();
     private List<Zone> zones = new();
+    private List<Menu> menus = new();
     private Portal portal;
     private Sprite underGround;
-    private Sun sun;
+    private List<MovingObject> movingObjects = new();
+    private MovingObject sun,cloud1,cloud2,cloud3;
+    private Vector2 startPoint;
+    private Vector2 endPoint;
     private int tilesX, tilesY, tileW, tileH;
 
+    #region ResourcesManager
+    
+    private ResourcesManager<Song> songManager;
+    private ResourcesManager<SoundEffect> soundEffectManager;
+
+    #endregion
     
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         spriteManager = new SpriteManager(Content);
-        
+        songManager = new ResourcesManager<Song>(Content);
+        soundEffectManager = new ResourcesManager<SoundEffect>(Content);
         
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -65,6 +78,9 @@ public class Game1 : Game
         _screenTopCenter = new Vector2(_graphics.PreferredBackBufferWidth * 0.5f, 0);
         
         _screenLeftCorner = Vector2.Zero;
+        groundLevel = _screenLeftCenter + yLevelOffset;
+        startPoint = new Vector2(groundLevel.X,groundLevel.Y);
+        endPoint = new Vector2(groundLevel.X + columns * blockSize,groundLevel.Y);
     }
 
     protected override void Initialize()
@@ -76,19 +92,25 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        groundLevel = _screenLeftCenter + yLevelOffset;
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _font = Content.Load<SpriteFont>("Fonts/GeistPixel");
         Button.Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Button.Pixel.SetData(new Color[] { Color.White });
         
+        AudioManager.AddSong("song1","Audio/Music/song1");
+        AudioManager.AddSoundEffect("portalSound", "Audio/SFX/portalSound");
+        AudioManager.AddSoundEffect("portalEnter", "Audio/SFX/portalEnterSfx");
+        AudioManager.AddSoundEffect("drillSfx", "Audio/SFX/drillSfx");
+        AudioManager.AddSoundEffect("fuelWarningSfx", "Audio/SFX/lowFuelSfx");
+        AudioManager.AddSoundEffect("explosion","Audio/SFX/explosion");
         
         AddGameSprites();
-        
+        AddMovingObjects();
         CreatingBlocksOresZones();
         underGround = new Sprite("UnderGround");
         underGround.sortingOrder = 0.1f / totalLayers;
-        sun = new Sun("Sun");
+        
+        
         worldGenerator = new WorldGenerator(rows, columns,zones);
         grid = worldGenerator.GenerateWorld();
 
@@ -99,6 +121,7 @@ public class Game1 : Game
     }
     private void Start()
     {   
+        AudioManager.PlaySong("song1");
         player = new Player();
         hud = new HUD(player.Inventory,_font);
         player.world = world;
@@ -118,8 +141,8 @@ public class Game1 : Game
         portal = new Portal("Portal", 3f, player);
         portal.PlaceAtRandomPosition();
         MakeBlocksBelowShopsUnbreakable(shops);
-        mainMenu = new MainMenu(new Sprite("MenuBackground"));
-        gameOver = new GameOver();
+        startMenu = new StartMenu(new Sprite("MenuBackground"));
+        finishMenu = new FinishMenu();
         TilesCount();
     }
 
@@ -132,13 +155,16 @@ public class Game1 : Game
         switch (GameManager.Instance.gameState)
         {
             case GameManager.GameState.MainMenu:
-                mainMenu.Update(gameTime);
+                startMenu.Update(gameTime);
                 break;
             case GameManager.GameState.Playing:
                 underGround.Update(gameTime);
                 player.Update(gameTime);
                 portal.Update(gameTime);
-                sun.Update(gameTime);
+                foreach (var obj in movingObjects)
+                {
+                    obj.Update(gameTime);
+                }
                 foreach (var shop in shops)
                 {
                     shop.Update();
@@ -146,7 +172,7 @@ public class Game1 : Game
                 }
                 break;
             case GameManager.GameState.GameOver:
-                gameOver.Update(gameTime);
+                finishMenu.Update(gameTime);
                 break;
         }
         base.Update(gameTime);
@@ -172,7 +198,10 @@ public class Game1 : Game
                 }
             }
             world.Draw(_spriteBatch);
-            sun.Draw(_spriteBatch);
+            foreach (var movingObject in movingObjects)
+            {
+                movingObject.Draw(_spriteBatch);
+            }
             portal.Draw(_spriteBatch);
             portal.DrawPrompt(_spriteBatch);
             player.Draw(_spriteBatch);
@@ -196,11 +225,11 @@ public class Game1 : Game
         
         if (GameManager.Instance.gameState == GameManager.GameState.MainMenu)
         {
-            mainMenu.Draw(_spriteBatch);
+            startMenu.Draw(_spriteBatch);
         }
         if (GameManager.Instance.gameState == GameManager.GameState.GameOver)
         {
-            gameOver.Draw(_spriteBatch);
+            finishMenu.Draw(_spriteBatch);
         }
         _spriteBatch.End();
         base.Draw(gameTime);
@@ -299,6 +328,9 @@ public class Game1 : Game
         SpriteManager.AddSprite("Cargo","Images/CargoIcon");
         SpriteManager.AddSprite("Hull","Images/HullIcon");
         SpriteManager.AddSprite("Portal","Images/Dimensional_Portal",3,2);
+        SpriteManager.AddSprite("Cloud1","Images/cloud1");
+        SpriteManager.AddSprite("Cloud2","Images/cloud2");
+        SpriteManager.AddSprite("Cloud3","Images/cloud3");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
@@ -336,6 +368,21 @@ public class Game1 : Game
         SpriteManager.AddSprite("PlatinumOre","Ores/PlatinumOre");
         SpriteManager.AddSprite("OpalOre","Ores/OpalOre");
         SpriteManager.AddSprite("PainiteOre","Ores/PainiteOre");
+    }
+
+    private void AddMovingObjects()
+    {
+        float cloudsPos = 500f;
+        Vector2 c1, c2, c3, c4;
+        c1 = startPoint - new Vector2(0, cloudsPos);
+        c2 = c1 + new Vector2(400, -50);
+        c3 = c1 + new Vector2(800, 30);
+        c4 = c1 + new Vector2(1200, -20);
+        movingObjects.Add(new MovingObject("Sun",1000f,200f,startPoint,endPoint));
+        movingObjects.Add(new MovingObject("Cloud1",50f,300f,c1,new Vector2(endPoint.X,c1.Y)));
+        movingObjects.Add(new MovingObject("Cloud2",70f,280f,c2,new Vector2(endPoint.X,c2.Y)));
+        movingObjects.Add(new MovingObject("Cloud3",0f,260f,c3,new Vector2(endPoint.X,c3.Y)));
+        movingObjects.Add(new MovingObject("Cloud2",100f,100f,c4,new Vector2(endPoint.X,c4.Y)));
     }
 
     private void TilesCount()
