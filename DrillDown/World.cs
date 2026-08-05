@@ -37,15 +37,10 @@ public class World : IDrawable
                     (int)groundLevel.Y + r * blockSize,
                     blockSize,
                     blockSize);
-                spriteBatch.Draw(block.Texture, dest, Color.White);
+                spriteBatch.Draw(block.Texture, dest,null ,Color.White,0f,Vector2.Zero,SpriteEffects.None,layer);
             }
         }
     }
-    
-    /*public Rectangle CellRect(int r, int c) => new Rectangle(
-        (int)groundLevel.X + c * blockSize,
-        (int)groundLevel.Y + r * blockSize,
-        blockSize, blockSize);*/
     
     public bool IsSolid(Rectangle podRect)
     {

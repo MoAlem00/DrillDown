@@ -10,7 +10,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private int totalLayers = 5;
+    public static int totalLayers = 10;
     public static Vector2 _screenCenter;
     public static Vector2 _screenLeftCenter;
     public static Vector2 _screenRightCorner;
@@ -22,8 +22,6 @@ public class Game1 : Game
     public const int rows = 500;
     private Player player;
     public static SpriteFont _font;
-    private int buttonWidth = 200;
-    private int buttonHeight = 80;
     public static Vector2 groundLevel;
     private Vector2 yLevelOffset = new Vector2(0, 200f);
     private SpriteManager spriteManager;
@@ -37,6 +35,9 @@ public class Game1 : Game
     private List<Shop> shops = new();
     private List<Zone> zones = new();
     private Portal portal;
+    private Sprite underGround;
+    private Sun sun;
+    private int tilesX, tilesY, tileW, tileH;
 
     
     public Game1()
@@ -78,7 +79,6 @@ public class Game1 : Game
         groundLevel = _screenLeftCenter + yLevelOffset;
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _font = Content.Load<SpriteFont>("Fonts/GeistPixel");
-        
         Button.Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Button.Pixel.SetData(new Color[] { Color.White });
         
@@ -86,10 +86,13 @@ public class Game1 : Game
         AddGameSprites();
         
         CreatingBlocksOresZones();
+        underGround = new Sprite("UnderGround");
+        underGround.sortingOrder = 0.1f / totalLayers;
+        sun = new Sun("Sun");
         worldGenerator = new WorldGenerator(rows, columns,zones);
         grid = worldGenerator.GenerateWorld();
 
-        world = new World(grid, blockSize, groundLevel, 4f/totalLayers);
+        world = new World(grid, blockSize, groundLevel, 2f/totalLayers);
         camera = new Camera(world);
 
         Start();
@@ -100,7 +103,6 @@ public class Game1 : Game
         hud = new HUD(player.Inventory,_font);
         player.world = world;
         player.PlayAnimation();
-        player.sortingOrder = 0.99f; //3f / totalLayers;
         player.OnFuelChange += hud.HandleFuelChange;
         player.OnHealthChange += hud.HandleHealthChange;
         player.OnMoneyChange += hud.HandleMoneyChange;
@@ -115,10 +117,10 @@ public class Game1 : Game
         shops.Add(new UpgradesShop("UpgradesShop",0.3f, 12,player));
         portal = new Portal("Portal", 3f, player);
         portal.PlaceAtRandomPosition();
-        Console.WriteLine(rows - 1);
         MakeBlocksBelowShopsUnbreakable(shops);
         mainMenu = new MainMenu(new Sprite("MenuBackground"));
         gameOver = new GameOver();
+        TilesCount();
     }
 
     protected override void Update(GameTime gameTime)
@@ -133,8 +135,10 @@ public class Game1 : Game
                 mainMenu.Update(gameTime);
                 break;
             case GameManager.GameState.Playing:
+                underGround.Update(gameTime);
                 player.Update(gameTime);
                 portal.Update(gameTime);
+                sun.Update(gameTime);
                 foreach (var shop in shops)
                 {
                     shop.Update();
@@ -150,18 +154,28 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.SaddleBrown);
+        GraphicsDevice.Clear(Color.SkyBlue);
 
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp,
             transformMatrix: camera.position);
         
-        world.Draw(_spriteBatch);
         if (GameManager.Instance.gameState == GameManager.GameState.Playing)
         {
+            for (int y = 0; y < tilesY; y++)
+            {
+                for (int x = 0; x < tilesX; x++)
+                {
+                    underGround.tm.position = new Vector2(
+                        groundLevel.X + x * tileW,
+                        groundLevel.Y + y * tileH);
+                    underGround.Draw(_spriteBatch);
+                }
+            }
+            world.Draw(_spriteBatch);
+            sun.Draw(_spriteBatch);
             portal.Draw(_spriteBatch);
             portal.DrawPrompt(_spriteBatch);
             player.Draw(_spriteBatch);
-            _spriteBatch.Draw(Button.Pixel, portal.EntranceBounds, Color.Red * 0.5f);
             foreach (var shop in shops)
             {
                 shop.Draw(_spriteBatch);
@@ -241,11 +255,10 @@ public class Game1 : Game
         BlockType kryptoniteType = new BlockType("Kryptonite",SpriteManager.GetSprite("KryptoniteBlock").texture, 2.5f, kryptoniteOre);
         BlockType painiteType = new BlockType("Painite",SpriteManager.GetSprite("PainiteBlock").texture, 2.5f, painiteOre);
         BlockType obsidianType = new BlockType("Obsidian", SpriteManager.GetSprite("ObsidianBlock").texture, 3f);
-        //BlockType bedrockType = new BlockType("Bedrock", SpriteManager.GetSprite("BedrockBlock").texture,0);
         
         zones.Add(new Zone(0, 0, new Dictionary<BlockType, float>{{grassType,1f}},dirtType)); //0
         zones.Add(new Zone(1, 2, new Dictionary<BlockType, float>{{dirtType,1f}},dirtType)); //1
-        zones.Add(new Zone(3, 50, new Dictionary<BlockType, float>{{stoneType,0.15f},{ironType,0.01f},{coalType,0.12f},{copperType,0.08f}},dirtType)); //2
+        zones.Add(new Zone(3, 50, new Dictionary<BlockType, float>{{stoneType,0.15f},{ironType,0.1f},{coalType,0.12f},{copperType,0.08f}},dirtType)); //2
         zones.Add(new Zone(51, 100, new Dictionary<BlockType, float>{{stoneType,0.18f},{ironType,0.12f},{coalType,0.08f},{copperType,0.1f},{silverType,0.04f}},dirtType)); //3
         zones.Add(new Zone(101, 150, new Dictionary<BlockType, float>{{ironType,0.1f},{copperType,0.08f},{goldType,0.04f},{silverType,0.07f},{titaniumType,0.05f}},stoneType)); //4
         zones.Add(new Zone(151, 200, new Dictionary<BlockType, float>{{ironType,0.08f},{coalType,0.1f},{copperType,0.1f},{goldType,0.06f},{silverType,0.08f},{titaniumType,0.06f},{amethystType,0.04f}},stoneType));//5
@@ -260,6 +273,8 @@ public class Game1 : Game
 
     private void AddGameSprites()
     {
+        SpriteManager.AddSprite("UnderGround","Images/BgTexture");
+        SpriteManager.AddSprite("Sun","Images/Sun");
         SpriteManager.AddSprite("MenuBackground","Images/MenuBG");
         SpriteManager.AddSprite("Button1","Images/CrackedButton1");
         SpriteManager.AddSprite("CloseButton64","Images/XButton64");
@@ -321,6 +336,18 @@ public class Game1 : Game
         SpriteManager.AddSprite("PlatinumOre","Ores/PlatinumOre");
         SpriteManager.AddSprite("OpalOre","Ores/OpalOre");
         SpriteManager.AddSprite("PainiteOre","Ores/PainiteOre");
+    }
+
+    private void TilesCount()
+    {
+        tileW = underGround.texture.Width;
+        tileH = underGround.texture.Height;
+
+        float worldWidth = columns * blockSize;
+        float worldBottom = groundLevel.Y + rows * blockSize;
+        
+        tilesX = (int)Math.Ceiling(worldWidth / tileW);
+        tilesY = (int)Math.Ceiling((worldBottom - groundLevel.Y) / tileH);
     }
     
 }

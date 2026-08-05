@@ -57,6 +57,7 @@ public class Player : Animation
     
     public Player() : base("DrillPod")
     {
+        
         anchor = Anchor.Center;
         inventory = new Inventory(startingCapacity);
         flame = new Animation("Flame");
@@ -78,12 +79,18 @@ public class Player : Animation
         tm.position = new Vector2(Game1._screenCenter.X, Game1.groundLevel.Y - 55);
         tm.scale = new Vector2(0.8f, 0.8f);
         explode.tm.scale = new Vector2(2.5f, 2.5f);
-        explode.sortingOrder = 1f;
         flame.tm.scale = new Vector2(1.4f, 1.4f);
         flame.PlayAnimation(true,5);
         foreach (Animation animation in animations.Values)
         {
             animation.PlayAnimation();
+        }
+        sortingOrder = 5f/Game1.totalLayers;
+        flame.sortingOrder = 4.8f/Game1.totalLayers;
+        explode.sortingOrder = 1f/Game1.totalLayers;
+        foreach (var a in animations)
+        {
+            a.Value.sortingOrder = 5f/Game1.totalLayers;
         }
     }
 

@@ -30,7 +30,7 @@ public class Shop : IDrawable
         shopSprite.anchor = Anchor.BottomLeft;
         shopSprite.tm.scale = new Vector2(scale, scale);
         shopSprite.tm.position = new Vector2(Game1.groundLevel.X + worldXPos * Game1.blockSize, Game1.groundLevel.Y);
-        shopSprite.sortingOrder = 0.8f;
+        shopSprite.sortingOrder = 3f / Game1.totalLayers;
         SetShopEntranceBounds(scale);
         SetPromptText();
     }
