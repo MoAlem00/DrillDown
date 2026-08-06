@@ -8,20 +8,24 @@ namespace DrillDown;
 
 public class Inventory : IEnumerable
 {
-    private Dictionary<Material, int> materials;
+    private Dictionary<Material, int> materials = new();
+    private Dictionary<ItemType, Item> items = new();
     private float currentWeight;
     private int materialsSellCost;
     private float capacity;
     private float maxCapacity = 400f;
     private float minCapacity = 0f;
+    
     public event Action<float> OnCapacityChange;
     
     public float Capacity => capacity;
     public float MaxCapacity => maxCapacity;
     public Dictionary<Material, int> Materials => materials;
+    public Dictionary<ItemType, Item> Items => items;
     
     public Inventory(float startingCapacity)
     {
+        items = new Dictionary<ItemType, Item>();
         materials = new Dictionary<Material, int>();
         capacity = Math.Clamp(capacity + startingCapacity, minCapacity, maxCapacity);
     }
@@ -40,6 +44,12 @@ public class Inventory : IEnumerable
         currentWeight += material.Weight;
         OnCapacityChange?.Invoke(currentWeight);
         return true;
+    }
+
+    public void AddItem(Item item)
+    {
+        if (item == null) return;
+        item.AddQuantity(1);
     }
 
     public void UpgradeCapacity(float amount)

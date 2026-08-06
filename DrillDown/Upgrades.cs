@@ -6,7 +6,7 @@ namespace DrillDown;
 
 public class Upgrades
 {
-    private int[] upgradesCosts = [1000, 5000, 10000, 100000, 500000];
+    private int[] upgradesCosts = [500, 5000, 10000, 100000, 500000];
     private int level = 0;
     private float[] upgradesValues;
 

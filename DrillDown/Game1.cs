@@ -44,6 +44,7 @@ public class Game1 : Game
     private Vector2 startPoint;
     private Vector2 endPoint;
     private int tilesX, tilesY, tileW, tileH;
+    private EffectManager effectManager;
 
     #region ResourcesManager
     
@@ -58,6 +59,7 @@ public class Game1 : Game
         spriteManager = new SpriteManager(Content);
         songManager = new ResourcesManager<Song>(Content);
         soundEffectManager = new ResourcesManager<SoundEffect>(Content);
+        effectManager = new EffectManager();
         
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -98,6 +100,11 @@ public class Game1 : Game
         Button.Pixel.SetData(new Color[] { Color.White });
         
         AudioManager.AddSong("song1","Audio/Music/song1");
+        AudioManager.AddSong("song2","Audio/Music/song2");
+        AudioManager.AddSong("song3","Audio/Music/song3");
+        AudioManager.AddSong("song4","Audio/Music/song4");
+        AudioManager.AddSong("song5","Audio/Music/song5");
+        AudioManager.AddSong("song6","Audio/Music/song6");
         AudioManager.AddSoundEffect("portalSound", "Audio/SFX/portalSound");
         AudioManager.AddSoundEffect("portalEnter", "Audio/SFX/portalEnterSfx");
         AudioManager.AddSoundEffect("drillSfx", "Audio/SFX/drillSfx");
@@ -123,7 +130,6 @@ public class Game1 : Game
     }
     private void Start()
     {   
-        AudioManager.PlaySong("song1");
         player = new Player();
         hud = new HUD(player.Inventory,_font);
         player.world = world;
@@ -134,13 +140,14 @@ public class Game1 : Game
         player.Inventory.OnCapacityChange += hud.HandleCapacityChange;
         player.OnPlayerDeath += GameManager.Instance.HandleGameOver;
         player.OnHardLanding += () => camera.CameraShake(0.15f, 9f);
-        
+        world.OnBlockBreak += effectManager.SpawnEffect;
         GameManager.Instance.OnQuitGame += Exit;
         player.Start();
-        shops.Add(new RepairStation("RepairStation", 0.3f, 35,player));
+        shops.Add(new GasStation("GasStation",0.4f, 2,player));
+        shops.Add(new UpgradesShop("UpgradesShop",0.3f, 10,player));
         shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
-        shops.Add(new GasStation("GasStation",0.4f, 5,player));
-        shops.Add(new UpgradesShop("UpgradesShop",0.3f, 12,player));
+        shops.Add(new ItemsShop("ItemsShop",1f, 35,player));
+        shops.Add(new RepairStation("RepairStation", 0.3f, 47,player));
         portal = new Portal("Portal", 3f, player);
         portal.PlaceAtRandomPosition();
         MakeBlocksBelowShopsUnbreakable(shops);
@@ -161,6 +168,7 @@ public class Game1 : Game
                 startMenu.Update(gameTime);
                 break;
             case GameManager.GameState.Playing:
+                effectManager.Update(gameTime);
                 underGround.Update(gameTime);
                 player.Update(gameTime);
                 portal.Update(gameTime);
@@ -178,6 +186,7 @@ public class Game1 : Game
                 finishMenu.Update(gameTime);
                 break;
         }
+        AudioManager.Update();
         base.Update(gameTime);
     }
 
@@ -190,6 +199,7 @@ public class Game1 : Game
         
         if (GameManager.Instance.gameState == GameManager.GameState.Playing)
         {
+            effectManager.Draw(_spriteBatch);
             for (int y = 0; y < tilesY; y++)
             {
                 for (int x = 0; x < tilesX; x++)
@@ -268,8 +278,8 @@ public class Game1 : Game
         Material kryptoniteOre = new Material("KryptoniteOre",SpriteManager.GetSprite("KryptoniteOre").texture,3f,15000);
         Material painiteOre = new Material("PainiteOre",SpriteManager.GetSprite("PainiteOre").texture,1f,30000);
         
-        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.3f);
-        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.15f);
+        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.3f,null,"DirtBreakEffect");
+        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.15f,null,"DirtBreakEffect");
         BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.5f);
         BlockType coalType = new BlockType("Coal",SpriteManager.GetSprite("CoalBlock").texture,0.4f,coalOre);
         BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.6f,ironOre);
@@ -277,16 +287,16 @@ public class Game1 : Game
         BlockType silverType = new BlockType("Silver",SpriteManager.GetSprite("SilverBlock").texture,0.8f,silverOre);
         BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.9f,goldOre);
         BlockType titaniumType = new BlockType("Titanium",SpriteManager.GetSprite("TitaniumBlock").texture, 1.2f, titaniumOre);
-        BlockType amethystType = new BlockType("Amethyst", SpriteManager.GetSprite("AmethystBlock").texture, 1f, amethystOre);
+        BlockType amethystType = new BlockType("Amethyst", SpriteManager.GetSprite("AmethystBlock").texture, 1f, amethystOre,"AmethystBreakEffect");
         BlockType platinumType = new BlockType("Platinum",SpriteManager.GetSprite("PlatinumBlock").texture, 1.3f, platinumOre);
         BlockType sapphireType = new BlockType("Sapphire",SpriteManager.GetSprite("SapphireBlock").texture, 1.4f, sapphireOre);
         BlockType rubyType = new BlockType("Ruby",SpriteManager.GetSprite("RubyBlock").texture,1.5f,rubyOre);
         BlockType emeraldType = new BlockType("Emerald",SpriteManager.GetSprite("EmeraldBlock").texture,1.7f,emeraldOre);
-        BlockType opalType = new BlockType("Opal",SpriteManager.GetSprite("OpalBlock").texture, 1.8f, opalOre);
+        BlockType opalType = new BlockType("Opal",SpriteManager.GetSprite("OpalBlock").texture, 1.8f, opalOre,"OpalBreakEffect");
         BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,2.2f,diamondOre);
-        BlockType kryptoniteType = new BlockType("Kryptonite",SpriteManager.GetSprite("KryptoniteBlock").texture, 2.5f, kryptoniteOre);
+        BlockType kryptoniteType = new BlockType("Kryptonite",SpriteManager.GetSprite("KryptoniteBlock").texture, 2.5f, kryptoniteOre,"KryptoniteBreakEffect");
         BlockType painiteType = new BlockType("Painite",SpriteManager.GetSprite("PainiteBlock").texture, 2.5f, painiteOre);
-        BlockType obsidianType = new BlockType("Obsidian", SpriteManager.GetSprite("ObsidianBlock").texture, 3f);
+        BlockType obsidianType = new BlockType("Obsidian", SpriteManager.GetSprite("ObsidianBlock").texture, 3f,null,"ObsidianBreakEffect");
         
         zones.Add(new Zone(0, 0, new Dictionary<BlockType, float>{{grassType,1f}},dirtType)); //0
         zones.Add(new Zone(1, 2, new Dictionary<BlockType, float>{{dirtType,1f}},dirtType)); //1
@@ -296,10 +306,10 @@ public class Game1 : Game
         zones.Add(new Zone(151, 200, new Dictionary<BlockType, float>{{ironType,0.08f},{coalType,0.1f},{copperType,0.1f},{goldType,0.06f},{silverType,0.08f},{titaniumType,0.06f},{amethystType,0.04f}},stoneType));//5
         zones.Add(new Zone(201, 250, new Dictionary<BlockType, float>{{silverType,0.06f},{goldType,0.07f},{titaniumType,0.05f},{amethystType,0.06f},{sapphireType,0.03f},{platinumType,0.03f}},stoneType));//6
         zones.Add(new Zone(251, 300, new Dictionary<BlockType, float>{{obsidianType,0.01f},{goldType,0.06f},{amethystType,0.06f},{sapphireType,0.05f},{rubyType,0.03f},{platinumType,0.04f}},stoneType));//7
-        zones.Add(new Zone(301, 350, new Dictionary<BlockType, float>{{obsidianType,0.01f},{platinumType,0.04f},{amethystType,0.05f},{sapphireType,0.06f},{rubyType,0.05f},{emeraldType,0.03f}},stoneType));//8
-        zones.Add(new Zone(351, 400, new Dictionary<BlockType, float>{{diamondType,0.02f},{opalType,0.03f},{obsidianType,0.02f},{sapphireType,0.05f},{rubyType,0.06f},{emeraldType,0.05f}},stoneType));//9
-        zones.Add(new Zone(401, 450, new Dictionary<BlockType, float>{{diamondType,0.03f},{opalType,0.04f},{obsidianType,0.05f},{platinumType,0.04f},{rubyType,0.06f},{emeraldType,0.06f}},stoneType));//10
-        zones.Add(new Zone(451, 490, new Dictionary<BlockType, float>{{kryptoniteType,0.02f},{diamondType,0.04f},{opalType,0.05f},{obsidianType,0.06f},{painiteType,0.02f},{emeraldType,0.03f}},stoneType));//11
+        zones.Add(new Zone(301, 350, new Dictionary<BlockType, float>{{stoneType,0.05f},{platinumType,0.04f},{amethystType,0.05f},{sapphireType,0.06f},{rubyType,0.05f},{emeraldType,0.03f}},obsidianType));//8
+        zones.Add(new Zone(351, 400, new Dictionary<BlockType, float>{{diamondType,0.02f},{opalType,0.03f},{stoneType,0.03f},{sapphireType,0.05f},{rubyType,0.06f},{emeraldType,0.05f}},obsidianType));//9
+        zones.Add(new Zone(401, 450, new Dictionary<BlockType, float>{{diamondType,0.03f},{opalType,0.04f},{stoneType,0.01f},{platinumType,0.04f},{rubyType,0.06f},{emeraldType,0.06f}},obsidianType));//10
+        zones.Add(new Zone(451, 490, new Dictionary<BlockType, float>{{kryptoniteType,0.02f},{diamondType,0.04f},{opalType,0.05f},{obsidianType,0.06f},{painiteType,0.02f},{emeraldType,0.03f}},obsidianType));//11
         
     }
 
@@ -326,6 +336,7 @@ public class Game1 : Game
         SpriteManager.AddSprite("MineralsShop","Shops/MineralsShop");
         SpriteManager.AddSprite("RepairStation","Shops/RepairShop");
         SpriteManager.AddSprite("UpgradesShop","Shops/UpgradesShop");
+        SpriteManager.AddSprite("ItemsShop","Shops/ItemsShop");
         SpriteManager.AddSprite("Panel1","Images/Panel1");
         SpriteManager.AddSprite("Drill","Images/DrillRight");
         SpriteManager.AddSprite("Cargo","Images/CargoIcon");
@@ -334,6 +345,13 @@ public class Game1 : Game
         SpriteManager.AddSprite("Cloud1","Images/cloud1");
         SpriteManager.AddSprite("Cloud2","Images/cloud2");
         SpriteManager.AddSprite("Cloud3","Images/cloud3");
+        SpriteManager.AddSprite("BreakEffect","Images/BreakEffect",6,1);
+        SpriteManager.AddSprite("DirtBreakEffect","Images/DirtBreakEffect",6,1);
+        SpriteManager.AddSprite("AmethystBreakEffect","Images/AmethystBreakEffect",6,1);
+        SpriteManager.AddSprite("KryptoniteBreakEffect","Images/KryptoniteBreakEffect",6,1);
+        SpriteManager.AddSprite("OpalBreakEffect","Images/OpalBreakEffect",6,1);
+        SpriteManager.AddSprite("ObsidianBreakEffect","Images/ObsidianBreakEffect",6,1);
+        SpriteManager.AddSprite("Teleport","Items/Teleport");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");

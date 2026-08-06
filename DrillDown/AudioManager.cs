@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
@@ -9,9 +10,12 @@ public static class AudioManager
     private static List<SoundEffectInstance> _soundEffectsInstance = new();
 
     private static float prevVolSong = 1;
+    private static List<string> playlist = new();
+    private static Random random = new Random();
     public static void AddSong(string name, string fileName)
     {
         ResourcesManager<Song>.LoadResource(name, fileName);
+        playlist.Add(name);
     }
 
     public static void AddSoundEffect(string name, string fileName)
@@ -29,8 +33,18 @@ public static class AudioManager
             MediaPlayer.Stop();
         
         MediaPlayer.Volume = volume;
-        MediaPlayer.IsRepeating = true;
+        MediaPlayer.IsRepeating = false;
         MediaPlayer.Play(song);
+    }
+    
+    public static void Update()
+    {
+        if (playlist.Count > 0 && MediaPlayer.State == MediaState.Stopped)
+        {
+            string next = playlist[random.Next(playlist.Count)];
+            PlaySong(next,0.1f);
+            Console.WriteLine("Playing: " + next);
+        }
     }
     
     public static void PlaySoundEffect(string name, bool isLooping = false, float volume = 1, float pitch = 0, float pan = 0)

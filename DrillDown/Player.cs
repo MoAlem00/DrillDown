@@ -22,7 +22,7 @@ public class Player : Animation
     private float deltaTime;
     private float startingCapacity = 50f;
     private float fuel;
-    private float maxFuel = 70f;
+    private float maxFuel = 50f;
     private float health;
     private float maxHealth = 100f;
     private float burnRate = 0.5f;
@@ -51,6 +51,7 @@ public class Player : Animation
     private SoundEffectInstance drillSound;
     private SoundEffectInstance fuelWarningSfx;
     private SoundEffectInstance thrustSound;
+    private bool wasKeyPressed;
     
     
     private DrillDirection drillDirection = DrillDirection.None;
@@ -234,6 +235,14 @@ public class Player : Animation
         }
     }
 
+    public bool TryBuyItem(Item item)
+    {
+        if (!TrySpendMoney(item.Cost)) return false;
+        inventory.AddItem(item);
+        Console.WriteLine($"{item.Type} Added");
+        return true;
+    }
+
     private void ShowInventory()
     {
         foreach (var item in inventory)
@@ -246,48 +255,58 @@ public class Player : Animation
         velocity.X = 0;
         drillDirection = DrillDirection.None;
         movingDirection = DrillDirection.None;
-        if (Keyboard.GetState().IsKeyDown(Keys.S))
+        KeyboardState keyboardState = Keyboard.GetState();
+        if (keyboardState.IsKeyDown(Keys.S))
         {
             movingDirection = DrillDirection.Down;
             if(isGrounded)
                 velocity.Y = drillSpeed;
         }
-        if (Keyboard.GetState().IsKeyDown(Keys.D))
+        else if (keyboardState.IsKeyDown(Keys.D))
         {
             movingDirection = DrillDirection.Right;
             effects = SpriteEffects.FlipHorizontally;
             velocity.X = speedMovement;
         }
-        if (Keyboard.GetState().IsKeyDown(Keys.A))
+        else if (keyboardState.IsKeyDown(Keys.A))
         {
             movingDirection = DrillDirection.Left;
             effects = SpriteEffects.None;
             velocity.X = -speedMovement;
         }
-        if (Keyboard.GetState().IsKeyDown(Keys.W))
+        if (keyboardState.IsKeyDown(Keys.W))
         {
-            thrustSound.Play();
+            if (thrustSound.State != SoundState.Playing)
+                thrustSound.Play();
             isFlying = true;
             velocity.Y = -flySpeed;
         }
         else
         {
-            thrustSound.Stop();
+            if (thrustSound.State == SoundState.Playing)
+                thrustSound.Stop();
             isFlying = false;
         }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.T)&&Keyboard.GetState().IsKeyDown(Keys.P))
+        //Cheats for me
+        bool keyPressed = keyboardState.IsKeyDown(Keys.T)&&keyboardState.IsKeyDown(Keys.P);
+        if (keyPressed && !wasKeyPressed)
         {
             Teleport();
-            GiveMoney();
         }
-        if(Keyboard.GetState().IsKeyDown(Keys.M)&&Keyboard.GetState().IsKeyDown(Keys.A)&&Keyboard.GetState().IsKeyDown(Keys.X))
+        wasKeyPressed = keyPressed;
+        keyPressed = keyboardState.IsKeyDown(Keys.M)&&keyboardState.IsKeyDown(Keys.A)&&keyboardState.IsKeyDown(Keys.X);
+        if(keyPressed && !wasKeyPressed)
             Cheat();
-
-        if (Keyboard.GetState().IsKeyDown(Keys.L))
+        wasKeyPressed = keyPressed;
+        keyPressed = keyboardState.IsKeyDown(Keys.RightShift)&&keyboardState.IsKeyDown(Keys.D4);
+        if (keyPressed && !wasKeyPressed)
+            CheatMoney();
+        wasKeyPressed = keyPressed;
+        if (keyboardState.IsKeyDown(Keys.L))
         {
             ShowStats();
         }
+        //Cheats for me
         
     }
 
@@ -356,14 +375,14 @@ public class Player : Animation
         OnHealthChange?.Invoke(health / maxHealth);
     }
 
-    private void Teleport()
+    public void Teleport()
     {
         tm.position = Game1._screenCenter;
     }
 
-    private void GiveMoney()
+    private void CheatMoney()
     {
-        money += 100000;
+        money += 1000000;
         OnMoneyChange?.Invoke(money);
     }
 

@@ -12,6 +12,7 @@ public class World : IDrawable
     private Vector2 groundLevel;
     private int rows, columns;
     private float layer;
+    public event Action<string,Vector2> OnBlockBreak;
     
     
     public World(Block[,] world, int blockSize, Vector2 groundLevel,float layer)
@@ -83,6 +84,9 @@ public class World : IDrawable
         bool broken = block.isDrilled(deltaTime);
         if (broken)
         {
+            Vector2 effectPos = new Vector2(groundLevel.X + col * blockSize + blockSize * 0.5f,
+                groundLevel.Y + row * blockSize + blockSize * 0.5f);
+            OnBlockBreak?.Invoke(block.EffectName,effectPos);
             Material dropped = block.Material;
             world[row, col] = null;
             return dropped;

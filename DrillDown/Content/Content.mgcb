@@ -31,6 +31,24 @@
 /processorParam:Quality=Best
 /build:Audio/Music/song3.mp3
 
+#begin Audio/Music/song4.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/song4.mp3
+
+#begin Audio/Music/song5.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/song5.mp3
+
+#begin Audio/Music/song6.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/song6.mp3
+
 #begin Audio/SFX/drillSfx.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
@@ -320,6 +338,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/GeistPixel.spritefont
 
+#begin Images/AmethystBreakEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/AmethystBreakEffect.png
+
 #begin Images/Bar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -367,6 +397,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/BgTexture.png
+
+#begin Images/BreakEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/BreakEffect.png
 
 #begin Images/CargoIcon.png
 /importer:TextureImporter
@@ -463,6 +505,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/Dimensional_Portal.png
+
+#begin Images/DirtBreakEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/DirtBreakEffect.png
 
 #begin Images/DrillDownSpriteSheet.png
 /importer:TextureImporter
@@ -632,6 +686,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/Inventory.png
 
+#begin Images/KryptoniteBreakEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/KryptoniteBreakEffect.png
+
 #begin Images/MenuBG.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -643,6 +709,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/MenuBG.png
+
+#begin Images/ObsidianBreakEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/ObsidianBreakEffect.png
+
+#begin Images/OpalBreakEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/OpalBreakEffect.png
 
 #begin Images/Panel.png
 /importer:TextureImporter
@@ -727,6 +817,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/XButton64.png
+
+#begin Items/Teleport.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/Teleport.png
 
 #begin Ores/AmethystOre.png
 /importer:TextureImporter
@@ -919,6 +1021,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Shops/GasStation.png
+
+#begin Shops/ItemsShop.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shops/ItemsShop.png
 
 #begin Shops/MineralsShop.png
 /importer:TextureImporter
