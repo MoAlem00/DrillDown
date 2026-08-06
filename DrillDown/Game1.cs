@@ -103,6 +103,8 @@ public class Game1 : Game
         AudioManager.AddSoundEffect("drillSfx", "Audio/SFX/drillSfx");
         AudioManager.AddSoundEffect("fuelWarningSfx", "Audio/SFX/lowFuelSfx");
         AudioManager.AddSoundEffect("explosion","Audio/SFX/explosion");
+        AudioManager.AddSoundEffect("Thrust", "Audio/SFX/thrust");
+        AudioManager.AddSoundEffect("Impact", "Audio/SFX/impact");
         
         AddGameSprites();
         AddMovingObjects();
@@ -131,6 +133,7 @@ public class Game1 : Game
         player.OnMoneyChange += hud.HandleMoneyChange;
         player.Inventory.OnCapacityChange += hud.HandleCapacityChange;
         player.OnPlayerDeath += GameManager.Instance.HandleGameOver;
+        player.OnHardLanding += () => camera.CameraShake(0.15f, 9f);
         
         GameManager.Instance.OnQuitGame += Exit;
         player.Start();
@@ -151,7 +154,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        camera.Follow(player);
+        camera.Follow(player,gameTime);
         switch (GameManager.Instance.gameState)
         {
             case GameManager.GameState.MainMenu:

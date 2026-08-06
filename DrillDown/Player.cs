@@ -9,21 +9,23 @@ namespace DrillDown;
 public enum DrillDirection { None, Down, Left, Right}
 public class Player : Animation
 {
-    private const float gravity = 200f;
+    private const float gravity = 500f;
     private Vector2 velocity;
-    float speedMovement = 300; //230
-    private float minFallSpeed = 350f; //300
+    private float speedMovement = 250f; //230
+    private float drillSpeed = 150f;
+    private float flySpeed = 350f;
+    private float minFallSpeed = 500f; //300
     private float fallDamageMultiplier = 0.2f;
     private bool isFlying;
     private bool isDead;
     private bool isGrounded;
     private float deltaTime;
-    private float startingCapacity = 30f;
+    private float startingCapacity = 50f;
     private float fuel;
-    private float maxFuel = 100f;
+    private float maxFuel = 70f;
     private float health;
     private float maxHealth = 100f;
-    private float burnRate = 1f;
+    private float burnRate = 0.5f;
     private int money;
     private float drillPower = 1f;
     private float maxDrillPower = 4f;
@@ -38,6 +40,7 @@ public class Player : Animation
     public event Action<float> OnFuelChange;
     public event Action<float> OnHealthChange;
     public event Action<int> OnMoneyChange;
+    public event Action OnHardLanding;
     public event Action OnPlayerDeath;
     public float Fuel => fuel;
     public float MaxFuel => maxFuel;
@@ -47,6 +50,7 @@ public class Player : Animation
     public float DrillPower => drillPower;
     private SoundEffectInstance drillSound;
     private SoundEffectInstance fuelWarningSfx;
+    private SoundEffectInstance thrustSound;
     
     
     private DrillDirection drillDirection = DrillDirection.None;
@@ -72,6 +76,7 @@ public class Player : Animation
         animations.Add(DrillDirection.Left, new Animation("LeftDrill") { anchor = Anchor.Center });
         drillSound = AudioManager.CreateSfxInstance("drillSfx",0.2f);
         fuelWarningSfx = AudioManager.CreateSfxInstance("fuelWarningSfx",0.5f);
+        thrustSound = AudioManager.CreateSfxInstance("Thrust",0.3f);
         drillSound.Pitch = -0.5f;
     }
 
@@ -150,7 +155,7 @@ public class Player : Animation
                 AddOreToInventory(ore);
                 break;
         }
-        bool isDrilling = drillDirection != DrillDirection.None;
+        bool isDrilling = drillDirection != DrillDirection.None && isGrounded;
         if (isDrilling && drillSound.State != SoundState.Playing)
             drillSound.Play();
         else if (!isDrilling && drillSound.State == SoundState.Playing)
@@ -181,7 +186,7 @@ public class Player : Animation
         if(isDead)
             explode.Draw(spriteBatch);
     }
-
+    //New Position += v × dt
     private void MoveX()
     {
         tm.position.X += velocity.X * deltaTime;
@@ -210,6 +215,8 @@ public class Player : Animation
             tm.position.Y = prevPosition.Y;
             if (velocity.Y > minFallSpeed)
             {
+                OnHardLanding?.Invoke();
+                AudioManager.PlaySoundEffect("Impact",false,0.2f);
                 float fallDamage = (velocity.Y - minFallSpeed) * fallDamageMultiplier;
                 LoseHealth(fallDamage);
             }
@@ -242,7 +249,8 @@ public class Player : Animation
         if (Keyboard.GetState().IsKeyDown(Keys.S))
         {
             movingDirection = DrillDirection.Down;
-            velocity.Y = speedMovement;
+            if(isGrounded)
+                velocity.Y = drillSpeed;
         }
         if (Keyboard.GetState().IsKeyDown(Keys.D))
         {
@@ -258,10 +266,15 @@ public class Player : Animation
         }
         if (Keyboard.GetState().IsKeyDown(Keys.W))
         {
+            thrustSound.Play();
             isFlying = true;
-            velocity.Y = -speedMovement;
+            velocity.Y = -flySpeed;
         }
-        else isFlying = false;
+        else
+        {
+            thrustSound.Stop();
+            isFlying = false;
+        }
 
         if (Keyboard.GetState().IsKeyDown(Keys.T)&&Keyboard.GetState().IsKeyDown(Keys.P))
         {
@@ -275,6 +288,7 @@ public class Player : Animation
         {
             ShowStats();
         }
+        
     }
 
     private void Die()
