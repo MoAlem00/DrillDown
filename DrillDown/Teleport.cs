@@ -12,11 +12,7 @@ public class Teleport : Item
 
     public override void Use(Player player)
     {
+        Console.WriteLine("Teleporting");
         player.Teleport();
-    }
-
-    public override void Draw(SpriteBatch spriteBatch)
-    {
-        base.Draw(spriteBatch);
     }
 }

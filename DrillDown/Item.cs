@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DrillDown;
 
 public enum ItemType{Bomb,Teleport,FuelTank,RepairKit}
-public abstract class Item : IUsable,IDrawable
+public abstract class Item : IUsable//,IDrawable
 {
     private ItemType type;
     private Sprite icon;
@@ -24,9 +25,21 @@ public abstract class Item : IUsable,IDrawable
     
     public abstract void Use(Player player);
     public void AddQuantity(int amount) => quantity += amount;
-    public virtual void Draw(SpriteBatch spriteBatch)
+    /*public void Draw(SpriteBatch spriteBatch)
     {
         icon.Draw(spriteBatch);
+    }*/
+
+    public bool CanUseItem(Player player)
+    {
+        if (quantity <= 0)
+        {
+            Console.WriteLine($"Not Enough {Type}");
+            return false;
+        }
+        quantity--;
+        Use(player);
+        return true;
     }
 
 }

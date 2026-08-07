@@ -52,6 +52,7 @@ public class Player : Animation
     private SoundEffectInstance fuelWarningSfx;
     private SoundEffectInstance thrustSound;
     private bool wasKeyPressed;
+    private bool wasTKeyPressed;
     
     
     private DrillDirection drillDirection = DrillDirection.None;
@@ -234,13 +235,13 @@ public class Player : Animation
             Console.WriteLine($"Collected {material.Name}");
         }
     }
+    
 
-    public bool TryBuyItem(Item item)
+    private void UseItem(ItemType type)
     {
-        if (!TrySpendMoney(item.Cost)) return false;
-        inventory.AddItem(item);
-        Console.WriteLine($"{item.Type} Added");
-        return true;
+        Item item = inventory.GetItem(type);
+        if (item != null)
+            item.CanUseItem(this);
     }
 
     private void ShowInventory()
@@ -288,13 +289,13 @@ public class Player : Animation
             isFlying = false;
         }
         //Cheats for me
-        bool keyPressed = keyboardState.IsKeyDown(Keys.T)&&keyboardState.IsKeyDown(Keys.P);
+        /*bool keyPressed = keyboardState.IsKeyDown(Keys.T)&&keyboardState.IsKeyDown(Keys.P);
         if (keyPressed && !wasKeyPressed)
         {
             Teleport();
         }
-        wasKeyPressed = keyPressed;
-        keyPressed = keyboardState.IsKeyDown(Keys.M)&&keyboardState.IsKeyDown(Keys.A)&&keyboardState.IsKeyDown(Keys.X);
+        wasKeyPressed = keyPressed;*/
+        bool keyPressed = keyboardState.IsKeyDown(Keys.M)&&keyboardState.IsKeyDown(Keys.A)&&keyboardState.IsKeyDown(Keys.X);
         if(keyPressed && !wasKeyPressed)
             Cheat();
         wasKeyPressed = keyPressed;
@@ -307,6 +308,12 @@ public class Player : Animation
             ShowStats();
         }
         //Cheats for me
+        bool tPressed = keyboardState.IsKeyDown(Keys.T);
+        if (tPressed && !wasTKeyPressed)
+        {
+            UseItem(ItemType.Teleport);
+        }
+        wasTKeyPressed = tPressed;
         
     }
 

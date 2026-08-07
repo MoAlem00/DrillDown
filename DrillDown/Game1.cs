@@ -352,6 +352,7 @@ public class Game1 : Game
         SpriteManager.AddSprite("OpalBreakEffect","Images/OpalBreakEffect",6,1);
         SpriteManager.AddSprite("ObsidianBreakEffect","Images/ObsidianBreakEffect",6,1);
         SpriteManager.AddSprite("Teleport","Items/Teleport");
+        SpriteManager.AddSprite("Bomb","Items/Bomb");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");
