@@ -6,9 +6,9 @@ namespace DrillDown;
 
 public class Bar
 {
-    public Texture2D background;
-    private Texture2D fill;
-    private Texture2D icon;
+    public Sprite background;
+    private Sprite fill;
+    private Sprite icon;
     private Vector2 position;
     private Color fillColor,bgColor;
     private Vector2 fillOffset = new Vector2(1f, 1f);
@@ -16,12 +16,13 @@ public class Bar
     private int fillMaxHeight = 20;
     private float ratio;
 
-    public Bar(Texture2D background, Texture2D fill, Texture2D icon, Vector2 position, Color fillColor, Color bgColor)
+    public Bar(Sprite background, Sprite fill, Sprite icon, Vector2 position, Color fillColor, Color bgColor)
     {
         this.background = background;
         this.fill = fill;
         this.icon = icon;
         this.position = position;
+        icon.tm.position = position;
         this.fillColor = fillColor;
         this.bgColor = bgColor;
     }
@@ -30,13 +31,13 @@ public class Bar
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(icon, position, Color.White);
-        spriteBatch.Draw(background, new Vector2(position.X + icon.Width,position.Y + (icon.Height - background.Height)*0.5f), bgColor);
+        icon.Draw(spriteBatch);
+        spriteBatch.Draw(background.texture, new Vector2(position.X + 60,position.Y + (60 - background.texture.Height)*0.5f), bgColor);
         Rectangle fillRect = new Rectangle(
-            (int)(position.X + icon.Width),
-            (int)(position.Y + (icon.Height - background.Height)*0.5f),
+            (int)(position.X + 60),
+            (int)(position.Y + (60 - background.texture.Height)*0.5f),
             (int)(fillMaxWidth * ratio),
             fillMaxHeight);
-        spriteBatch.Draw(fill, fillRect, fillColor);
+        spriteBatch.Draw(fill.texture, fillRect, fillColor);
     }
 }

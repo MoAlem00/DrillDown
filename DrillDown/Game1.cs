@@ -130,9 +130,9 @@ public class Game1 : Game
     }
     private void Start()
     {   
-        player = new Player();
-        hud = new HUD(player.Inventory,_font);
-        player.world = world;
+        player = new Player(world,effectManager);
+        hud = new HUD(player.Inventory);
+        //player.world = world;
         player.PlayAnimation();
         player.OnFuelChange += hud.HandleFuelChange;
         player.OnHealthChange += hud.HandleHealthChange;
@@ -329,7 +329,7 @@ public class Game1 : Game
         SpriteManager.AddSprite("InventorySlots","Images/Inventory");
         SpriteManager.AddSprite("BarFill","Images/BarFill");
         SpriteManager.AddSprite("Bar","Images/Bar");
-        SpriteManager.AddSprite("FuelIcon","Images/FuelIcon");
+        SpriteManager.AddSprite("OilIcon","Images/OilIcon");
         SpriteManager.AddSprite("HealthIcon","Images/HealthIcon");
         SpriteManager.AddSprite("Flame","Images/FlameSheet",4,1);
         SpriteManager.AddSprite("GasStation","Shops/GasStation");
@@ -351,8 +351,11 @@ public class Game1 : Game
         SpriteManager.AddSprite("KryptoniteBreakEffect","Images/KryptoniteBreakEffect",6,1);
         SpriteManager.AddSprite("OpalBreakEffect","Images/OpalBreakEffect",6,1);
         SpriteManager.AddSprite("ObsidianBreakEffect","Images/ObsidianBreakEffect",6,1);
+        SpriteManager.AddSprite("LandEffect","Images/LandEffect",7,1);
         SpriteManager.AddSprite("Teleport","Items/Teleport");
         SpriteManager.AddSprite("Bomb","Items/Bomb");
+        SpriteManager.AddSprite("RepairKit","Items/RepairKit");
+        SpriteManager.AddSprite("FuelTank","Items/FuelTank");
         
         SpriteManager.AddSprite("DirtBlock","Blocks/DirtBlock");
         SpriteManager.AddSprite("GrassBlock","Blocks/GrassBlock");

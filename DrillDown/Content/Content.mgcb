@@ -638,18 +638,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/FuelBarFill.png
 
-#begin Images/FuelIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/FuelIcon.png
-
 #begin Images/HealthIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -698,6 +686,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/KryptoniteBreakEffect.png
 
+#begin Images/LandEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/LandEffect.png
+
 #begin Images/MenuBG.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -721,6 +721,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/ObsidianBreakEffect.png
+
+#begin Images/OilIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/OilIcon.png
 
 #begin Images/OpalBreakEffect.png
 /importer:TextureImporter
@@ -829,6 +841,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Items/Bomb.png
+
+#begin Items/FuelTank.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/FuelTank.png
+
+#begin Items/RepairKit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/RepairKit.png
 
 #begin Items/Teleport.png
 /importer:TextureImporter

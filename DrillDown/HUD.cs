@@ -13,7 +13,7 @@ public class HUD : IDrawable
     private int rows = 3;
     private int inventoryWidth;
     private int inventoryHeight;
-    private int margin = 50;
+    private int margin = 60;
     private Vector2 inventorySlotsPos;
     private Text counterText;
     private int iconPaddingX = 16;
@@ -29,16 +29,17 @@ public class HUD : IDrawable
     
     private Bar healthBar;
     private Sprite healthIcon;
+    private Sprite bar,barFill;
+    
 
-    public HUD(Inventory inventory, SpriteFont font)
+    public HUD(Inventory inventory)
     {
-        fuelIcon = new Sprite("FuelIcon");
+        fuelIcon = new Sprite("OilIcon");
         healthIcon = new Sprite("HealthIcon");
-        healthIcon.tm.scale = new Vector2(1.2f, 1.2f);
-        healthBar = new Bar(SpriteManager.GetSprite("Bar").texture,
-            SpriteManager.GetSprite("BarFill").texture,healthIcon.texture,new Vector2(margin,margin*2.2f),Color.Red,Color.DarkRed);
-        fuelBar = new Bar(SpriteManager.GetSprite("Bar").texture,
-            SpriteManager.GetSprite("BarFill").texture,fuelIcon.texture,new Vector2(margin,margin),Color.Yellow,Color.DarkGoldenrod);
+        bar = new Sprite("Bar");
+        barFill = new Sprite("BarFill");
+        healthBar = new Bar(bar, barFill,healthIcon,new Vector2(margin,margin*2.2f),Color.Red,Color.DarkRed);
+        fuelBar = new Bar(bar, barFill,fuelIcon,new Vector2(margin,margin),Color.Yellow,Color.DarkGoldenrod);
         counterText = Text.CreateDefault();
         moneyText = Text.CreateDefault("$" + "0");
         capacity = Text.CreateDefault("0" + "Kg");

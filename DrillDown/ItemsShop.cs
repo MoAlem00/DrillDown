@@ -10,7 +10,9 @@ public class ItemsShop : Shop
         panel = new Panel(new Sprite("Panel1"), 4, 4);
         panel.SetTitle("Items Shop");
         panel.AddSpriteButton(4,"Teleport",() => BuyItem(ItemType.Teleport),new Sprite("Teleport"),100,75);
-        panel.AddSpriteButton(5,"Bomb",() => BuyItem(ItemType.Bomb),new Sprite("Bomb"),120,70);
+        panel.AddSpriteButton(5,"Bomb",() => BuyItem(ItemType.Bomb),new Sprite("Bomb"),130,70);
+        panel.AddSpriteButton(6,"Repair",() => BuyItem(ItemType.RepairKit),new Sprite("RepairKit"),90,100);
+        panel.AddSpriteButton(7,"Fuel",() => BuyItem(ItemType.FuelTank),new Sprite("FuelTank"),80,80 );
         panel.AddCloseButton(3,CloseShop);
     }
 

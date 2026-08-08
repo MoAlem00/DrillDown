@@ -28,8 +28,10 @@ public class Inventory : IEnumerable
         items = new Dictionary<ItemType, Item>();
         materials = new Dictionary<Material, int>();
         capacity = Math.Clamp(capacity + startingCapacity, minCapacity, maxCapacity);
-        items.Add(ItemType.Teleport,new Teleport(ItemType.Teleport, new Sprite("Teleport"), 1000));
+        items.Add(ItemType.Teleport,new Teleport(ItemType.Teleport, new Sprite("Teleport"), 10000));
         items.Add(ItemType.Bomb,new Bomb(ItemType.Bomb, new Sprite("Bomb"), 3000));
+        items.Add(ItemType.RepairKit,new RepairKit(ItemType.RepairKit, new Sprite("RepairKit"), 2000));
+        items.Add(ItemType.FuelTank,new FuelTank(ItemType.FuelTank, new Sprite("FuelTank"), 5000));
     }
 
     public bool TryAddMaterial(Material material)

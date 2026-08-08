@@ -11,6 +11,6 @@ public class Bomb : Item
 
     public override void Use(Player player)
     {
-        Console.WriteLine("Use Bomb");
+        player.world.DestroyArea(player.tm.position,1);
     }
 }

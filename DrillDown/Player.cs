@@ -34,7 +34,7 @@ public class Player : Animation
     private Material ore;
     private Animation flame;
     private Animation explode;
-    public World world { get; set; }
+    public World world;
     private Inventory inventory;
     public Inventory Inventory => inventory;
     public event Action<float> OnFuelChange;
@@ -53,6 +53,10 @@ public class Player : Animation
     private SoundEffectInstance thrustSound;
     private bool wasKeyPressed;
     private bool wasTKeyPressed;
+    private bool wasRKeyPressed;
+    private bool wasFKeyPressed;
+    private bool wasBKeyPressed;
+    public EffectManager effectManager;
     
     
     private DrillDirection drillDirection = DrillDirection.None;
@@ -65,8 +69,10 @@ public class Player : Animation
         { DrillDirection.Right, new Vector2(32f, 0) },
     };
     
-    public Player() : base("DrillPod")
+    public Player(World world,EffectManager effectManager) : base("DrillPod")
     {
+        this.world = world;
+        this.effectManager = effectManager;
         anchor = Anchor.Center;
         inventory = new Inventory(startingCapacity);
         flame = new Animation("Flame");
@@ -218,6 +224,7 @@ public class Player : Animation
             if (velocity.Y > minFallSpeed)
             {
                 OnHardLanding?.Invoke();
+                effectManager.SpawnEffect("LandEffect", tm.position);
                 AudioManager.PlaySoundEffect("Impact",false,0.2f);
                 float fallDamage = (velocity.Y - minFallSpeed) * fallDamageMultiplier;
                 LoseHealth(fallDamage);
@@ -288,34 +295,12 @@ public class Player : Animation
                 thrustSound.Stop();
             isFlying = false;
         }
-        //Cheats for me
-        /*bool keyPressed = keyboardState.IsKeyDown(Keys.T)&&keyboardState.IsKeyDown(Keys.P);
-        if (keyPressed && !wasKeyPressed)
-        {
-            Teleport();
-        }
-        wasKeyPressed = keyPressed;*/
-        bool keyPressed = keyboardState.IsKeyDown(Keys.M)&&keyboardState.IsKeyDown(Keys.A)&&keyboardState.IsKeyDown(Keys.X);
-        if(keyPressed && !wasKeyPressed)
-            Cheat();
-        wasKeyPressed = keyPressed;
-        keyPressed = keyboardState.IsKeyDown(Keys.RightShift)&&keyboardState.IsKeyDown(Keys.D4);
-        if (keyPressed && !wasKeyPressed)
-            CheatMoney();
-        wasKeyPressed = keyPressed;
-        if (keyboardState.IsKeyDown(Keys.L))
-        {
-            ShowStats();
-        }
-        //Cheats for me
-        bool tPressed = keyboardState.IsKeyDown(Keys.T);
-        if (tPressed && !wasTKeyPressed)
-        {
-            UseItem(ItemType.Teleport);
-        }
-        wasTKeyPressed = tPressed;
         
+        ItemsInput(keyboardState);
+        CheatsInput(keyboardState);
     }
+
+    
 
     private void Die()
     {
@@ -400,9 +385,37 @@ public class Player : Animation
 
     private void ShowStats()
     {
-        Console.WriteLine($"Drill Power: {drillPower}");
-        Console.WriteLine($"Max Health: {maxHealth}");
-        Console.WriteLine($"Max Fuel: {maxFuel}");
-        Console.WriteLine($"Capacity: {inventory.Capacity}");
+        Console.WriteLine($"Drill Power: {drillPower}\r\nMax Health: {maxHealth}\r\nMax Fuel: {maxFuel}\r\nCapacity: {inventory.Capacity}");
+    }
+    
+    private void CheatsInput(KeyboardState keyboardState)
+    {
+        if (keyboardState.IsKeyDown(Keys.T)&&keyboardState.IsKeyDown(Keys.P))
+            Teleport();
+        if (keyboardState.IsKeyDown(Keys.M)&&keyboardState.IsKeyDown(Keys.A)&&keyboardState.IsKeyDown(Keys.X))
+            Cheat();
+        if(keyboardState.IsKeyDown(Keys.RightShift)&&keyboardState.IsKeyDown(Keys.D4))
+            CheatMoney();
+        if (keyboardState.IsKeyDown(Keys.L))
+            ShowStats();
+    }
+    private void ItemsInput(KeyboardState keyboardState)
+    {
+        bool tPressed = keyboardState.IsKeyDown(Keys.T);
+        if (tPressed && !wasTKeyPressed)
+            UseItem(ItemType.Teleport);
+        wasTKeyPressed = tPressed;
+        bool rPressed = keyboardState.IsKeyDown(Keys.R);
+        if(rPressed && !wasRKeyPressed)
+            UseItem(ItemType.RepairKit);
+        wasRKeyPressed = rPressed;
+        bool fPressed = keyboardState.IsKeyDown(Keys.F);
+        if (fPressed && !wasFKeyPressed)
+            UseItem(ItemType.FuelTank);
+        wasFKeyPressed = fPressed;
+        bool bPressed = keyboardState.IsKeyDown(Keys.B);
+        if (bPressed && !wasBKeyPressed)
+            UseItem(ItemType.Bomb);
+        wasBKeyPressed = bPressed;
     }
 }

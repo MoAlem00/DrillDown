@@ -99,7 +99,27 @@ public class World : IDrawable
         if (row < 0 || row >= rows || col < 0 || col >= columns) return;
         Block block = world[row, col];
         if (block == null) return;
+     
         block.SetBlockUnbreakable();
+    }
+
+    public void DestroyArea(Vector2 position, int radius)
+    {
+        int row = WorldToRow(position);
+        int col = WorldToCol(position);
+        for (int i = row - radius; i <= row + radius; i++)
+        {
+            for (int j = col - radius; j <= col + radius; j++)
+            {
+                if (i < 0 || i >= rows || j < 0 || j >= columns) continue;
+                Block block = world[i, j];
+                if (block == null || !block.IsBreakable) continue;
+                Vector2 effectPos = new Vector2(groundLevel.X + j * blockSize + blockSize * 0.5f,
+                    groundLevel.Y + i * blockSize + blockSize * 0.5f);
+                OnBlockBreak?.Invoke(block.EffectName,effectPos);
+                world[i, j] = null;
+            }
+        }
     }
 
     public float GetWorldRight() => groundLevel.X + columns * blockSize;
