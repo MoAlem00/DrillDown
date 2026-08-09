@@ -111,6 +111,7 @@ public class Game1 : Game
         AudioManager.AddSoundEffect("explosion","Audio/SFX/explosion");
         AudioManager.AddSoundEffect("Thrust", "Audio/SFX/thrust");
         AudioManager.AddSoundEffect("Impact", "Audio/SFX/impact");
+        AudioManager.AddSoundEffect("BombExplode", "Audio/SFX/BombExplodeSound");
         
         AddGameSprites();
         AddMovingObjects();

@@ -56,12 +56,12 @@ public class Shop : IDrawable
     {
         bool ePressed = Keyboard.GetState().IsKeyDown(Keys.E);
         playerIsInside = IsPlayerInside();
-            
+
         if (playerIsInside && ePressed && !wasEPressed)
+        {
             isOpen = true;
-        if(Keyboard.GetState().IsKeyDown(Keys.F))
-            isOpen = false;
-        
+            player.SetMovable(false);
+        }
         wasEPressed = ePressed;
     }
 
@@ -106,6 +106,7 @@ public class Shop : IDrawable
     public void CloseShop()
     {
         isOpen = false;
+        player.SetMovable(true);
     }
 
     public Vector2 GetShopPosition()

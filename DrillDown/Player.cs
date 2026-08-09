@@ -37,6 +37,7 @@ public class Player : Animation
     private Animation explode;
     public World world;
     private Inventory inventory;
+    private bool canMove = true;
     public Inventory Inventory => inventory;
     public event Action<float> OnFuelChange;
     public event Action<float> OnHealthChange;
@@ -120,7 +121,7 @@ public class Player : Animation
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
         prevPosition = tm.position;
-        
+        if(!canMove)return;
         ReadInput();
         if ((fuel <= 0 || health <=0) && !isDead)
             Die();
@@ -422,5 +423,10 @@ public class Player : Animation
         if (bPressed && !wasBKeyPressed)
             UseItem(ItemType.Bomb,totalTime);
         wasBKeyPressed = bPressed;
+    }
+
+    public void SetMovable(bool movable)
+    {
+        canMove = movable;
     }
 }
