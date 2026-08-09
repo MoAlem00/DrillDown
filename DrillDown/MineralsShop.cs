@@ -45,7 +45,7 @@ public class MineralsShop : Shop
         if (player == null) return;
         int totalValue = player.Inventory.GetOresTotalValue();
         player.AddMoney(totalValue);
-        player.Inventory.ClearInventory();
+        player.Inventory.SellInventory();
     }
     
     public override void DrawPanel(SpriteBatch spriteBatch)

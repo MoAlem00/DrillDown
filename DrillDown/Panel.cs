@@ -59,7 +59,7 @@ public class Panel
         titleText?.Draw(spriteBatch);
         foreach (var button in buttons)
             button.Draw(spriteBatch);
-        DrawGridDebug(spriteBatch);
+        //DrawGridDebug(spriteBatch);
     }
 
     private Vector2 GetSlotTopRightCorner(int slotIndex)

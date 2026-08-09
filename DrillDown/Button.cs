@@ -18,6 +18,7 @@ public class Button : IUpdatable, IDrawable
     public event Action OnClick;
     private readonly float sortingOrder;
     private bool isInside;
+    private bool wasInside;
 
     public Button(Sprite sprite, Vector2 position, int width, int height,float layer = 0.9f)//constructor for a button with texture
     {
@@ -55,14 +56,20 @@ public class Button : IUpdatable, IDrawable
         MouseState mouseState = Mouse.GetState();
         bool isPressedNow = mouseState.LeftButton == ButtonState.Pressed;
         isInside = bounds.Contains(mouseState.Position);
-        if (isPressedNow && !isButtonPressed && isInside)//if button pressed in this frame
+        if (isInside&&!wasInside)
         {
-            OnClick?.Invoke();//launch OnClick event
+            AudioManager.PlaySoundEffect("ButtonHoverSound");
+        }
+        if (isPressedNow && !isButtonPressed && isInside)
+        {
+            OnClick?.Invoke();
+            AudioManager.PlaySoundEffect("ButtonClick");
         }
         isButtonPressed = isPressedNow;
+        wasInside = isInside;
     }
         
-    public void Draw(SpriteBatch spriteBatch)//draw the button either with texture or without
+    public void Draw(SpriteBatch spriteBatch)
     {
         Texture2D drawTexture = sprite.texture ?? Pixel;
         Color drawColor = isInside ? hoverColor : tintColor;

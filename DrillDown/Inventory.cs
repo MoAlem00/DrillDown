@@ -16,11 +16,14 @@ public class Inventory : IEnumerable
     private float minCapacity = 0f;
     
     public event Action<float> OnCapacityChange;
+    public event Action OnInventoryFull;
+    public event Action OnInventoryEmpty;
     
     public float Capacity => capacity;
     public float MaxCapacity => maxCapacity;
     public Dictionary<Material, int> Materials => materials;
     public Dictionary<ItemType, Item> Items => items;
+    public bool IsFull => currentWeight >= capacity;
     
     public Inventory(float startingCapacity)
     {
@@ -35,6 +38,11 @@ public class Inventory : IEnumerable
 
     public bool TryAddMaterial(Material material)
     {
+        if (currentWeight >= capacity)
+        {
+            OnInventoryFull?.Invoke();
+            return false;
+        }
         if (currentWeight + material.Weight > capacity)
         {
             Console.WriteLine("Inventory Full!!");
@@ -64,8 +72,9 @@ public class Inventory : IEnumerable
     
     public int GetOresTotalValue() => materials.Sum(m => m.Key.SellCost * m.Value);
 
-    public void ClearInventory()
+    public void SellInventory()
     {
+        OnInventoryEmpty?.Invoke();
         materials.Clear();
         currentWeight = 0f;
         OnCapacityChange?.Invoke(currentWeight);

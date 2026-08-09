@@ -55,6 +55,18 @@
 /processorParam:Quality=Best
 /build:Audio/SFX/BombExplodeSound.mp3
 
+#begin Audio/SFX/ButtonClick.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/ButtonClick.mp3
+
+#begin Audio/SFX/ButtonHoverSound.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/ButtonHoverSound.mp3
+
 #begin Audio/SFX/drillSfx.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor

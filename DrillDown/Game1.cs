@@ -34,6 +34,7 @@ public class Game1 : Game
     private HUD hud;
     private StartMenu startMenu;
     private FinishMenu finishMenu;
+    private GameOverMenu gameOverMenu;
     private List<Shop> shops = new();
     private List<Zone> zones = new();
     private List<Menu> menus = new();
@@ -58,7 +59,7 @@ public class Game1 : Game
         spriteManager = new SpriteManager(Content);
         songManager = new ResourcesManager<Song>(Content);
         soundEffectManager = new ResourcesManager<SoundEffect>(Content);
-        effectManager = new EffectManager();
+        
         
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -98,64 +99,16 @@ public class Game1 : Game
         Button.Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Button.Pixel.SetData(new Color[] { Color.White });
         
-        AudioManager.AddSong("song1","Audio/Music/song1");
-        AudioManager.AddSong("song2","Audio/Music/song2");
-        AudioManager.AddSong("song3","Audio/Music/song3");
-        AudioManager.AddSong("song4","Audio/Music/song4");
-        AudioManager.AddSong("song5","Audio/Music/song5");
-        AudioManager.AddSong("song6","Audio/Music/song6");
-        AudioManager.AddSoundEffect("portalSound", "Audio/SFX/portalSound");
-        AudioManager.AddSoundEffect("portalEnter", "Audio/SFX/portalEnterSfx");
-        AudioManager.AddSoundEffect("drillSfx", "Audio/SFX/drillSfx");
-        AudioManager.AddSoundEffect("fuelWarningSfx", "Audio/SFX/lowFuelSfx");
-        AudioManager.AddSoundEffect("explosion","Audio/SFX/explosion");
-        AudioManager.AddSoundEffect("Thrust", "Audio/SFX/thrust");
-        AudioManager.AddSoundEffect("Impact", "Audio/SFX/impact");
-        AudioManager.AddSoundEffect("BombExplode", "Audio/SFX/BombExplodeSound");
-        
+        AddAudio();
         AddGameSprites();
         AddMovingObjects();
-        CreatingBlocksOresZones();
-        underGround = new Sprite("UnderGround");
-        underGround.sortingOrder = 0.1f / totalLayers;
-        
-        
-        worldGenerator = new WorldGenerator(rows, columns,zones);
-        grid = worldGenerator.GenerateWorld();
-
-        world = new World(grid, blockSize, groundLevel, 2f/totalLayers);
-        camera = new Camera(world);
+        CreateBlocksOresZones();
 
         Start();
     }
     private void Start()
     {   
-        player = new Player(world,effectManager);
-        hud = new HUD(player.Inventory);
-        //player.world = world;
-        player.PlayAnimation();
-        player.OnFuelChange += hud.HandleFuelChange;
-        player.OnHealthChange += hud.HandleHealthChange;
-        player.OnMoneyChange += hud.HandleMoneyChange;
-        player.Inventory.OnCapacityChange += hud.HandleCapacityChange;
-        player.OnPlayerDeath += GameManager.Instance.HandleGameOver;
-        player.OnHardLanding += () => camera.CameraShake(0.15f, 9f);
-        world.OnBlockBreak += effectManager.SpawnEffect;
-        foreach (var item in player.Inventory.Items.Values)
-            item.OnUse += effectManager.SpawnEffect;
-        GameManager.Instance.OnQuitGame += Exit;
-        player.Start();
-        shops.Add(new GasStation("GasStation",0.4f, 2,player));
-        shops.Add(new UpgradesShop("UpgradesShop",0.3f, 10,player));
-        shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
-        shops.Add(new ItemsShop("ItemsShop",1f, 35,player));
-        shops.Add(new RepairStation("RepairStation", 0.3f, 47,player));
-        portal = new Portal("Portal", 3f, player);
-        portal.PlaceAtRandomPosition();
-        MakeBlocksBelowShopsUnbreakable(shops);
-        startMenu = new StartMenu(new Sprite("MenuBackground"));
-        finishMenu = new FinishMenu();
-        TilesCount();
+        StartGame();
     }
 
     protected override void Update(GameTime gameTime)
@@ -183,8 +136,12 @@ public class Game1 : Game
                     shop.Update();
                     shop.UpdatePanel(gameTime);
                 }
+                hud.Update(gameTime);
                 break;
             case GameManager.GameState.GameOver:
+                gameOverMenu.Update(gameTime);
+                break;
+            case GameManager.GameState.WinGame:
                 finishMenu.Update(gameTime);
                 break;
         }
@@ -198,53 +155,53 @@ public class Game1 : Game
 
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp,
             transformMatrix: camera.position);
-        
-        if (GameManager.Instance.gameState == GameManager.GameState.Playing)
+
+        switch (GameManager.Instance.gameState)
         {
-            effectManager.Draw(_spriteBatch);
-            for (int y = 0; y < tilesY; y++)
-            {
-                for (int x = 0; x < tilesX; x++)
+            case GameManager.GameState.Playing:
+                effectManager.Draw(_spriteBatch);
+                for (int y = 0; y < tilesY; y++)
                 {
-                    underGround.tm.position = new Vector2(
-                        groundLevel.X + x * tileW,
-                        groundLevel.Y + y * tileH);
-                    underGround.Draw(_spriteBatch);
+                    for (int x = 0; x < tilesX; x++)
+                    {
+                        underGround.tm.position = new Vector2(
+                            groundLevel.X + x * tileW,
+                            groundLevel.Y + y * tileH);
+                        underGround.Draw(_spriteBatch);
+                    }
                 }
-            }
-            world.Draw(_spriteBatch);
-            foreach (var movingObject in movingObjects)
-            {
-                movingObject.Draw(_spriteBatch);
-            }
-            portal.Draw(_spriteBatch);
-            portal.DrawPrompt(_spriteBatch);
-            player.Draw(_spriteBatch);
-            foreach (var shop in shops)
-            {
-                shop.Draw(_spriteBatch);
-                shop.DrawPrompt(_spriteBatch);
-            }
+                world.Draw(_spriteBatch);
+                foreach (var movingObject in movingObjects)
+                    movingObject.Draw(_spriteBatch);
+                portal.Draw(_spriteBatch);
+                portal.DrawPrompt(_spriteBatch);
+                player.Draw(_spriteBatch);
+                foreach (var shop in shops)
+                {
+                    shop.Draw(_spriteBatch);
+                    shop.DrawPrompt(_spriteBatch);
+                }
+                break;
         }
         _spriteBatch.End();
         
         _spriteBatch.Begin();
         hud.Draw(_spriteBatch);
-        if (GameManager.Instance.gameState == GameManager.GameState.Playing)
+        switch (GameManager.Instance.gameState)
         {
-            foreach (var shop in shops)
-            {
-                shop.DrawPanel(_spriteBatch);
-            }
-        }
-        
-        if (GameManager.Instance.gameState == GameManager.GameState.MainMenu)
-        {
-            startMenu.Draw(_spriteBatch);
-        }
-        if (GameManager.Instance.gameState == GameManager.GameState.GameOver)
-        {
-            finishMenu.Draw(_spriteBatch);
+            case GameManager.GameState.Playing:
+                foreach (var shop in shops)
+                    shop.DrawPanel(_spriteBatch);
+                break;
+            case GameManager.GameState.MainMenu:
+                startMenu.Draw(_spriteBatch);
+                break;
+            case GameManager.GameState.GameOver:
+                gameOverMenu.Draw(_spriteBatch);
+                break;
+            case GameManager.GameState.WinGame:
+                finishMenu.Draw(_spriteBatch);
+                break;
         }
         _spriteBatch.End();
         base.Draw(gameTime);
@@ -262,9 +219,94 @@ public class Game1 : Game
         }
     }
     
-    private void CreatingBlocksOresZones()
+
+    private void AddMovingObjects()
     {
-        Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,1f,20);
+        float cloudsPos = 500f;
+        Vector2 c1, c2, c3, c4;
+        c1 = startPoint - new Vector2(0, cloudsPos);
+        c2 = c1 + new Vector2(400, -50);
+        c3 = c1 + new Vector2(800, 30);
+        c4 = c1 + new Vector2(1200, -20);
+        movingObjects.Add(new MovingObject("Sun",1000f,200f,startPoint,endPoint));
+        movingObjects.Add(new MovingObject("Cloud1",50f,300f,c1,new Vector2(endPoint.X,c1.Y)));
+        movingObjects.Add(new MovingObject("Cloud2",70f,280f,c2,new Vector2(endPoint.X,c2.Y)));
+        movingObjects.Add(new MovingObject("Cloud3",0f,260f,c3,new Vector2(endPoint.X,c3.Y)));
+        movingObjects.Add(new MovingObject("Cloud2",100f,100f,c4,new Vector2(endPoint.X,c4.Y)));
+    }
+
+    private void TilesCount()
+    {
+        tileW = underGround.texture.Width;
+        tileH = underGround.texture.Height;
+
+        float worldWidth = columns * blockSize;
+        float worldBottom = groundLevel.Y + rows * blockSize;
+        
+        tilesX = (int)Math.Ceiling(worldWidth / tileW);
+        tilesY = (int)Math.Ceiling((worldBottom - groundLevel.Y) / tileH);
+    }
+
+    private void StartGame()
+    {
+        effectManager = new EffectManager();
+        underGround = new Sprite("UnderGround");
+        underGround.sortingOrder = 0.1f / totalLayers;
+        worldGenerator = new WorldGenerator(rows, columns,zones);
+        grid = worldGenerator.GenerateWorld();
+        world = new World(grid, blockSize, groundLevel, 2f/totalLayers);
+        camera = new Camera(world);
+        player = new Player(world,effectManager);
+        hud = new HUD(player.Inventory);
+        player.PlayAnimation();
+        player.OnFuelChange += hud.HandleFuelChange;
+        player.OnHealthChange += hud.HandleHealthChange;
+        player.OnMoneyChange += hud.HandleMoneyChange;
+        player.Inventory.OnCapacityChange += hud.HandleCapacityChange;
+        player.OnPlayerDeath += GameManager.Instance.HandleGameOver;
+        player.OnHardLanding += () => camera.CameraShake(0.15f, 9f);
+        player.Inventory.OnInventoryFull += hud.HandleInventoryFull;
+        player.Inventory.OnInventoryEmpty += hud.HandleInventoryEmpty;
+        world.OnBlockBreak += effectManager.SpawnEffect;
+        GameManager.Instance.OnQuitGame += Exit;
+        GameManager.Instance.OnGameRestart += ResetGame;
+        foreach (var item in player.Inventory.Items.Values)
+            item.OnUse += effectManager.SpawnEffect;
+        
+        player.Start();
+        shops.Add(new GasStation("GasStation",0.4f, 2,player));
+        shops.Add(new UpgradesShop("UpgradesShop",0.3f, 10,player));
+        shops.Add(new MineralsShop("MineralsShop",0.5f,20,player));
+        shops.Add(new ItemsShop("ItemsShop",1f, 35,player));
+        shops.Add(new RepairStation("RepairStation", 0.3f, 47,player));
+        portal = new Portal("Portal", 3f, player);
+        portal.PlaceAtRandomPosition();
+        MakeBlocksBelowShopsUnbreakable(shops);
+        startMenu = new StartMenu(new Sprite("MenuBackground"));
+        finishMenu = new FinishMenu();
+        gameOverMenu = new GameOverMenu();
+        TilesCount();
+    }
+
+    private void ResetGame()
+    {
+        player.OnFuelChange -= hud.HandleFuelChange;
+        player.OnHealthChange -= hud.HandleHealthChange;
+        player.OnMoneyChange -= hud.HandleMoneyChange;
+        player.Inventory.OnCapacityChange -= hud.HandleCapacityChange;
+        player.OnPlayerDeath -= GameManager.Instance.HandleGameOver;
+        player.OnHardLanding -= () => camera.CameraShake(0.15f, 9f);
+        world.OnBlockBreak -= effectManager.SpawnEffect;
+        foreach (var item in player.Inventory.Items.Values)
+            item.OnUse -= effectManager.SpawnEffect;
+        GameManager.Instance.OnQuitGame -= Exit;
+        shops.Clear();
+        StartGame();
+    }
+    
+    private void CreateBlocksOresZones()
+    {
+        Material coalOre = new Material("CoalOre",SpriteManager.GetSprite("CoalOre").texture,0.5f,20);
         Material ironOre = new Material("IronOre",SpriteManager.GetSprite("IronOre").texture,2f,30);
         Material copperOre = new Material("CopperOre",SpriteManager.GetSprite("CopperOre").texture,2f,45);
         Material silverOre = new Material("SilverOre",SpriteManager.GetSprite("SilverOre").texture,2.5f,90);
@@ -398,31 +440,23 @@ public class Game1 : Game
         SpriteManager.AddSprite("PainiteOre","Ores/PainiteOre");
     }
 
-    private void AddMovingObjects()
+    private void AddAudio()
     {
-        float cloudsPos = 500f;
-        Vector2 c1, c2, c3, c4;
-        c1 = startPoint - new Vector2(0, cloudsPos);
-        c2 = c1 + new Vector2(400, -50);
-        c3 = c1 + new Vector2(800, 30);
-        c4 = c1 + new Vector2(1200, -20);
-        movingObjects.Add(new MovingObject("Sun",1000f,200f,startPoint,endPoint));
-        movingObjects.Add(new MovingObject("Cloud1",50f,300f,c1,new Vector2(endPoint.X,c1.Y)));
-        movingObjects.Add(new MovingObject("Cloud2",70f,280f,c2,new Vector2(endPoint.X,c2.Y)));
-        movingObjects.Add(new MovingObject("Cloud3",0f,260f,c3,new Vector2(endPoint.X,c3.Y)));
-        movingObjects.Add(new MovingObject("Cloud2",100f,100f,c4,new Vector2(endPoint.X,c4.Y)));
+        AudioManager.AddSong("song1","Audio/Music/song1");
+        AudioManager.AddSong("song2","Audio/Music/song2");
+        AudioManager.AddSong("song3","Audio/Music/song3");
+        AudioManager.AddSong("song4","Audio/Music/song4");
+        AudioManager.AddSong("song5","Audio/Music/song5");
+        AudioManager.AddSong("song6","Audio/Music/song6");
+        AudioManager.AddSoundEffect("portalSound", "Audio/SFX/portalSound");
+        AudioManager.AddSoundEffect("portalEnter", "Audio/SFX/portalEnterSfx");
+        AudioManager.AddSoundEffect("drillSfx", "Audio/SFX/drillSfx");
+        AudioManager.AddSoundEffect("fuelWarningSfx", "Audio/SFX/lowFuelSfx");
+        AudioManager.AddSoundEffect("explosion","Audio/SFX/explosion");
+        AudioManager.AddSoundEffect("Thrust", "Audio/SFX/thrust");
+        AudioManager.AddSoundEffect("Impact", "Audio/SFX/impact");
+        AudioManager.AddSoundEffect("BombExplode", "Audio/SFX/BombExplodeSound");
+        AudioManager.AddSoundEffect("ButtonClick", "Audio/SFX/ButtonClick");
+        AudioManager.AddSoundEffect("ButtonHoverSound", "Audio/SFX/ButtonHoverSound");
     }
-
-    private void TilesCount()
-    {
-        tileW = underGround.texture.Width;
-        tileH = underGround.texture.Height;
-
-        float worldWidth = columns * blockSize;
-        float worldBottom = groundLevel.Y + rows * blockSize;
-        
-        tilesX = (int)Math.Ceiling(worldWidth / tileW);
-        tilesY = (int)Math.Ceiling((worldBottom - groundLevel.Y) / tileH);
-    }
-    
 }

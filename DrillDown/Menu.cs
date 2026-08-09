@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DrillDown;
 
-public abstract class Menu : IDrawable,IUpdatable
+public class Menu : IDrawable,IUpdatable
 {
     protected Panel panel;
     

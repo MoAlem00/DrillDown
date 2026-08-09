@@ -20,7 +20,7 @@ public class Player : Animation
     private bool isDead;
     private bool isGrounded;
     private float deltaTime;
-    private float startingCapacity = 50f;
+    private float startingCapacity = 10f;
     private float fuel;
     private float maxFuel = 50f;
     private float health;
@@ -31,6 +31,7 @@ public class Player : Animation
     private float maxDrillPower = 4f;
     private float totalTime;
     private bool deathFired;
+    private float distance;
     private Vector2 prevPosition;
     private Material ore;
     private Animation flame;
@@ -48,6 +49,7 @@ public class Player : Animation
     public float MaxFuel => maxFuel;
     public float Health => health;
     public float MaxHealth => maxHealth;
+    public float Distance => distance;
     public int Money => money;
     public float DrillPower => drillPower;
     private SoundEffectInstance drillSound;
@@ -183,6 +185,7 @@ public class Player : Animation
             flame.tm.position = tm.position + offsets[DrillDirection.Down];
             flame.Update(gameTime);
         }
+        
         base.Update(gameTime);
     }
     
@@ -235,6 +238,13 @@ public class Player : Animation
             velocity.Y = 0;
         }
     }
+
+    private float GetYDistance()
+    {
+        distance = Game1.groundLevel.Y - tm.position.Y;
+        Console.WriteLine(distance);
+        return distance;
+    }
     
 
     private void AddOreToInventory(Material material)
@@ -255,6 +265,7 @@ public class Player : Animation
         if (item.TryUseItem(this))
             item.MarkUsed(time);
     }
+    
 
     private void ShowInventory()
     {
@@ -391,7 +402,7 @@ public class Player : Animation
 
     private void ShowStats()
     {
-        Console.WriteLine($"Drill Power: {drillPower}\r\nMax Health: {maxHealth}\r\nMax Fuel: {maxFuel}\r\nCapacity: {inventory.Capacity}");
+        Console.WriteLine($"Drill Power: {drillPower}\r\nMax Health: {maxHealth}\r\nMax Fuel: {maxFuel}\r\nCapacity: {inventory.Capacity}\r\n{GetYDistance()}");
     }
     
     private void CheatsInput(KeyboardState keyboardState)
@@ -429,4 +440,5 @@ public class Player : Animation
     {
         canMove = movable;
     }
+    
 }

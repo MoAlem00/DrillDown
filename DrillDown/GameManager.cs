@@ -8,10 +8,13 @@ public class GameManager
     {
         MainMenu,
         GameOver,
+        WinGame,
         Playing
     }
 
     public event Action OnGameStart;
+    public event Action OnGameRestart;
+    //public event Action OnGameWon;
     public event Action OnQuitGame;
     public GameState gameState { get; private set; } = GameState.MainMenu;
 
@@ -42,6 +45,12 @@ public class GameManager
     
     public void WinGame()
     {
-        gameState = GameState.GameOver;
+        gameState = GameState.WinGame;
+    }
+
+    public void RestartGame()
+    {
+        OnGameRestart?.Invoke();
+        gameState = GameState.Playing;
     }
 }

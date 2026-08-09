@@ -55,7 +55,7 @@ public class WorldGenerator
                     lastBlock.SetBlockUnbreakable();
                     grid[r, c] = lastBlock;
                 }
-                else if (canBeHole && random.NextDouble() < 0.05)
+                else if (canBeHole && random.NextDouble() < 0.05f)
                     grid[r, c] = null;
                 else grid[r, c] = new Block(chosenBlock);
             }
