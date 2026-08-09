@@ -29,6 +29,7 @@ public class Player : Animation
     private int money;
     private float drillPower = 1f;
     private float maxDrillPower = 4f;
+    private float totalTime;
     private bool deathFired;
     private Vector2 prevPosition;
     private Material ore;
@@ -56,7 +57,7 @@ public class Player : Animation
     private bool wasRKeyPressed;
     private bool wasFKeyPressed;
     private bool wasBKeyPressed;
-    public EffectManager effectManager;
+    private EffectManager effectManager;
     
     
     private DrillDirection drillDirection = DrillDirection.None;
@@ -115,6 +116,7 @@ public class Player : Animation
 
     public override void Update(GameTime gameTime)
     {
+        totalTime = (float)gameTime.TotalGameTime.TotalSeconds;
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
         prevPosition = tm.position;
@@ -244,11 +246,13 @@ public class Player : Animation
     }
     
 
-    private void UseItem(ItemType type)
+    private void UseItem(ItemType type,float time)
     {
         Item item = inventory.GetItem(type);
-        if (item != null)
-            item.CanUseItem(this);
+        if (item == null) return;
+        if (!item.IsReady(time)) return;
+        if (item.TryUseItem(this))
+            item.MarkUsed(time);
     }
 
     private void ShowInventory()
@@ -403,19 +407,19 @@ public class Player : Animation
     {
         bool tPressed = keyboardState.IsKeyDown(Keys.T);
         if (tPressed && !wasTKeyPressed)
-            UseItem(ItemType.Teleport);
+            UseItem(ItemType.Teleport,totalTime);
         wasTKeyPressed = tPressed;
         bool rPressed = keyboardState.IsKeyDown(Keys.R);
         if(rPressed && !wasRKeyPressed)
-            UseItem(ItemType.RepairKit);
+            UseItem(ItemType.RepairKit,totalTime);
         wasRKeyPressed = rPressed;
         bool fPressed = keyboardState.IsKeyDown(Keys.F);
         if (fPressed && !wasFKeyPressed)
-            UseItem(ItemType.FuelTank);
+            UseItem(ItemType.FuelTank,totalTime);
         wasFKeyPressed = fPressed;
         bool bPressed = keyboardState.IsKeyDown(Keys.B);
         if (bPressed && !wasBKeyPressed)
-            UseItem(ItemType.Bomb);
+            UseItem(ItemType.Bomb,totalTime);
         wasBKeyPressed = bPressed;
     }
 }

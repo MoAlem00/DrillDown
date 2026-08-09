@@ -398,6 +398,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/BgTexture.png
 
+#begin Images/BombEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/BombEffect.png
+
 #begin Images/BreakEffect.png
 /importer:TextureImporter
 /processor:TextureProcessor

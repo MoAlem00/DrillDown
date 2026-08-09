@@ -141,6 +141,8 @@ public class Game1 : Game
         player.OnPlayerDeath += GameManager.Instance.HandleGameOver;
         player.OnHardLanding += () => camera.CameraShake(0.15f, 9f);
         world.OnBlockBreak += effectManager.SpawnEffect;
+        foreach (var item in player.Inventory.Items.Values)
+            item.OnUse += effectManager.SpawnEffect;
         GameManager.Instance.OnQuitGame += Exit;
         player.Start();
         shops.Add(new GasStation("GasStation",0.4f, 2,player));
@@ -352,6 +354,7 @@ public class Game1 : Game
         SpriteManager.AddSprite("OpalBreakEffect","Images/OpalBreakEffect",6,1);
         SpriteManager.AddSprite("ObsidianBreakEffect","Images/ObsidianBreakEffect",6,1);
         SpriteManager.AddSprite("LandEffect","Images/LandEffect",7,1);
+        SpriteManager.AddSprite("BombEffect","Images/BombEffect",4,1);
         SpriteManager.AddSprite("Teleport","Items/Teleport");
         SpriteManager.AddSprite("Bomb","Items/Bomb");
         SpriteManager.AddSprite("RepairKit","Items/RepairKit");

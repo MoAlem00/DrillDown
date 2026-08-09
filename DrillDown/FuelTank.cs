@@ -1,11 +1,12 @@
-﻿namespace DrillDown;
+﻿using Microsoft.Xna.Framework;
+
+namespace DrillDown;
 
 public class FuelTank : Item
 {
     private float refuelAmount = 30f;
-    public FuelTank(ItemType type, Sprite icon, int cost) : base(type, icon, cost)
+    public FuelTank(ItemType type, Sprite icon, int cost) : base(type, icon, cost,cooldown:1.2f)
     {
-        type = ItemType.FuelTank;
     }
 
     public override void Use(Player player)

@@ -13,18 +13,14 @@ public class EffectManager : IUpdatable,IDrawable
     public void Update(GameTime gameTime)
     {
         foreach (var effect in effects)
-        {
             effect.Update(gameTime);
-        }
         effects.RemoveAll(effect => effect.IsFinished);
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         foreach (var effect in effects)
-        {
             effect.Draw(spriteBatch);
-        }
     }
 
     public void SpawnEffect(string effectName, Vector2 position)

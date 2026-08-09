@@ -3,9 +3,8 @@
 public class RepairKit : Item
 {
     private float repairAmount = 40f;
-    public RepairKit(ItemType type, Sprite icon, int cost) : base(type, icon, cost)
+    public RepairKit(ItemType type, Sprite icon, int cost) : base(type, icon, cost,cooldown:1.2f)
     {
-        type = ItemType.RepairKit;
     }
 
     public override void Use(Player player)
