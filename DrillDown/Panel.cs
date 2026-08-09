@@ -14,9 +14,7 @@ public class Panel
     private float scale;
     private Sprite buttonSprite;
     private List<Button> buttons = new();
-    private int padding = 20;
     private int titleOffsetY = 60;
-    private Text content;
     
     public Panel(Sprite panelSprite,int cols, int rows,float scale = 1.4f,int paddingY = 0)
     {
@@ -59,7 +57,6 @@ public class Panel
     {
         panelSprite.Draw(spriteBatch);
         titleText?.Draw(spriteBatch);
-        content?.Draw(spriteBatch);
         foreach (var button in buttons)
             button.Draw(spriteBatch);
         DrawGridDebug(spriteBatch);

@@ -24,7 +24,7 @@ public class Animation : Sprite
         isAnimating = true;
     }
 
-    void StopAnimation()
+    public void StopAnimation()
     {
         Reset();
     }

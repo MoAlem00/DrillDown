@@ -77,9 +77,7 @@ public class Player : Animation
         anchor = Anchor.Center;
         inventory = new Inventory(startingCapacity);
         flame = new Animation("Flame");
-        flame.anchor = Anchor.Center;
         explode = new Animation("Explosion");
-        explode.anchor = Anchor.Center;
         animations.Add(DrillDirection.Down, new Animation("DownDrill") { anchor = Anchor.Center });
         animations.Add(DrillDirection.Right, new Animation("RightDrill") { anchor = Anchor.Center });
         animations.Add(DrillDirection.Left, new Animation("LeftDrill") { anchor = Anchor.Center });
@@ -98,9 +96,11 @@ public class Player : Animation
         OnFuelChange?.Invoke(fuel / maxFuel);
         tm.position = new Vector2(Game1._screenCenter.X, Game1.groundLevel.Y - 55);
         tm.scale = new Vector2(0.8f, 0.8f);
+        explode.anchor = Anchor.Center;
         explode.tm.scale = new Vector2(2.5f, 2.5f);
         flame.tm.scale = new Vector2(1.4f, 1.4f);
-        flame.PlayAnimation(true,5);
+        flame.anchor = Anchor.Center;
+        flame.PlayAnimation(true,8);
         foreach (Animation animation in animations.Values)
         {
             animation.PlayAnimation();
@@ -309,6 +309,7 @@ public class Player : Animation
     private void Die()
     {
         isDead = true;
+        flame.StopAnimation();
         explode.PlayAnimation(false,13);
         AudioManager.PlaySoundEffect("explosion");
     }

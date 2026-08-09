@@ -11,7 +11,6 @@ public class Inventory : IEnumerable
     private Dictionary<Material, int> materials = new();
     private Dictionary<ItemType, Item> items = new();
     private float currentWeight;
-    private int materialsSellCost;
     private float capacity;
     private float maxCapacity = 400f;
     private float minCapacity = 0f;

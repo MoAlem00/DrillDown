@@ -40,7 +40,6 @@ public class Game1 : Game
     private Portal portal;
     private Sprite underGround;
     private List<MovingObject> movingObjects = new();
-    private MovingObject sun,cloud1,cloud2,cloud3;
     private Vector2 startPoint;
     private Vector2 endPoint;
     private int tilesX, tilesY, tileW, tileH;
