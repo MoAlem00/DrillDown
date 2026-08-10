@@ -11,16 +11,16 @@ public class Player : Animation
 {
     private const float gravity = 500f;
     private Vector2 velocity;
-    private float speedMovement = 250f; //230
+    private float speedMovement = 250f;
     private float drillSpeed = 150f;
     private float flySpeed = 350f;
-    private float minFallSpeed = 500f; //300
+    private float minFallSpeed = 500f;
     private float fallDamageMultiplier = 0.2f;
     private bool isFlying;
     private bool isDead;
     private bool isGrounded;
     private float deltaTime;
-    private float startingCapacity = 10f;
+    private float startingCapacity = 50f;
     private float fuel;
     private float maxFuel = 50f;
     private float health;
@@ -36,7 +36,8 @@ public class Player : Animation
     private Material ore;
     private Animation flame;
     private Animation explode;
-    public World world;
+    private readonly World world;
+    public World World => world;
     private Inventory inventory;
     private bool canMove = true;
     public Inventory Inventory => inventory;
@@ -79,15 +80,14 @@ public class Player : Animation
         this.effectManager = effectManager;
         anchor = Anchor.Center;
         inventory = new Inventory(startingCapacity);
-        flame = new Animation("Flame");
-        explode = new Animation("Explosion");
+        flame = new Animation("Flame"){anchor = Anchor.Center};
+        explode = new Animation("Explosion"){anchor = Anchor.Center};
         animations.Add(DrillDirection.Down, new Animation("DownDrill") { anchor = Anchor.Center });
         animations.Add(DrillDirection.Right, new Animation("RightDrill") { anchor = Anchor.Center });
         animations.Add(DrillDirection.Left, new Animation("LeftDrill") { anchor = Anchor.Center });
         drillSound = AudioManager.CreateSfxInstance("drillSfx",0.2f);
         fuelWarningSfx = AudioManager.CreateSfxInstance("fuelWarningSfx",0.5f);
         thrustSound = AudioManager.CreateSfxInstance("Thrust",0.3f);
-        drillSound.Pitch = -0.5f;
     }
 
     public override void Start()
@@ -99,22 +99,17 @@ public class Player : Animation
         OnFuelChange?.Invoke(fuel / maxFuel);
         tm.position = new Vector2(Game1._screenCenter.X, Game1.groundLevel.Y - 55);
         tm.scale = new Vector2(0.8f, 0.8f);
-        explode.anchor = Anchor.Center;
         explode.tm.scale = new Vector2(2.5f, 2.5f);
         flame.tm.scale = new Vector2(1.4f, 1.4f);
-        flame.anchor = Anchor.Center;
         flame.PlayAnimation(true,8);
         foreach (Animation animation in animations.Values)
-        {
             animation.PlayAnimation();
-        }
         sortingOrder = 5f/Game1.totalLayers;
         flame.sortingOrder = 4.8f/Game1.totalLayers;
         explode.sortingOrder = 10f/Game1.totalLayers;
         foreach (var a in animations)
-        {
             a.Value.sortingOrder = 5f/Game1.totalLayers;
-        }
+        drillSound.Pitch = -0.5f;
     }
 
     public override void Update(GameTime gameTime)

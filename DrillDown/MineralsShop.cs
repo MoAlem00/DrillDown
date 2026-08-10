@@ -44,8 +44,10 @@ public class MineralsShop : Shop
     {
         if (player == null) return;
         int totalValue = player.Inventory.GetOresTotalValue();
+        if(totalValue == 0) return;
         player.AddMoney(totalValue);
         player.Inventory.SellInventory();
+        AudioManager.PlaySoundEffect("CollectMoneySound",false,0.3f);
     }
     
     public override void DrawPanel(SpriteBatch spriteBatch)

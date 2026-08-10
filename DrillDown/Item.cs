@@ -41,6 +41,7 @@ public abstract class Item : IUsable
     {
         if (quantity <= 0)
         {
+            AudioManager.PlaySoundEffect("ErrorSound",false,0.4f);
             Console.WriteLine($"Not Enough {Type}");
             return false;
         }

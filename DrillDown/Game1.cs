@@ -322,25 +322,25 @@ public class Game1 : Game
         Material kryptoniteOre = new Material("KryptoniteOre",SpriteManager.GetSprite("KryptoniteOre").texture,3f,15000);
         Material painiteOre = new Material("PainiteOre",SpriteManager.GetSprite("PainiteOre").texture,1f,30000);
         
-        BlockType dirtType = new BlockType("Dirt",SpriteManager.GetSprite("DirtBlock").texture,0.3f,null,"DirtBreakEffect");
-        BlockType grassType = new BlockType("Grass",SpriteManager.GetSprite("GrassBlock").texture,0.15f,null,"DirtBreakEffect");
-        BlockType stoneType = new BlockType("Stone",SpriteManager.GetSprite("StoneBlock").texture,0.5f);
-        BlockType coalType = new BlockType("Coal",SpriteManager.GetSprite("CoalBlock").texture,0.4f,coalOre);
-        BlockType ironType = new BlockType("Iron",SpriteManager.GetSprite("IronBlock").texture,0.6f,ironOre);
-        BlockType copperType = new BlockType("Copper",SpriteManager.GetSprite("CopperBlock").texture,0.6f,copperOre);
-        BlockType silverType = new BlockType("Silver",SpriteManager.GetSprite("SilverBlock").texture,0.8f,silverOre);
-        BlockType goldType = new BlockType("Gold",SpriteManager.GetSprite("GoldBlock").texture,0.9f,goldOre);
-        BlockType titaniumType = new BlockType("Titanium",SpriteManager.GetSprite("TitaniumBlock").texture, 1.2f, titaniumOre);
-        BlockType amethystType = new BlockType("Amethyst", SpriteManager.GetSprite("AmethystBlock").texture, 1f, amethystOre,"AmethystBreakEffect");
-        BlockType platinumType = new BlockType("Platinum",SpriteManager.GetSprite("PlatinumBlock").texture, 1.3f, platinumOre);
-        BlockType sapphireType = new BlockType("Sapphire",SpriteManager.GetSprite("SapphireBlock").texture, 1.4f, sapphireOre);
-        BlockType rubyType = new BlockType("Ruby",SpriteManager.GetSprite("RubyBlock").texture,1.5f,rubyOre);
-        BlockType emeraldType = new BlockType("Emerald",SpriteManager.GetSprite("EmeraldBlock").texture,1.7f,emeraldOre);
-        BlockType opalType = new BlockType("Opal",SpriteManager.GetSprite("OpalBlock").texture, 1.8f, opalOre,"OpalBreakEffect");
-        BlockType diamondType = new BlockType("Diamond",SpriteManager.GetSprite("DiamondBlock").texture,2.2f,diamondOre);
-        BlockType kryptoniteType = new BlockType("Kryptonite",SpriteManager.GetSprite("KryptoniteBlock").texture, 2.5f, kryptoniteOre,"KryptoniteBreakEffect");
-        BlockType painiteType = new BlockType("Painite",SpriteManager.GetSprite("PainiteBlock").texture, 2.5f, painiteOre);
-        BlockType obsidianType = new BlockType("Obsidian", SpriteManager.GetSprite("ObsidianBlock").texture, 3f,null,"ObsidianBreakEffect");
+        BlockType dirtType = new BlockType(SpriteManager.GetSprite("DirtBlock").texture,0.3f,null,"DirtBreakEffect");
+        BlockType grassType = new BlockType(SpriteManager.GetSprite("GrassBlock").texture,0.15f,null,"DirtBreakEffect");
+        BlockType stoneType = new BlockType(SpriteManager.GetSprite("StoneBlock").texture,0.5f);
+        BlockType coalType = new BlockType(SpriteManager.GetSprite("CoalBlock").texture,0.4f,coalOre);
+        BlockType ironType = new BlockType(SpriteManager.GetSprite("IronBlock").texture,0.6f,ironOre);
+        BlockType copperType = new BlockType(SpriteManager.GetSprite("CopperBlock").texture,0.6f,copperOre);
+        BlockType silverType = new BlockType(SpriteManager.GetSprite("SilverBlock").texture,0.8f,silverOre);
+        BlockType goldType = new BlockType(SpriteManager.GetSprite("GoldBlock").texture,0.9f,goldOre);
+        BlockType titaniumType = new BlockType(SpriteManager.GetSprite("TitaniumBlock").texture, 1.2f, titaniumOre);
+        BlockType amethystType = new BlockType(SpriteManager.GetSprite("AmethystBlock").texture, 1f, amethystOre,"AmethystBreakEffect");
+        BlockType platinumType = new BlockType(SpriteManager.GetSprite("PlatinumBlock").texture, 1.3f, platinumOre);
+        BlockType sapphireType = new BlockType(SpriteManager.GetSprite("SapphireBlock").texture, 1.4f, sapphireOre);
+        BlockType rubyType = new BlockType(SpriteManager.GetSprite("RubyBlock").texture,1.5f,rubyOre);
+        BlockType emeraldType = new BlockType(SpriteManager.GetSprite("EmeraldBlock").texture,1.7f,emeraldOre);
+        BlockType opalType = new BlockType(SpriteManager.GetSprite("OpalBlock").texture, 1.8f, opalOre,"OpalBreakEffect");
+        BlockType diamondType = new BlockType(SpriteManager.GetSprite("DiamondBlock").texture,2.2f,diamondOre);
+        BlockType kryptoniteType = new BlockType(SpriteManager.GetSprite("KryptoniteBlock").texture, 2.5f, kryptoniteOre,"KryptoniteBreakEffect");
+        BlockType painiteType = new BlockType(SpriteManager.GetSprite("PainiteBlock").texture, 2.5f, painiteOre);
+        BlockType obsidianType = new BlockType(SpriteManager.GetSprite("ObsidianBlock").texture, 3f,null,"ObsidianBreakEffect");
         
         zones.Add(new Zone(0, 0, new Dictionary<BlockType, float>{{grassType,1f}},dirtType)); //0
         zones.Add(new Zone(1, 2, new Dictionary<BlockType, float>{{dirtType,1f}},dirtType)); //1
@@ -353,7 +353,7 @@ public class Game1 : Game
         zones.Add(new Zone(301, 350, new Dictionary<BlockType, float>{{stoneType,0.05f},{platinumType,0.04f},{amethystType,0.05f},{sapphireType,0.06f},{rubyType,0.05f},{emeraldType,0.03f}},obsidianType));//8
         zones.Add(new Zone(351, 400, new Dictionary<BlockType, float>{{diamondType,0.02f},{opalType,0.03f},{stoneType,0.03f},{sapphireType,0.05f},{rubyType,0.06f},{emeraldType,0.05f}},obsidianType));//9
         zones.Add(new Zone(401, 450, new Dictionary<BlockType, float>{{diamondType,0.03f},{opalType,0.04f},{stoneType,0.01f},{platinumType,0.04f},{rubyType,0.06f},{emeraldType,0.06f}},obsidianType));//10
-        zones.Add(new Zone(451, 490, new Dictionary<BlockType, float>{{kryptoniteType,0.02f},{diamondType,0.04f},{opalType,0.05f},{obsidianType,0.06f},{painiteType,0.02f},{emeraldType,0.03f}},obsidianType));//11
+        zones.Add(new Zone(451, 500, new Dictionary<BlockType, float>{{kryptoniteType,0.02f},{diamondType,0.04f},{opalType,0.05f},{obsidianType,0.06f},{painiteType,0.02f},{emeraldType,0.03f}},obsidianType));//11
         
     }
 
@@ -458,5 +458,7 @@ public class Game1 : Game
         AudioManager.AddSoundEffect("BombExplode", "Audio/SFX/BombExplodeSound");
         AudioManager.AddSoundEffect("ButtonClick", "Audio/SFX/ButtonClick");
         AudioManager.AddSoundEffect("ButtonHoverSound", "Audio/SFX/ButtonHoverSound");
+        AudioManager.AddSoundEffect("ErrorSound", "Audio/SFX/ErrorSound");
+        AudioManager.AddSoundEffect("CollectMoneySound", "Audio/SFX/CollectMoneySound");
     }
 }

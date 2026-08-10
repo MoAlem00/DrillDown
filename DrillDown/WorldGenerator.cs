@@ -17,7 +17,7 @@ public class WorldGenerator
         this.columns = columns;
         this.rows = rows;
         this.zones = zones;
-        bedrock = new BlockType("Bedrock", SpriteManager.GetSprite("BedrockBlock").texture, 0);
+        bedrock = new BlockType(SpriteManager.GetSprite("BedrockBlock").texture, 0);
     }
 
     public Block[,] GenerateWorld()
