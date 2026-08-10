@@ -24,7 +24,7 @@ public class Block
         isBreakable = true;
     }
     
-    public bool isDrilled(float amount)
+    public bool IsDrilled(float amount)
     {
         drillProgress += amount;
         return drillProgress >= type.timeToDrill;

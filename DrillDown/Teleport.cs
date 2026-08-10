@@ -9,9 +9,11 @@ public class Teleport : Item
     {
     }
 
-    public override void Use(Player player)
+    public override bool Use(Player player)
     {
         Console.WriteLine("Teleporting");
+        AudioManager.PlaySoundEffect("portalEnter",false,0.2f);
         player.Teleport();
+        return true;
     }
 }

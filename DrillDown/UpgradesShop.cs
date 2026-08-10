@@ -52,6 +52,7 @@ public class UpgradesShop : Shop
     {
         if (!upgrade.TryUpgrade(player)) return;
         applyToPlayer(upgrade.CurrentValue());
+        AudioManager.PlaySoundEffect("UpgradeSound",false,0.5f);
     }
     
     public override void DrawPanel(SpriteBatch spriteBatch)

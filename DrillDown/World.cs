@@ -81,7 +81,7 @@ public class World : IDrawable
         Block block = world[row, col];
         if (block == null) return null;
         if (!block.IsBreakable) return null;
-        bool broken = block.isDrilled(deltaTime);
+        bool broken = block.IsDrilled(deltaTime);
         if (broken)
         {
             Vector2 effectPos = new Vector2(groundLevel.X + col * blockSize + blockSize * 0.5f,

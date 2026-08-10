@@ -51,7 +51,6 @@ public class Player : Animation
     public float Health => health;
     public float MaxHealth => maxHealth;
     public float Distance => distance;
-    public int Money => money;
     public float DrillPower => drillPower;
     private SoundEffectInstance drillSound;
     private SoundEffectInstance fuelWarningSfx;
@@ -86,7 +85,7 @@ public class Player : Animation
         animations.Add(DrillDirection.Right, new Animation("RightDrill") { anchor = Anchor.Center });
         animations.Add(DrillDirection.Left, new Animation("LeftDrill") { anchor = Anchor.Center });
         drillSound = AudioManager.CreateSfxInstance("drillSfx",0.2f);
-        fuelWarningSfx = AudioManager.CreateSfxInstance("fuelWarningSfx",0.5f);
+        fuelWarningSfx = AudioManager.CreateSfxInstance("fuelWarningSfx",0.2f);
         thrustSound = AudioManager.CreateSfxInstance("Thrust",0.3f);
     }
 
@@ -319,6 +318,7 @@ public class Player : Animation
         flame.StopAnimation();
         explode.PlayAnimation(false,13);
         AudioManager.PlaySoundEffect("explosion");
+        fuelWarningSfx.Stop();
     }
 
     private void BurnFuel(float amount)

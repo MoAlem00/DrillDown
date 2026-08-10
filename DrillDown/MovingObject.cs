@@ -40,8 +40,8 @@ public class MovingObject : IUpdatable,IDrawable
 
     public void Update(GameTime gameTime)
     {
-        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        t += dt / duration;
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        t += deltaTime / duration;
         if (t > 1f) t = 0f;
         sprite.tm.position = MoveObject();
     }

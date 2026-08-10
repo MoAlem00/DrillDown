@@ -30,23 +30,6 @@ public class Panel
         cellW = scaledWidth / cols;
     }
     
-    public void DrawGridDebug(SpriteBatch spriteBatch)
-    {
-        int t = 1;   // border thickness
-        for (int i = 0; i < cols * rows; i++)
-        {
-            Vector2 pos = GetSlotPosition(i);
-            int x = (int)pos.X, y = (int)pos.Y;
-
-            // top, bottom, left, right edges
-            spriteBatch.Draw(Button.Pixel, new Rectangle(x, y, cellW, t), Color.Red);
-            spriteBatch.Draw(Button.Pixel, new Rectangle(x, y + cellH - t, cellW, t), Color.Red);
-            spriteBatch.Draw(Button.Pixel, new Rectangle(x, y, t, cellH), Color.Red);
-            spriteBatch.Draw(Button.Pixel, new Rectangle(x + cellW - t, y, t, cellH), Color.Red);
-        }
-    }
-    
-    
     public void UpdatePanel(GameTime gameTime)
     {
         foreach (Button button in buttons)
@@ -59,7 +42,6 @@ public class Panel
         titleText?.Draw(spriteBatch);
         foreach (var button in buttons)
             button.Draw(spriteBatch);
-        //DrawGridDebug(spriteBatch);
     }
 
     private Vector2 GetSlotTopRightCorner(int slotIndex)
@@ -91,7 +73,7 @@ public class Panel
     public void AddButton(int slotIndex, string label, Action onClick, int width = 200, int height = 80)
     {
         buttonSprite = new Sprite("Button1");
-        Vector2 btnSize = new Vector2(width /2f, height/2f);//used to center the buttons to the center of the cell
+        Vector2 btnSize = new Vector2(width /2f, height/2f);
         Vector2 pos = GetSlotCenter(slotIndex) - btnSize;
         Button b = new Button(buttonSprite, pos, width, height);
         b.SetText(label, Game1._font, Color.White);
@@ -103,7 +85,7 @@ public class Panel
     public void AddSpriteButton(int slotIndex, string label, Action onClick, Sprite buttonSprite, int width = 64, int height = 64)
     {
         this.buttonSprite = buttonSprite;
-        Vector2 btnSize = new Vector2(width /2f, height/2f);//used to center the buttons to the center of the cell
+        Vector2 btnSize = new Vector2(width /2f, height/2f);
         Vector2 pos = GetSlotCenter(slotIndex) - btnSize;
         Vector2 textPos = GetSlotUpperCenter(slotIndex);
         Button b = new Button(buttonSprite, pos, width, height);
@@ -117,7 +99,6 @@ public class Panel
     {
         buttonSprite = new Sprite("CloseButton64");
         float btnWidth = buttonSprite.texture.Width;
-        //float btnHeight = buttonSprite.texture.Height;
         Vector2 pos = GetSlotTopRightCorner(slotIndex) - new Vector2(btnWidth, 0);
         Button b = new Button(buttonSprite, pos, 64, 64);
         b.OnClick += onClick;

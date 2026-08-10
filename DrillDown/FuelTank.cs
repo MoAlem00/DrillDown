@@ -1,16 +1,19 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace DrillDown;
 
 public class FuelTank : Item
 {
-    private float refuelAmount = 30f;
     public FuelTank(ItemType type, Sprite icon, int cost) : base(type, icon, cost,cooldown:1.2f)
     {
     }
 
-    public override void Use(Player player)
+    public override bool Use(Player player)
     {
-        player.Refuel(refuelAmount);
+        if(Math.Abs(player.MaxFuel - player.Fuel) < 0.01f) return false;
+        player.Refuel(player.MaxFuel/3f);
+        AudioManager.PlaySoundEffect("RefuelSound");
+        return true;
     }
 }

@@ -2,5 +2,5 @@
 
 public interface IUsable
 {
-    void Use(Player player);
+    bool Use(Player player);
 }

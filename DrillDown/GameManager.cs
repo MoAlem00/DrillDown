@@ -14,7 +14,6 @@ public class GameManager
 
     public event Action OnGameStart;
     public event Action OnGameRestart;
-    //public event Action OnGameWon;
     public event Action OnQuitGame;
     public GameState gameState { get; private set; } = GameState.MainMenu;
 

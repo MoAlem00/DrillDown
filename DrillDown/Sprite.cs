@@ -29,9 +29,9 @@ public class Sprite : IDrawable, IUpdatable
     public virtual void Start()
     {
     }
-    
 
-    public Vector2 GetOrigin()
+
+    private Vector2 GetOrigin()
     {
         if(sourceRect == null) return Vector2.Zero;
         return AnchorHelper.GetOrigin(anchor,new Vector2(sourceRect.Value.Width,sourceRect.Value.Height));

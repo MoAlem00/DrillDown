@@ -10,10 +10,11 @@ public class Bomb : Item
     {
     }
 
-    public override void Use(Player player)
+    public override bool Use(Player player)
     {
         player.World.DestroyArea(player.tm.position,1);
         AudioManager.PlaySoundEffect("BombExplode",false,0.5f);
         OnItemUse("BombEffect",player.tm.position);
+        return true;
     }
 }

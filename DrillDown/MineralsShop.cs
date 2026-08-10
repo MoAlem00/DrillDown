@@ -18,24 +18,14 @@ public class MineralsShop : Shop
         panel.SetTitle("MineralsShop");
         panel.AddButton(22,"Sell All",() => SellAll());
         panel.AddCloseButton(4,CloseShop);
-        totalValueText = new Text
-        {
-            font = Game1._font,
-            color = Color.White,
-            sortingOrder = 1f
-        };
+        totalValueText = Text.CreateDefault();
+        emptyText = Text.CreateDefault();
         oresList = new Text
         {
             font = Game1._font,
             color = Color.Black,
             sortingOrder = 1f,
             centered = false,
-        };
-        emptyText = new Text
-        {
-            font = Game1._font,
-            color = Color.White,
-            sortingOrder = 1f,
         };
         totalValueText.tm.position = panel.GetSlotCenter(17);
     }

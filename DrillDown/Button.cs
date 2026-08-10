@@ -20,7 +20,7 @@ public class Button : IUpdatable, IDrawable
     private bool isInside;
     private bool wasInside;
 
-    public Button(Sprite sprite, Vector2 position, int width, int height,float layer = 0.9f)//constructor for a button with texture
+    public Button(Sprite sprite, Vector2 position, int width, int height,float layer = 0.9f)
     {
         this.sprite = sprite;
         tintColor = Color.White;
@@ -31,7 +31,7 @@ public class Button : IUpdatable, IDrawable
         sortingOrder = layer;
     }
 
-    public Button(Color color, Vector2 position, int width, int height, float layer = 0.9f)//constructor for a button without texture
+    public Button(Color color, Vector2 position, int width, int height, float layer = 0.9f)
     {
         sprite = null;
         tintColor = color;
@@ -57,13 +57,11 @@ public class Button : IUpdatable, IDrawable
         bool isPressedNow = mouseState.LeftButton == ButtonState.Pressed;
         isInside = bounds.Contains(mouseState.Position);
         if (isInside&&!wasInside)
-        {
-            AudioManager.PlaySoundEffect("ButtonHoverSound");
-        }
+            AudioManager.PlaySoundEffect("ButtonHoverSound",false,0.3f);
         if (isPressedNow && !isButtonPressed && isInside)
         {
             OnClick?.Invoke();
-            AudioManager.PlaySoundEffect("ButtonClick");
+            AudioManager.PlaySoundEffect("ButtonClick",false,0.3f);
         }
         isButtonPressed = isPressedNow;
         wasInside = isInside;
@@ -85,7 +83,7 @@ public class Button : IUpdatable, IDrawable
         text?.Draw(spriteBatch);
     }
 
-    public void SetText(string label, SpriteFont font, Color color,float layer = 1f ,float scale = 1f)//method to set text for the button, can change font, color and scale ...
+    public void SetText(string label, SpriteFont font, Color color,float layer = 1f ,float scale = 1f)
     {
         text = new Text
         {
@@ -100,7 +98,7 @@ public class Button : IUpdatable, IDrawable
             sortingOrder = layer
         };
     }
-    public void SetTextAtPos(string label, SpriteFont font, Color color,Vector2 pos,float layer = 1f ,float scale = 1f)//method to set text for the button, can change font, color and scale ...
+    public void SetTextAtPos(string label, SpriteFont font, Color color,Vector2 pos,float layer = 1f ,float scale = 1f)
     {
         text = new Text
         {

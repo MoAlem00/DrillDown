@@ -66,7 +66,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
 
-        _graphics.IsFullScreen = false;
+        _graphics.IsFullScreen = true;
         
         _screenCenter =  new Vector2(
             _graphics.PreferredBackBufferWidth * 0.5f,
@@ -460,5 +460,7 @@ public class Game1 : Game
         AudioManager.AddSoundEffect("ButtonHoverSound", "Audio/SFX/ButtonHoverSound");
         AudioManager.AddSoundEffect("ErrorSound", "Audio/SFX/ErrorSound");
         AudioManager.AddSoundEffect("CollectMoneySound", "Audio/SFX/CollectMoneySound");
+        AudioManager.AddSoundEffect("UpgradeSound", "Audio/SFX/UpgradeSound");
+        AudioManager.AddSoundEffect("RefuelSound", "Audio/SFX/refuelSound");
     }
 }

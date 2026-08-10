@@ -1,4 +1,6 @@
-﻿namespace DrillDown;
+﻿using System;
+
+namespace DrillDown;
 
 public class RepairKit : Item
 {
@@ -6,8 +8,11 @@ public class RepairKit : Item
     {
     }
 
-    public override void Use(Player player)
+    public override bool Use(Player player)
     {
+        if (Math.Abs(player.Health - player.MaxHealth) < 0.01f) return false;
         player.Repair(player.MaxHealth/3f);
+        AudioManager.PlaySoundEffect("UpgradeSound");
+        return true;
     }
 }

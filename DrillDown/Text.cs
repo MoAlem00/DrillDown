@@ -69,14 +69,4 @@ public class Text : IUpdatable, IDrawable
             sortingOrder = 1f
         };
     }
-
-    /*public static Text CreateCustom(Color color,float scale)
-    {
-        return new Text
-        {
-            font = Game1._font,
-            color = Color.White,
-            sortingOrder = 1f,
-        };
-    }*/
 }

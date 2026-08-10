@@ -115,11 +115,23 @@
 /processorParam:Quality=Best
 /build:Audio/SFX/portalsound.mp3
 
+#begin Audio/SFX/refuelSound.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/refuelSound.mp3
+
 #begin Audio/SFX/thrust.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Audio/SFX/thrust.mp3
+
+#begin Audio/SFX/UpgradeSound.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SFX/UpgradeSound.mp3
 
 #begin Blocks/AmethystBlock.png
 /importer:TextureImporter

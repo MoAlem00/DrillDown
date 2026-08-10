@@ -33,7 +33,7 @@ public abstract class Item : IUsable
         this.cooldown = cooldown;
     }
     
-    public abstract void Use(Player player);
+    public abstract bool Use(Player player);
     public void AddQuantity(int amount) => quantity += amount;
 
 
@@ -45,8 +45,8 @@ public abstract class Item : IUsable
             Console.WriteLine($"Not Enough {Type}");
             return false;
         }
+        if(!Use(player)) return false;
         quantity--;
-        Use(player);
         return true;
     }
 

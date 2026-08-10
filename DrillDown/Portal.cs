@@ -86,13 +86,7 @@ public class Portal : IDrawable, IUpdatable
     
     private void SetPromptText()
     {
-        promptText = new Text
-        {
-            text = "Press E to Enter",
-            font = Game1._font,
-            color = Color.White,
-            sortingOrder = 1f
-        };
+        promptText = Text.CreateDefault("Press E To Enter");
         promptText.tm.scale = new Vector2(0.6f, 0.6f);
         promptText.tm.position = new Vector2(entranceBounds.X, entranceBounds.Y);
     }
