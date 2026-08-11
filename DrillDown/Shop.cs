@@ -103,7 +103,7 @@ public class Shop : IDrawable
         return player.destRect.Intersects(entranceBounds);
     }
 
-    public void CloseShop()
+    protected void CloseShop()
     {
         isOpen = false;
         player.SetMovable(true);

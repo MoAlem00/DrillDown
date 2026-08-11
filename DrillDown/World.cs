@@ -49,7 +49,6 @@ public class World : IDrawable
         int rightCol  = (int)Math.Floor((podRect.Right - 1 - groundLevel.X) / blockSize);
         int topRow    = (int)Math.Floor((podRect.Top - groundLevel.Y) / blockSize);
         int bottomRow = (int)Math.Floor((podRect.Bottom - 1 - groundLevel.Y) / blockSize);
-
         for (int r = topRow; r <= bottomRow; r++)
         {
             for (int c = leftCol; c <= rightCol; c++)

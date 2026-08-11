@@ -110,6 +110,6 @@ public class Portal : IDrawable, IUpdatable
     private float ComputeVolumeByDistance()
     {
         float distance = Vector2.Distance(player.tm.position, portalSprite.tm.position);
-        return Math.Clamp(1f - distance / maxRange, 0f, 1f);
+        return Math.Clamp(1f - distance / maxRange, 0f, 0.7f);
     }
 }

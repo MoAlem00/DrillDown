@@ -66,7 +66,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
 
-        _graphics.IsFullScreen = true;
+        _graphics.IsFullScreen = false;
         
         _screenCenter =  new Vector2(
             _graphics.PreferredBackBufferWidth * 0.5f,

@@ -106,8 +106,8 @@ public class Player : Animation
         sortingOrder = 5f/Game1.totalLayers;
         flame.sortingOrder = 4.8f/Game1.totalLayers;
         explode.sortingOrder = 10f/Game1.totalLayers;
-        foreach (var a in animations)
-            a.Value.sortingOrder = 5f/Game1.totalLayers;
+        foreach (var a in animations.Values)
+            a.sortingOrder = 5f/Game1.totalLayers;
         drillSound.Pitch = -0.5f;
     }
 
@@ -324,8 +324,16 @@ public class Player : Animation
     private void BurnFuel(float amount)
     {
         fuel = Math.Clamp(fuel - amount, 0f, maxFuel);
-        if(fuel <= maxFuel/3f) fuelWarningSfx.Play();
-        else fuelWarningSfx.Stop();
+        if (fuel <= maxFuel / 3f)
+        {
+            fuelWarningSfx.Play();
+            burnRate = 0.25f;
+        }
+        else
+        {
+            fuelWarningSfx.Stop();
+            burnRate = 0.5f;
+        }
         OnFuelChange?.Invoke(fuel / maxFuel);
     }
 
