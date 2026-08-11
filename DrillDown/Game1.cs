@@ -159,17 +159,8 @@ public class Game1 : Game
         switch (GameManager.Instance.gameState)
         {
             case GameManager.GameState.Playing:
+                DrawBackground(_spriteBatch);
                 effectManager.Draw(_spriteBatch);
-                for (int y = 0; y < tilesY; y++)
-                {
-                    for (int x = 0; x < tilesX; x++)
-                    {
-                        underGround.tm.position = new Vector2(
-                            groundLevel.X + x * tileW,
-                            groundLevel.Y + y * tileH);
-                        underGround.Draw(_spriteBatch);
-                    }
-                }
                 world.Draw(_spriteBatch);
                 foreach (var movingObject in movingObjects)
                     movingObject.Draw(_spriteBatch);
@@ -207,6 +198,19 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
+    private void DrawBackground(SpriteBatch spriteBatch)
+    {
+        for (int y = 0; y < tilesY; y++)
+        {
+            for (int x = 0; x < tilesX; x++)
+            {
+                underGround.tm.position = new Vector2(
+                    groundLevel.X + x * tileW,
+                    groundLevel.Y + y * tileH);
+                underGround.Draw(_spriteBatch);
+            }
+        }
+    }
     private void MakeBlocksBelowShopsUnbreakable(List<Shop> shops)
     {
         foreach (Shop shop in shops)
