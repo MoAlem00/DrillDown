@@ -13,6 +13,7 @@ public abstract class Item : IUsable
     private int quantity;
     private float cooldown;
     private float lastUseTime;
+    private string errorSound = "ErrorSound";
     public event Action<string,Vector2> OnUse;
     protected void OnItemUse(string effectName, Vector2 position) => OnUse?.Invoke(effectName, position);
 
@@ -41,7 +42,7 @@ public abstract class Item : IUsable
     {
         if (quantity <= 0)
         {
-            AudioManager.PlaySoundEffect("ErrorSound",false,0.4f);
+            AudioManager.PlaySoundEffect(errorSound,false,0.4f);
             Console.WriteLine($"Not Enough {Type}");
             return false;
         }

@@ -45,7 +45,7 @@ public class Inventory : IEnumerable
         }
         if (currentWeight + material.Weight > capacity)
         {
-            Console.WriteLine("Inventory Full!!");
+            //Console.WriteLine("Inventory Full!!");
             return false;
         }
         if(materials.ContainsKey(material))

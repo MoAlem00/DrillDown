@@ -19,6 +19,8 @@ public class Button : IUpdatable, IDrawable
     private readonly float sortingOrder;
     private bool isInside;
     private bool wasInside;
+    private string buttonSound = "ButtonClick";
+    private string buttonHoverSound = "ButtonHoverSound";
 
     public Button(Sprite sprite, Vector2 position, int width, int height,float layer = 0.9f)
     {
@@ -57,11 +59,11 @@ public class Button : IUpdatable, IDrawable
         bool isPressedNow = mouseState.LeftButton == ButtonState.Pressed;
         isInside = bounds.Contains(mouseState.Position);
         if (isInside&&!wasInside)
-            AudioManager.PlaySoundEffect("ButtonHoverSound",false,0.3f);
+            AudioManager.PlaySoundEffect(buttonHoverSound,false,0.3f);
         if (isPressedNow && !isButtonPressed && isInside)
         {
             OnClick?.Invoke();
-            AudioManager.PlaySoundEffect("ButtonClick",false,0.3f);
+            AudioManager.PlaySoundEffect(buttonSound,false,0.3f);
         }
         isButtonPressed = isPressedNow;
         wasInside = isInside;
